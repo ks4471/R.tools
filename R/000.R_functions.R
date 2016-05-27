@@ -20,7 +20,19 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 
+#install.packages('devtools')
 
+#library(devtools)
+
+
+#devtools::install_github("ks471/R_helper")
+#devtools::install_github("ks471/clickyOSX")
+#devtools::install_github("ks471/clickyLinux")
+
+
+#library(R.helper)
+#library(clickyOSX)
+#library(clickyLinux)
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 # nohup for R scrpts
@@ -35,35 +47,10 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 # gzip -d file.gz
 
 
-# standard settings for each file..
-#options(stringsAsFactors=F)
-#rm(list=ls())
-#ls()
-#t0=Sys.time()
-#### disables the base::`[` function from dropping the single column matrixes to vectors, very annoying and requires constant vigil.. cos making drop=T by default is apparently not ok???    http://stackoverflow.com/questions/12196724/generally-disable-dimension-dropping-for-matrices
-##    - the below command stops that from happening ## very tempted to just activate it here, however it would break any code with drop=F in it already.. >> insert evil laugh <<
-##    - solved by a simple replace obviously.. 
-##  `[` <- function(...) base::`[`(...,drop=FALSE)  
-
-## http://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
-#rfunc <- new.env(parent=as.environment("package:stats"))
-
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-# installing WGCNA - dependencies require installation - simplest is to use instruction as per website :
-#  http://labs.genetics.ucla.edu/horvath/CoexpressionNetwork/Rpackages/WGCNA/#cranInstall
-# source("http://bioconductor.org/biocLite.R") 
-#biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore")) 
-#install.packages("WGCNA")
-
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-##  good venn diagram - auto calculates type and overlaps from a list of vectors
-#library(gplots)
-# venn(genlist)
-
-
-
 #fnames=list.files("/Users/Shkura/Dropbox/Cognition/GWAS/magma/hrh.magma/out/netw.enrich", pattern = ".out", full.names = TRUE)
 #basename
 #dirname
@@ -75,8 +62,6 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
 #source('~/Dropbox//000.R.functions.R')#╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣╔╗║╚╚╣║╚╣
 #╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
-
-
 
 ## useful concept : add a readme.object.in.saved.R.object when saving file create a "method" / "description" of the file for easier handover / re-analysis
 ##  readme.lires=
@@ -93,10 +78,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #sink()
 
 
-
-
-##Here are the different parameters used by phyper and fisher.test: 
-
+## easier names for vars used by phyper and fisher.test: 
 # phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
 
 #fisher.test(matrix(c(x, 13-x, 5-x, 34+x), 2, 2), alternative='less');
@@ -3982,6 +3964,9 @@ clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=F,
   cat('\tNOTE  :\tk- specify number of clusters for cutree, can use range i.e. 2:5, if k="dynamic", WGCNA function "cutreeHybrid" is used to cut the tree\n\n')
  }
 
+    if(do_plots){
+    	library(WGCNA)	##  moved it here to avoid waiting for clustering only to find the plots failed 
+    }
 
   if(cor_method=='dist'){
    cat('\t- calculating eucledian distance\n')
@@ -4011,22 +3996,19 @@ clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=F,
     clust[[as.character(clustnm)[iclust]]]=names(trestat)[trestat==clustnm[iclust]]
   }
     if(do_plots){
-
-   library(WGCNA)
-  plotDendroAndColors(
-    clustat
-      ,trestat
-  # ,cutHeight=300
-      ,hang = 0.03
-  #    ,addGuide = TRUE
-      ,guideHang = 0.05,
-
-        ,main=main_text
-      ,cex.colorLabels = plot_cex
-      ,cex.dendroLabels = plot_cex
-    ,cex.rowText = plot_cex
-      )
-    }
+		plotDendroAndColors(
+		clustat
+		,trestat
+		#,cutHeight=300
+		,hang=0.03
+		#,addGuide=TRUE
+		,guideHang=0.05,
+		,main=main_text
+		,cex.colorLabels=plot_cex
+		,cex.dendroLabels=plot_cex
+		,cex.rowText=plot_cex
+	)
+	}
 
     readme='\n\toutput contains :
             \t1. clust - members of modules based on k
@@ -5221,7 +5203,7 @@ cat("Cell background is the genes with one2one human orthologous of mice genes u
 
 
 
-dnm.enrich.bg<-function(module_list,bg_vect=NA,use_counts=F,dtb_path='/Users/ks/Dropbox/PROJ/annot/dtb/processed'){
+dnm.enrich.bg<-function(module_list,bg_vect=NA,use_counts=F){
 #cat('\n\tNOTE:\tid_type - options: "name" - gene name / HUGO name; "ensg" - ensembl gene id;"mouse.ensg" - mouse ensembl gene id - one2one orthologs to human only\n')
 cat('\tNOTE:\tbg_vect - options: "NA" - one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)\n\n')
 ##  based on bg input - if data.frame or matrix -> create a list of identical bg length=length(module_list)
@@ -5230,7 +5212,7 @@ cat('\tNOTE:\tbg_vect - options: "NA" - one2one human orthologous of mice genes 
 
 ##  option for supporting multiple ID types -> ensg /+/ gene name
 ##  + auto-detect ID option - a possibility but seems unnecessary given only 2 types
-load(paste0(dtb_path,'/DNM_enrich_idmap.Rdata'))
+
 
 ##===================================================================================================================================
 ## generate background as per options, if list provided (same length as modules)=================================
@@ -5247,7 +5229,7 @@ options(warn=-1)
   }
 
   if(class(bg_vect)!='list' & !is.na(bg_vect)){
-    dnms=lapply(dnms,function(x){unique(x[x[,'ids']%in%bg_vect|x[,'gene']%in%bg_vect,c('gene','count','ids')])})  ## limit ids to just those in bg_vect
+    dnmid=lapply(dnmid,function(x){unique(x[x[,'ids']%in%bg_vect|x[,'gene']%in%bg_vect,c('gene','count','ids')])})  ## limit ids to just those in bg_vect
     cat('\tusing the provided bkgrnd, same for all modules\n')
   }
 
@@ -5260,8 +5242,8 @@ options(warn=0)
 ## perform the fisher.test() using fet() function=================================
 
   plot_dat=list()
-  for(idat in 1:(length(dnms)-4)){
-     cat('\t=====================',names(dnms)[idat],'=====================',idat,' of ',(length(dnms)-4),'\n')
+  for(idat in 1:(length(dnmid)-4)){
+     cat('\t=====================',names(dnmid)[idat],'=====================',idat,' of ',(length(dnmid)-4),'\n')
      dumpty=list()
     for(imod in 1:length(module_list)){
 
@@ -5270,19 +5252,19 @@ options(warn=0)
 
 	   not_mod=bg_vect[!(bg_vect%in%module_list[[names(module_list)[imod]]])]
 ## case dnm in module
-       ms=dnms[[idat]]
+       ms=dnmid[[idat]]
        ms=unique(ms[ms$ids%in%module_list[[names(module_list)[imod]]] | ms$gene%in%module_list[[names(module_list)[imod]]],c('gene','count')])
 
 ## control dnm in module
-       mf=dnms[['lgd']]
+       mf=dnmid[['lgd']]
        mf=unique(mf[mf$ids%in%module_list[[names(module_list)[imod]]] | mf$gene%in%module_list[[names(module_list)[imod]]],c('gene','count')])
 
 ## case dnm outside module
-       bs=dnms[[idat]]
+       bs=dnmid[[idat]]
        bs=unique(bs[bs$ids%in%not_mod | bs$gene%in%not_mod,c('gene','count')])
 
 ## control dnm outside module
-       bf=dnms[['lgd']]
+       bf=dnmid[['lgd']]
        bf=unique(bf[bf$ids%in%not_mod | bf$gene%in%not_mod,c('gene','count')])
 
 
@@ -5309,14 +5291,14 @@ options(warn=0)
 
 #      if(do_plots){
 #        colvec=colmix
-#        humpty$module=as.factor(paste(names(module_list)[imod],names(dnms)[imod],sep='_'))
+#        humpty$module=as.factor(paste(names(module_list)[imod],names(dnmid)[imod],sep='_'))
 #        humpty$color=colvec[imod]#c(rep(colvec[imod],nrow(plot_dat[[names(module_list)[imod]]])-1),'black')
 #        humpty$point_width=(humpty[[names(module_list)[imod]]]$fetOR*3)+point_width_scale
  #       }
       dumpty[[names(module_list)[[imod]]]]=(unlist(humpty))
     }
 
-    plot_dat[[names(dnms)[idat]]]=(t(as.data.frame(dumpty)))
+    plot_dat[[names(dnmid)[idat]]]=(t(as.data.frame(dumpty)))
 
   }
 
@@ -5329,8 +5311,11 @@ options(warn=0)
   ## generate plots=================================
 
 }
+
+
+
 ### appears to work..
-cellt.enrich.bg<-function(module_list,bg_list=NA,dtb_path='/Users/ks/Dropbox/PROJ/annot/dtb/processed',id_type='name'){
+cellt.enrich.bg<-function(module_list,bg_list=NA,id_type='name'){
 cat('\n\tNOTE:\tid_type - options: "name" - gene name / HUGO name; "ensg" - ensembl gene id;"mouse.ensg" - mouse ensembl gene id - one2one orthologs to human only\n')
 cat('\tNOTE:\tbg_list - options: "NA" - one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)\n\n')
 ##  based on bg input - if data.frame or matrix -> create a list of identical bg length=length(module_list)
@@ -5339,7 +5324,8 @@ cat('\tNOTE:\tbg_list - options: "NA" - one2one human orthologous of mice genes 
 
 ##  option for supporting multiple ID types -> ensg /+/ gene name
 ##  + auto-detect ID option - a possibility but seems unnecessary given only 2 types
-load(paste0(dtb_path,'/cellt.enrich.zeizel.dtb.Rdata'))
+#dtb_path='/Users/ks/Dropbox/PROJ/annot/dtb/processed'
+#load(paste0(dtb_path,'/cellt.enrich.zeizel.dtb.Rdata'))
 
 ##===================================================================================================================================
 ## generate background as per options, if list provided (same length as modules)=================================
@@ -5836,20 +5822,44 @@ install.bioc<-function(package_name){
 }
 
 
+install.pkg<-function(){
+##  USE : install all packages used by one of the functions (yes these can indeed be specified as dependencies, not implemented yet)
+##  NOTE: example error below means the mirror used is not functional/unavailable, try another..
 
+# Warning: unable to access index for repository https://mirrors.ebi.ac.uk/CRAN/src/contrib:
+#   cannot download all files
+# Warning: unable to access index for repository https://mirrors.ebi.ac.uk/CRAN/bin/macosx/mavericks/contrib/3.3:
+#   cannot download all files
+# Warning message:
+# package ‘gplots’ is not available (for R version 3.3.0) 
 
+	system('git clone https://github.com/jalvesaq/colorout.git')
+	system('sudo R CMD INSTALL colorout')
+	library(colorout)
 
+	install.packages('devtools')
+	install.packages('gplots')
 
+##  installing WGCNA - requires dependencies first - simplest is to use instruction as per website :
+##  http://labs.genetics.ucla.edu/horvath/CoexpressionNetwork/Rpackages/WGCNA/#cranInstall
+	source("http://bioconductor.org/biocLite.R") 
+	biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore")) 
+	install.packages("WGCNA")
 
+	install.packages('MetaDE')
+	install.packages('mixtools')
+	install.packages('pamr')
+	install.packages("psych")
+	install.packages('corrplot')
 
+	install.packages('gplots')
+	install.packages('ggplot2')
+	install.packages('pvclust')
 
-
-
-
-
-
-
-
+	install.bioc('minet')
+	install.bioc('limma')
+	install.bioc('biomaRt')
+}
 
 
 
@@ -5894,3 +5904,13 @@ annot_combine<-function(expr_mat,annot_mat,annot_from,annot_to){
 	return(invisible(expr_out))
 
 }
+
+
+
+
+
+
+
+
+
+
