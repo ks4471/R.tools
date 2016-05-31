@@ -1477,6 +1477,14 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
 
 
 
+p.adjust.mat<-function(p_mat,method='fdr'){
+	adj_mat=matrix(p.adjust(unlist(p_mat),method=method),nrow=nrow(p_mat))
+	rownames(adj_mat)=rownames(p_mat)
+	colnames(adj_mat)=colnames(p_mat)
+	return(invisible(adj_mat))
+}
+
+
 gwas_module_enrich<-function(in_gwas,module,bkgrnd,nperm=100000,seed=0,type=1){
 cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of modules  |  bkgrnd - matrix first column contains the ENSG list")
   set.seed(seed)
@@ -5236,6 +5244,7 @@ options(warn=-1)
 
   if(is.na(bg_vect)){
     cat('\tno background list provided, using default\n')
+    dnmid=lapply(dnmid,function(x){unique(x[,c('gene','count')])})  ## limit ids to just those in bg_vect
   }
 options(warn=0)
 
@@ -5910,6 +5919,10 @@ annot_combine<-function(expr_mat,annot_mat,annot_from,annot_to){
 
 
 
+lcount<-function(x,length){
+	cat(round(x/length,digits=2),"\r");flush.console()
+	return(x+1)
+}
 
 
 
