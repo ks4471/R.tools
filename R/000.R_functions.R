@@ -564,6 +564,12 @@ colbw=c("#ffffff","#f0f0f0","#d9d9d9","#bdbdbd","#969696","#737373","#525252","#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+sessionn<-function(){
+	options(stringsAsFactors=F)
+	library(colorout)
+	rm(list=ls());ls()
+}
+
 make.numeric<-function(Matrix,col_factor="",fac_legend=F,verbose=F,help=F,char_as_fac=F){ #char_as_fac=T,
 if(help==T){
       cat("\tINPUTS:\tMatrix - rows : samples, columns - variables\n")
