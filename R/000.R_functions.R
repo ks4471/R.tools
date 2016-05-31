@@ -564,11 +564,6 @@ colbw=c("#ffffff","#f0f0f0","#d9d9d9","#bdbdbd","#969696","#737373","#525252","#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-sessionn<-function(){
-	options(stringsAsFactors=F)
-	library(colorout)
-	rm(list=ls());ls()
-}
 
 make.numeric<-function(Matrix,col_factor="",fac_legend=F,verbose=F,help=F,char_as_fac=F){ #char_as_fac=T,
 if(help==T){
@@ -3198,7 +3193,7 @@ matst<-function(dat_mat,sort=T,decreasing=T){
   }
 
   colnames(dummy)="count"
-  dummy$percent=round(dummy$count/sum(dummy$count),digits=3)
+#  dummy$percent=round(dummy$count/sum(as.numeric(dummy$count)),digits=3)
   return(dummy)
 
 }
