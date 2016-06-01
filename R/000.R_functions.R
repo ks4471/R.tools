@@ -33,6 +33,14 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #library(R.helper)
 #library(clickyOSX)
 #library(clickyLinux)
+
+#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
+#devtools::use_data(x)	# saves to working directory by default
+
+
+
+
+
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 # nohup for R scrpts
@@ -4975,14 +4983,14 @@ fetc<-function(samp.sucess,bkgrnd.success,samp.fail,bkgrnd.fail,...){
 
 
 
-dnm.enrich<-function(clusters_list,runname="",inpath="~/Dropbox/SHARED/tools/FUNDNMmap/",selection=F){
+dnm.enrich<-function(clusters_list,runname="",selection=F){ 				#,inpath="~/Dropbox/SHARED/tools/FUNDNMmap/"
   cat('\tNOTE:\tclusters_list only ENSG ids currently supported\n\n')
 library(MetaDE)
 library('parallel')
 
-  Load(paste(inpath,"/PathoGeneENS.Rdata",sep="")) # PathoGene & Patho_ENSgeneID
-  Load(paste(inpath,"/ctr_GeneENS.Rdata",sep="")) # ctrGene & ctr_ENSgeneID
-  map=read.table(file=paste(inpath,'/functional_mut_rate.bias_corrected.local.canonical_tx_only.bed.txt',sep=""),header=TRUE, sep='\t', blank.lines.skip=TRUE)
+#  Load(paste(inpath,"/PathoGeneENS.Rdata",sep="")) # PathoGene & Patho_ENSgeneID
+#  Load(paste(inpath,"/ctr_GeneENS.Rdata",sep="")) # ctrGene & ctr_ENSgeneID
+#  gene_map_dat=read.table(file=paste(inpath,'/functional_mut_rate.bias_corrected.local.canonical_tx_only.bed.txt',sep=""),header=TRUE, sep='\t', blank.lines.skip=TRUE)
 
   ### create a matrix for results
   FBET=matrix(nrow=length(clusters_list), ncol=23)
@@ -5043,16 +5051,16 @@ library('parallel')
       #### BET
             
       # theorical Ps=Theorical probablity of sucess based on mutation rate map
-      CL.map.ens=intersect(clusters_list[[i]],map$Gene)
+      CL.map.ens=intersect(clusters_list[[i]],gene_map_dat$Gene)
       #NnID=paste(setdiff(clusters_list[[i]],map$Gene), collapse=", ")
-      nID=length(setdiff(clusters_list[[i]],map$Gene))
+      nID=length(setdiff(clusters_list[[i]],gene_map_dat$Gene))
       # if lgd(nonsens + missense)
-      ThPs=sum(sapply(CL.map.ens,FUN=function(x){sum(map[which(map$Gene==x),c("Missense_rate","Nonsense_rate")])}))
+      ThPs=sum(sapply(CL.map.ens,FUN=function(x){sum(gene_map_dat[which(gene_map_dat$Gene==x),c("Missense_rate","Nonsense_rate")])}))
 
       # nb of trials=nb of DNM falling in all map genes divided by the mutation rate on all map genes
-      patho.map.ens=intersect(pathoENS$ensembl_gene_id,map$Gene)
+      patho.map.ens=intersect(pathoENS$ensembl_gene_id,gene_map_dat$Gene)
       y=lapply(patho.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id==x),'external_gene_name']})
-      n=round(sum(sapply(unique(y), FUN=function(x) {length(which(DNM_Gene==x ))}))/sum(map[,c("Missense_rate","Nonsense_rate")]))
+      n=round(sum(sapply(unique(y), FUN=function(x) {length(which(DNM_Gene==x ))}))/sum(gene_map_dat[,c("Missense_rate","Nonsense_rate")]))
 
       # nb of sucess=nb of DNM falling in map of the module
       z=lapply(CL.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id==x),'external_gene_name']})
@@ -5114,15 +5122,15 @@ library('parallel')
 }
 
 
-cellt.enrich<-function(clusters_list,runname="",inpath="~/Dropbox/SHARED/tools/Data_to_load_CellFET",outpath=getwd(),selection=F){
+cellt.enrich<-function(clusters_list,runname="",outpath=getwd(),selection=F){	#inpath="~/Dropbox/SHARED/tools/Data_to_load_CellFET",
 cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
 cat("Cell background is the genes with one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)")
   library(MetaDE)
   library('parallel')
 
   ###load data
-  Load(paste(inpath,"/HUMQb.Rdata",sep="")) #"HUMQb" human ENSid orthologous genes of mice background genes
-  Load(paste(inpath,"/hmscDF.Rdata",sep="")) #"hmscDF" human ENSid orthologous of mice single cell enriched by class dataframe
+#  Load(paste(inpath,"/HUMQb.Rdata",sep="")) #"HUMQb" human ENSid orthologous genes of mice background genes
+#  Load(paste(inpath,"/hmscDF.Rdata",sep="")) #"hmscDF" human ENSid orthologous of mice single cell enriched by class dataframe
   
   ### create a matrix for results
   cFET=matrix(nrow=length(clusters_list), ncol=14)
@@ -5244,7 +5252,7 @@ options(warn=-1)
 
   if(is.na(bg_vect)){
     cat('\tno background list provided, using default\n')
-    dnmid=lapply(dnmid,function(x){unique(x[,c('gene','count')])})  ## limit ids to just those in bg_vect
+#    bg_vect=unique(unlist(lapply(dnmid[c('EE','ASD','ID','SCZ','DDD','lgd')],function(x){unique(x[,c('gene')])})))  ## basically all the genes assayed
   }
 options(warn=0)
 
@@ -5260,42 +5268,41 @@ options(warn=0)
        cat('\t\t',names(module_list)[imod],'\n')
        humpty=list()
 
-	   not_mod=bg_vect[!(bg_vect%in%module_list[[names(module_list)[imod]]])]
-## case dnm in module
+## case DNM in module
        ms=dnmid[[idat]]
        ms=unique(ms[ms$ids%in%module_list[[names(module_list)[imod]]] | ms$gene%in%module_list[[names(module_list)[imod]]],c('gene','count')])
 
-## control dnm in module
+## control DNM in module
        mf=dnmid[['lgd']]
        mf=unique(mf[mf$ids%in%module_list[[names(module_list)[imod]]] | mf$gene%in%module_list[[names(module_list)[imod]]],c('gene','count')])
 
-## case dnm outside module
+## case DNM not in module
        bs=dnmid[[idat]]
-       bs=unique(bs[bs$ids%in%not_mod | bs$gene%in%not_mod,c('gene','count')])
+       bs=unique(bs[!(bs$ids%in%module_list[[names(module_list)[imod]]] | bs$gene%in%module_list[[names(module_list)[imod]]]),c('gene','count')])
 
-## control dnm outside module
+## control DNM not in module
        bf=dnmid[['lgd']]
-       bf=unique(bf[bf$ids%in%not_mod | bf$gene%in%not_mod,c('gene','count')])
+       bf=unique(bf[!(bf$ids%in%module_list[[names(module_list)[imod]]] | bf$gene%in%module_list[[names(module_list)[imod]]]),c('gene','count')])
 
 
        if(!use_counts){
-       	ms=length(unique(ms$gene))
-       	mf=length(unique(mf$gene))
-       	bs=length(unique(bs$gene))
-       	bf=length(unique(bf$gene))
-       	
-       	humpty=fetc(samp.sucess=ms,bkgrnd.success=bs,samp.fail=mf,bkgrnd.fail=bf)
+        ms=length(unique(ms$gene))
+        mf=length(unique(mf$gene))
+        bs=length(unique(bs$gene))
+        bf=length(unique(bf$gene))
+        
+        humpty=fetc(samp.sucess=ms,bkgrnd.success=bs,samp.fail=mf,bkgrnd.fail=bf)
        }
        if(use_counts){
-       	ms=sum(ms$count)
-       	mf=sum(mf$count)
-       	bs=sum(bs$count)
-       	bf=sum(bf$count)
-       	
-       	humpty=fetc(samp.sucess=ms,bkgrnd.success=bs,samp.fail=mf,bkgrnd.fail=bf)
+        ms=sum(ms$count)
+        mf=sum(mf$count)
+        bs=sum(bs$count)
+        bf=sum(bf$count)
+        
+        humpty=fetc(samp.sucess=ms,bkgrnd.success=bs,samp.fail=mf,bkgrnd.fail=bf)
 
-       	}
-       	humpty$n.genes=length(module_list[[names(module_list)[imod]]])    
+        }
+        humpty$n.genes=length(module_list[[names(module_list)[imod]]])    
 #      if(is.infinite(humpty$upperCI)){humpty$upperCI=1}
 #      if(is.infinite(humpty$lowerCI)){humpty$upperCI=0}
 
@@ -5323,6 +5330,120 @@ options(warn=0)
 }
 
 
+
+
+#### this enrichment test is only for DNM in module compared to genome/background
+##<<>>dnm.enrich.bg<-function(module_list,bg_vect=NA,use_counts=F){
+##<<>>#cat('\n\tNOTE:\tid_type - options: "name" - gene name / HUGO name; "ensg" - ensembl gene id;"mouse.ensg" - mouse ensembl gene id - one2one orthologs to human only\n')
+##<<>>cat('\tNOTE:\tbg_vect - options: "NA" - one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)\n\n')
+##<<>>##  based on bg input - if data.frame or matrix -> create a list of identical bg length=length(module_list)
+##<<>>##  + alternatively a list of modules with backgrounds in the same order -> flexibility option for unique backgrounds for each module
+##<<>>##  + added benefit of allowing different color coding for each bg (eg darker or different style of line / OR dot)
+##<<>>
+##<<>>##  option for supporting multiple ID types -> ensg /+/ gene name
+##<<>>##  + auto-detect ID option - a possibility but seems unnecessary given only 2 types
+##<<>>
+##<<>>
+##<<>>##===================================================================================================================================
+##<<>>## generate background as per options, if list provided (same length as modules)=================================
+##<<>>options(warn=-1)
+##<<>>
+##<<>>#  if(!is.na(bg_vect)){
+##<<>>  if(class(bg_vect)=='list'){
+##<<>>    if(length(bg_vect)==length(module_list)){
+##<<>>      cat('\tusing multiple bg list as provided\n')
+##<<>>    }
+##<<>>    if(length(bg_vect)!=length(module_list)){
+##<<>>      stop('\tlength of bg_vect provided not the same length as module_list. if same bkgrnd for all modules, do not provide as.list()\n')
+##<<>>    }
+##<<>>  }
+##<<>>
+##<<>>  if(class(bg_vect)!='list' & !is.na(bg_vect)){
+##<<>>    dnmid=lapply(dnmid,function(x){unique(x[x[,'ids']%in%bg_vect|x[,'gene']%in%bg_vect,c('gene','count','ids')])})  ## limit ids to just those in bg_vect
+##<<>>    cat('\tusing the provided bkgrnd, same for all modules\n')
+##<<>>  }
+##<<>>
+##<<>>  if(is.na(bg_vect)){
+##<<>>    cat('\tno background list provided, using default\n')
+##<<>>    bg_vect=unique(unlist(lapply(dnmid[c('EE','ASD','ID','SCZ','DDD','lgd')],function(x){unique(x[,c('gene')])})))  ## basically all the genes assayed
+##<<>>  }
+##<<>>options(warn=0)
+##<<>>
+##<<>>##===================================================================================================================================
+##<<>>## perform the fisher.test() using fet() function=================================
+##<<>>
+##<<>>  plot_dat=list()
+##<<>>  for(idat in 1:(length(dnmid)-4)){
+##<<>>     cat('\t=====================',names(dnmid)[idat],'=====================',idat,' of ',(length(dnmid)-4),'\n')
+##<<>>     dumpty=list()
+##<<>>    for(imod in 1:length(module_list)){
+##<<>>
+##<<>>       cat('\t\t',names(module_list)[imod],'\n')
+##<<>>       humpty=list()
+##<<>>
+##<<>>	   not_mod=bg_vect[!(bg_vect%in%module_list[[names(module_list)[imod]]])]
+##<<>>## case dnm in module
+##<<>>       ms=dnmid[[idat]]
+##<<>>       ms=unique(ms[ms$ids%in%module_list[[names(module_list)[imod]]] | ms$gene%in%module_list[[names(module_list)[imod]]],c('gene','count')])
+##<<>>
+##<<>>## control dnm in module
+##<<>>       mf=dnmid[['lgd']]
+##<<>>       mf=unique(mf[mf$ids%in%module_list[[names(module_list)[imod]]] | mf$gene%in%module_list[[names(module_list)[imod]]],c('gene','count')])
+##<<>>
+##<<>>## case dnm outside module
+##<<>>       bs=dnmid[[idat]]
+##<<>>       bs=unique(bs[bs$ids%in%not_mod | bs$gene%in%not_mod,c('gene','count')])
+##<<>>
+##<<>>## control dnm outside module
+##<<>>       bf=dnmid[['lgd']]
+##<<>>       bf=unique(bf[bf$ids%in%not_mod | bf$gene%in%not_mod,c('gene','count')])
+##<<>>
+##<<>>
+##<<>>       if(!use_counts){
+##<<>>       	ms=length(unique(ms$gene))
+##<<>>       	mf=length(unique(mf$gene))
+##<<>>       	bs=length(unique(bs$gene))
+##<<>>       	bf=length(unique(bf$gene))
+##<<>>       	
+##<<>>       	humpty=fetc(samp.sucess=ms,bkgrnd.success=bs,samp.fail=mf,bkgrnd.fail=bf)
+##<<>>       }
+##<<>>       if(use_counts){
+##<<>>       	ms=sum(ms$count)
+##<<>>       	mf=sum(mf$count)
+##<<>>       	bs=sum(bs$count)
+##<<>>       	bf=sum(bf$count)
+##<<>>       	
+##<<>>       	humpty=fetc(samp.sucess=ms,bkgrnd.success=bs,samp.fail=mf,bkgrnd.fail=bf)
+##<<>>
+##<<>>       	}
+##<<>>       	humpty$n.genes=length(module_list[[names(module_list)[imod]]])    
+##<<>>#      if(is.infinite(humpty$upperCI)){humpty$upperCI=1}
+##<<>>#      if(is.infinite(humpty$lowerCI)){humpty$upperCI=0}
+##<<>>
+##<<>>#      if(do_plots){
+##<<>>#        colvec=colmix
+##<<>>#        humpty$module=as.factor(paste(names(module_list)[imod],names(dnmid)[imod],sep='_'))
+##<<>>#        humpty$color=colvec[imod]#c(rep(colvec[imod],nrow(plot_dat[[names(module_list)[imod]]])-1),'black')
+##<<>>#        humpty$point_width=(humpty[[names(module_list)[imod]]]$fetOR*3)+point_width_scale
+##<<>> #       }
+##<<>>      dumpty[[names(module_list)[[imod]]]]=(unlist(humpty))
+##<<>>    }
+##<<>>
+##<<>>    plot_dat[[names(dnmid)[idat]]]=(t(as.data.frame(dumpty)))
+##<<>>
+##<<>>  }
+##<<>>
+##<<>>#  if(!do_plots){
+##<<>>    return(plot_dat)
+##<<>>#  }
+##<<>>
+##<<>>#  if(do_plots){
+##<<>>  ##===================================================================================================================================
+##<<>>  ## generate plots=================================
+##<<>>
+##<<>>}
+##<<>>
+##<<>>
 
 ### appears to work..
 cellt.enrich.bg<-function(module_list,bg_list=NA,id_type='name'){
