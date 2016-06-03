@@ -4981,15 +4981,6 @@ fet<-function(samp,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail
 	}
 }
 
-fetc<-function(,...){
-# alternative ='greater'
-# phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
-
-#fisher.test(matrix(c(x, 13-x, 5-x, 34+x), 2, 2), alternative='less');
-# Numerical parameters in order:
-# (success-in-sample, success-in-left-part, failure-in-sample, failure-in-left-part).
-
-}
 
 
 
