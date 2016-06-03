@@ -997,7 +997,7 @@ write.delim<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",s
   if(col.names==T & row.names==T){
     col.names=NA
   }
-  write.table(mat,file.path,row.names=row.names,col.names=col.names,sep=sep,quote=F,na=missing.value.char,...)
+  write.table(mat,file,row.names=row.names,col.names=col.names,sep=sep,quote=F,na=missing.value.char,...)
 }
 
 
@@ -4952,7 +4952,7 @@ fet<-function(samp,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail
 	    test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
 	    test_out=fisher.test(test_mat,...)
 	
-		print(test_mat)
+#		print(test_mat)
 
 	    fet$n.genes=length(sampl)
 	    fet$FETp=round(test_out$p.value,digits=3)
@@ -4968,7 +4968,7 @@ fet<-function(samp,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail
 		test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
 		test_out=fisher.test(test_mat,...)
     
-    print(test_mat)
+#    	 print(test_mat)
 
 		fet$n.genes=sum(samp.success,samp.fail)
 		fet$FETp=round(test_out$p.value,digits=3)
