@@ -2478,10 +2478,11 @@ pcVarExpl<-function(cexpr){
 
 
 
-pc<-function(subset,full,sig_fig=2){
-  return(round(length(subset)/length(full),digits=sig_fig))
-}
+frac<-function(subset,full,num=F,sig_fig=2){
+  if(!num){return(round(length(subset)/length(full),digits=sig_fig))}
+  if(num){return(round(subset/full,digits=sig_fig))}
 
+}
 
 
 rmduplicates<-function(matrix,colName){
@@ -4937,46 +4938,56 @@ gsea.run<-function(
 
 
 
-fet<-function(sampl,bkgrnd,success,...){
+fet<-function(samp,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail,bkgrnd.fail,...){
 # alternative ='greater'
 # phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
 
 #fisher.test(matrix(c(x, 13-x, 5-x, 34+x), 2, 2), alternative='less');
 # Numerical parameters in order:
 # (success-in-sample, success-in-left-part, failure-in-sample, failure-in-left-part).
-      bkgrnd=bkgrnd[!(bkgrnd%in%sampl)]
-      fet=list(samp.sucess=sum(sampl%in%success),bkgrnd.success=sum(bkgrnd%in%success),samp.fail=sum(!(sampl%in%success)),bkgrnd.fail=sum(!(bkgrnd%in%success)))
-      test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
-      test_out=fisher.test(test_mat,...)
 
-      fet$n.genes=length(sampl)
-      fet$FETp=round(test_out$p.value,digits=3)
-      fet$fetOR=round(test_out$estimate,digits=3)
-      fet$lowerCI=round(test_out$conf.int[1],digits=3)
-      fet$upperCI=round(test_out$conf.int[2],digits=3)
-#      fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
-      return(invisible((fet)))
+	if(!counts){
+	    bkgrnd=bkgrnd[!(bkgrnd%in%sampl)]
+	    fet=list(samp.success=sum(sampl%in%success),bkgrnd.success=sum(bkgrnd%in%success),samp.fail=sum(!(sampl%in%success)),bkgrnd.fail=sum(!(bkgrnd%in%success)))
+	    test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
+	    test_out=fisher.test(test_mat,...)
+	
+		print(test_mat)
 
+	    fet$n.genes=length(sampl)
+	    fet$FETp=round(test_out$p.value,digits=3)
+	    fet$fetOR=round(test_out$estimate,digits=3)
+	    fet$lowerCI=round(test_out$conf.int[1],digits=3)
+	    fet$upperCI=round(test_out$conf.int[2],digits=3)
+#		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
+	    return(invisible((fet)))
+	}
+
+	if(counts){
+		fet=list(samp.success=samp.success,bkgrnd.success=bkgrnd.success,samp.fail=samp.fail,bkgrnd.fail=bkgrnd.fail)
+		test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
+		test_out=fisher.test(test_mat,...)
+    
+    print(test_mat)
+
+		fet$n.genes=sum(samp.success,samp.fail)
+		fet$FETp=round(test_out$p.value,digits=3)
+		fet$fetOR=round(test_out$estimate,digits=3)
+		fet$lowerCI=round(test_out$conf.int[1],digits=3)
+		fet$upperCI=round(test_out$conf.int[2],digits=3)
+#		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
+		return(invisible((fet)))
+
+	}
 }
 
-fetc<-function(samp.sucess,bkgrnd.success,samp.fail,bkgrnd.fail,...){
+fetc<-function(,...){
 # alternative ='greater'
 # phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
 
 #fisher.test(matrix(c(x, 13-x, 5-x, 34+x), 2, 2), alternative='less');
 # Numerical parameters in order:
 # (success-in-sample, success-in-left-part, failure-in-sample, failure-in-left-part).
-      fet=list(samp.sucess=samp.sucess,bkgrnd.success=bkgrnd.success,samp.fail=samp.fail,bkgrnd.fail=bkgrnd.fail)
-      test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
-      test_out=fisher.test(test_mat,...)
-
-      fet$n.genes=sum(samp.sucess,samp.fail)
-      fet$FETp=round(test_out$p.value,digits=3)
-      fet$fetOR=round(test_out$estimate,digits=3)
-      fet$lowerCI=round(test_out$conf.int[1],digits=3)
-      fet$upperCI=round(test_out$conf.int[2],digits=3)
-#      fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
-      return(invisible((fet)))
 
 }
 
