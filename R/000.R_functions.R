@@ -1485,11 +1485,43 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
 
 
 
-p.adjust.mat<-function(p_mat,method='fdr'){
-	adj_mat=matrix(p.adjust(unlist(p_mat),method=method),nrow=nrow(p_mat))
-	rownames(adj_mat)=rownames(p_mat)
-	colnames(adj_mat)=colnames(p_mat)
-	return(invisible(adj_mat))
+p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
+##  p.adjust appears to be designed to handle NA values 
+
+	if(single_row & single_column){
+		 stop('\n\tERROR :\tto perform "p.adjust()" across whole matrix use "single_col=F" & "single_row=F", ie default\n')
+	}
+	if(!single_col & !single_row){
+		cat('\n\t"p.adjust()" on whole matrix simultaneously using "method =',method,'"\n')
+
+		adj_mat=matrix(p.adjust(unlist(p_mat),method=method),nrow=nrow(p_mat))
+		rownames(adj_mat)=rownames(p_mat)
+		colnames(adj_mat)=colnames(p_mat)
+		return(invisible(adj_mat))
+	}
+
+	if(single_col & ! single_row){
+		 cat('\n\t"p.adjust()" individually on each column of supplied matrix "method =',method,'"\n')
+		adj_mat=matrix(NA,nrow=nrow(p_mat),ncol=ncol(p_mat))
+		 rownames(adj_mat)=rownames(p_mat)
+		 colnames(adj_mat)=colnames(p_mat)
+		for(icol in colnames(p_mat)){
+			adj_mat[,icol]=p.adjust(p_mat[,icol],method=method)
+		}		
+		return(invisible(adj_mat))	
+	}
+
+	if(single_row){
+		 cat('\n\t"p.adjust()" individually on each row of supplied matrix "method =',method,'"\n')
+		adj_mat=matrix(NA,nrow=nrow(p_mat),ncol=ncol(p_mat))
+		 rownames(adj_mat)=rownames(p_mat)
+		 colnames(adj_mat)=colnames(p_mat)
+		for(irow in colnames(p_mat)){
+			adj_mat[irow,]=p.adjust(p_mat[irow,],method=method)
+		}		
+		return(invisible(adj_mat))	
+	}
+
 }
 
 
@@ -3304,13 +3336,12 @@ cplot<-function(x,y,dat_descr="",legend.pos="topright",...){
 #  print(dummy)
   plot(x=x,y=y,pch=16,frame.plot=FALSE,...
     ,main=paste(dat_descr
-                ,"\t\t"
-                ,"spearman P =",signif(cor.test(x,y,method="spearman")$p.val,digits=2)
+                ,"spearman  P =",signif(cor.test(x,y,method="spearman")$p.val,digits=2)
                 ,"  R-sq =",round(cor(x,y,method="spearman"),digits=3)
-                ,"\n   kendall      P =",signif(cor.test(x,y,method="kendall")$p.val,digits=2)
+                ,"\nkendall      P =",signif(cor.test(x,y,method="kendall")$p.val,digits=2)
                 ,"  R-sq =",round(cor(x,y,method="kendall"),digits=3)
-                ,"\nlm              P =",signif(lmp(lm(x~y)),digits=2)
-                ,"  R-sq =",signif(summary(lm(x~y))$r.sq,digits=3))
+                ,"\nlm           P =",signif(lmp(lm(x~y)),digits=2)
+                ,"     R-sq =",signif(summary(lm(x~y))$r.sq,digits=3))
     )
 #  points(x,y,pch=16)
   abline(lm(x~y),col="dodgerblue")
@@ -6050,4 +6081,26 @@ lcount<-function(x,length){
 
 
 
+
+
+
+overlap<-function (A, B){
+
+    both <- union(A, B)
+    inA <- both %in% A
+    inB <- both %in% B
+    return(table(inA, inB))
+}
+
+
+
+Intersect <- function(a,b,...){
+##  full credit to Abhishek K Baikady at http://stackoverflow.com/questions/3695677/how-to-find-common-elements-from-multiple-vectors
+  Reduce(intersect, list(a,b,...))
+}
+
+Union <- function(a,b,...){
+##  full credit to Abhishek K Baikady at http://stackoverflow.com/questions/3695677/how-to-find-common-elements-from-multiple-vectors
+  Reduce(union, list(a,b,...))
+}
 
