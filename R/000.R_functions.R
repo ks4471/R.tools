@@ -24,7 +24,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 
 #library(devtools)
 
-
+#library(colorout)
 #devtools::install_github("ks471/R_helper")
 #devtools::install_github("ks471/clickyOSX")
 #devtools::install_github("ks471/clickyLinux")
@@ -1488,11 +1488,11 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
 p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
 ##  p.adjust appears to be designed to handle NA values 
 
-	if(single_row & single_column){
-		 stop('\n\tERROR :\tto perform "p.adjust()" across whole matrix use "single_col=F" & "single_row=F", ie default\n')
+	if(single_row & single_col){
+		 stop('\n\tERROR :\tto perform "p.adjust()" across whole matrix use "single_col=F" & "single_row=F", ie default\n\n')
 	}
 	if(!single_col & !single_row){
-		cat('\n\t"p.adjust()" on whole matrix simultaneously using "method =',method,'"\n')
+		cat('\n\t"p.adjust()" on whole matrix simultaneously using "method =',method,'"\n\n')
 
 		adj_mat=matrix(p.adjust(unlist(p_mat),method=method),nrow=nrow(p_mat))
 		rownames(adj_mat)=rownames(p_mat)
@@ -1501,7 +1501,7 @@ p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
 	}
 
 	if(single_col & ! single_row){
-		 cat('\n\t"p.adjust()" individually on each column of supplied matrix "method =',method,'"\n')
+		 cat('\n\t"p.adjust()" individually on each column of supplied matrix "method =',method,'"\n\n')
 		adj_mat=matrix(NA,nrow=nrow(p_mat),ncol=ncol(p_mat))
 		 rownames(adj_mat)=rownames(p_mat)
 		 colnames(adj_mat)=colnames(p_mat)
@@ -1512,7 +1512,7 @@ p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
 	}
 
 	if(single_row){
-		 cat('\n\t"p.adjust()" individually on each row of supplied matrix "method =',method,'"\n')
+		 cat('\n\t"p.adjust()" individually on each row of supplied matrix "method =',method,'"\n\n')
 		adj_mat=matrix(NA,nrow=nrow(p_mat),ncol=ncol(p_mat))
 		 rownames(adj_mat)=rownames(p_mat)
 		 colnames(adj_mat)=colnames(p_mat)
@@ -5986,7 +5986,7 @@ install.bioc<-function(package_name){
 }
 
 
-install.pkg<-function(){
+install.dependencies<-function(){
 ##  USE : install all packages used by one of the functions (yes these can indeed be specified as dependencies, not implemented yet)
 ##  NOTE: example error below means the mirror used is not functional/unavailable, try another..
 
