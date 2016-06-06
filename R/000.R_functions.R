@@ -1485,14 +1485,14 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
 
 
 
-p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
+p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F,verbose=F){
 ##  p.adjust appears to be designed to handle NA values 
 
 	if(single_row & single_col){
 		 stop('\n\tERROR :\tto perform "p.adjust()" across whole matrix use "single_col=F" & "single_row=F", ie default\n\n')
 	}
 	if(!single_col & !single_row){
-		cat('\n\t"p.adjust()" on whole matrix simultaneously using "method =',method,'"\n\n')
+		if(verbose){cat('\n\t"p.adjust()" on whole matrix simultaneously using "method =',method,'"\n\n')}
 
 		adj_mat=matrix(p.adjust(unlist(p_mat),method=method),nrow=nrow(p_mat))
 		rownames(adj_mat)=rownames(p_mat)
@@ -1501,7 +1501,7 @@ p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
 	}
 
 	if(single_col & ! single_row){
-		 cat('\n\t"p.adjust()" individually on each column of supplied matrix "method =',method,'"\n\n')
+		 if(verbose){cat('\n\t"p.adjust()" individually on each column of supplied matrix "method =',method,'"\n\n')}
 		adj_mat=matrix(NA,nrow=nrow(p_mat),ncol=ncol(p_mat))
 		 rownames(adj_mat)=rownames(p_mat)
 		 colnames(adj_mat)=colnames(p_mat)
@@ -1512,7 +1512,7 @@ p.adjust.mat<-function(p_mat,method='fdr',single_col=F,single_row=F){
 	}
 
 	if(single_row){
-		 cat('\n\t"p.adjust()" individually on each row of supplied matrix "method =',method,'"\n\n')
+		 if(verbose){cat('\n\t"p.adjust()" individually on each row of supplied matrix "method =',method,'"\n\n')}
 		adj_mat=matrix(NA,nrow=nrow(p_mat),ncol=ncol(p_mat))
 		 rownames(adj_mat)=rownames(p_mat)
 		 colnames(adj_mat)=colnames(p_mat)
