@@ -25,7 +25,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #library(devtools)
 
 #library(colorout)
-#devtools::install_github("ks471/R_helper")
+#devtools::install_github("ks471/R.helper")
 #devtools::install_github("ks471/clickyOSX")
 #devtools::install_github("ks471/clickyLinux")
 
@@ -35,6 +35,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #library(clickyLinux)
 
 #setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
+##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
 #devtools::use_data(x)	# saves to working directory by default
 
 
@@ -2648,8 +2649,8 @@ print(as.matrix(unmapped))
 
 
 
-bgcommon<-function(list_dat,transform=F,dat_mat='',union=F,verbose=F){
-if(verbose){
+bgcommon<-function(list_dat,transform=F,dat_mat='',union=F,help=F,verbose=T){
+if(help){
  cat("\n\tUSE\t: determine common background (union or intersect) across all entries in expression list\n")
  cat("\tNOTE\t: list_dat - list of expression matrices: row=genes, col=samples\n")
  cat("\tNOTE\t: transfrom=T also returns the list_dat processed for common bg\n")
@@ -2662,8 +2663,8 @@ if(verbose){
      if(union){bgcommon=union(bgcommon,rownames(list_dat[[ilis]]))}
   }
 
-  if(!union){cat("\n\t\tintersect:",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
-  if(union){cat("\n\t\tunion",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
+  if(!union&verbose){cat("\n\t\tintersect:",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
+  if(union&verbose){cat("\n\t\tunion",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
 
   
     
@@ -3242,7 +3243,7 @@ matst<-function(dat_mat,sort=T,decreasing=T){
   }
 
   colnames(dummy)="count"
-#  dummy$percent=round(dummy$count/sum(as.numeric(dummy$count)),digits=3)
+  dummy$percent=round(dummy$count/sum(as.numeric(dummy$count)),digits=3)
   return(dummy)
 
 }
@@ -4147,7 +4148,7 @@ clicky.run<-function(module_genes_list,module_bkrnd,clicky_dir,dat_descr='',id_t
   
 
   for(imod in 1:length(module_genes_list)){
-    cat('\t',names(module_genes_list)[imod],dat_descr,'\t',length(module_genes_list[[1]]),'\t',length(module_bkrnd),'\n')
+    cat('\t',names(module_genes_list)[imod],dat_descr,'\t',length(module_genes_list[[imod]]),'\t',length(module_bkrnd),'\n')
 
     write.table(module_genes_list[[imod]],file="tmp_in_files/tmp_genelist.txt", quote=F, sep="\t", row.names=F, col.names=F)
   
@@ -6102,5 +6103,23 @@ Intersect <- function(a,b,...){
 Union <- function(a,b,...){
 ##  full credit to Abhishek K Baikady at http://stackoverflow.com/questions/3695677/how-to-find-common-elements-from-multiple-vectors
   Reduce(union, list(a,b,...))
+}
+
+
+
+idconvert<-function(ids){
+	ids=toupper(ids)
+
+	if(length(unique(ids))<length(ids)){
+		warning('\tWARNING : some ids are not unique, ',length(unique(ids)),' of ',length(ids),' are unique after "toupper" case conversion\n')
+	}
+	cat('\tnum genes recognised : ',sum(ids%in%idmap$ids),', ',frac(sum(ids%in%idmap$ids),length(ids),num=T)*100,'%\n',sep='')
+
+	idmap$ids=toupper(idmap$ids)
+#	idmap[idmap$ids%in%ids,c('gene','ids','name')]
+
+	return(idmap[idmap$ids%in%ids,c('gene','ids','name')])
+#	for(igen )
+
 }
 
