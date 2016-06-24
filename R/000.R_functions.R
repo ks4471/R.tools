@@ -2511,7 +2511,7 @@ pcVarExpl<-function(cexpr){
 
 
 
-frac<-function(subset,full,num=F,sig_fig=2){
+frac<-function(subset,full,num=T,sig_fig=2){
   if(!num){return(round(length(subset)/length(full),digits=sig_fig))}
   if(num){return(round(subset/full,digits=sig_fig))}
 
