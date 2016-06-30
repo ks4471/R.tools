@@ -6176,6 +6176,7 @@ applydiffcoex <- function(beta2,corr_mat_list,signtype=signType){
 
 
 
+
 wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDescr="",signType="unsigned"){
   print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
   library('WGCNA')
@@ -6244,7 +6245,7 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
       colnames(mstat)=c('color','ngenes','module')
     mstat$color=as.character(mstat$color)
 
-if(datDescr!=''){mstat$module=paste(mstat$module,datDescr,sep="_")}   ##  add info after module name
+if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add info after module name
 
 
 ## module membership ------------------------------------------
@@ -6266,7 +6267,7 @@ if(datDescr!=''){mstat$module=paste(mstat$module,datDescr,sep="_")}   ##  add in
 
 ## add bkgrnd info to mstat
     mbg=as.data.frame('bkgrnd')
-    mbg$length=ncol(list_expr[[1]])
+    mbg$length=nrow(list_expr[[1]])
     mbg$name='bkgrnd'
 
       colnames(mbg)=colnames(mstat)
@@ -6276,8 +6277,9 @@ if(datDescr!=''){mstat$module=paste(mstat$module,datDescr,sep="_")}   ##  add in
     \t1.\tmodule_list - list containing names of genes in each module
     \t2.\tmodule_expr - expression matrix of all genes in module / input dataset
     \t3.\tmstat       - key used to name modules, includes module size
+    \t4.\geneTree     - object to plot the WGCNA style dendrogram
     \n'
   cat(readme)
-  return(invisible(list(module_list=module_list,module_expr=module_expr,mstat=mstat,readme=readme)))
+  return(invisible(list(module_list=module_list,module_expr=module_expr,mstat=mstat,plotobj=geneTree,readme=readme)))
 
 }
