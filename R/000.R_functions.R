@@ -6107,14 +6107,15 @@ Union <- function(a,b,...){
 
 
 
-idconvert<-function(ids){
+idconvert<-function(ids,verbose=T){
 	ids=toupper(ids)
 
 	if(length(unique(ids))<length(ids)){
 		warning('\tWARNING : some ids are not unique, ',length(unique(ids)),' of ',length(ids),' are unique after "toupper" case conversion\n')
 	}
+	if(verbose){
 	cat('\tnum genes recognised : ',sum(ids%in%idmap$ids),', ',frac(sum(ids%in%idmap$ids),length(ids),num=T)*100,'%\n',sep='')
-
+	}
 	idmap$ids=toupper(idmap$ids)
 #	idmap[idmap$ids%in%ids,c('gene','ids','name')]
 
@@ -6123,3 +6124,160 @@ idconvert<-function(ids){
 
 }
 
+
+
+
+
+
+
+check.data<-function(dat_lis){
+  dummy=list()
+  for(ilis in names(dat_lis)){
+    dummy[[ilis]]=rownames(dat_lis[[ilis]])
+    cat('\t',ilis,'\tnrow=',length(dummy[[ilis]]),'\tncol=',ncol(dat_lis[[ilis]]),'\n')
+  }
+
+  stata=list()
+  for(ilis in 1:length(dummy)){
+    if(ilis==1){
+      holder=dummy[[names(dummy)[ilis]]]
+    }
+    if(ilis>1){
+      stata[[paste(names(dummy)[ilis-1],names(dummy)[ilis],sep='_')]]=sum(holder==dummy[[names(dummy)[ilis]]])/length(holder)
+      cat('\t\t% genes in same order between',names(dummy)[ilis-1],'&',names(dummy)[ilis],'wrt',names(dummy)[ilis-1],stata[[paste(names(dummy)[ilis-1],names(dummy)[ilis],sep='_')]],'\n')
+    }
+  }
+}
+
+
+applydiffcoex <- function(beta2,corr_mat_list,signtype=signType){
+  correl=vector(mode="list", length=length(corr_mat_list));
+  compDij=vector(mode="list", length=length(corr_mat_list));
+  #compute the cij0 (for all the seven conditions)
+  for (k in 1:length(corr_mat_list)){
+    #we convert each element in the list in a matrix
+    datmat=as.matrix(corr_mat_list[[k]]) 
+    #compute sign(corr)*(corr)^2 and store it in a correlation vector
+    correl[[k]]= sign(datmat)*(datmat)^2
+    diag(correl[[k]])=0
+  }
+  
+  #we compute cij0 (reduce applies the binary function to all the elements in the list).
+  cij0 = Reduce("+",correl)/length(correl);
+  #compute Dij
+  for (element in 1:length(correl)){
+    compDij[[element]]=abs(correl[[element]]- cij0)/2; 
+  }
+  Dij=(1/(length(corr_mat_list)-1))*Reduce("+", compDij)^(beta2/2)
+  dissTOM=TOMdist(Dij, TOMType = signtype);
+  collectGarbage()
+  return(dissTOM)
+}
+
+
+
+wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDescr="",signType="unsigned"){
+  print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
+  library('WGCNA')
+  enableWGCNAThreads()
+  print("Can deal with only one softpower (pow) at a time ")
+
+  set.seed(0)       # reproducibility 
+  bicorL <- list()
+  
+  
+  for(ireg in 1:length(list_expr)){
+    print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■")
+    print(paste(names(list_expr)[ireg],ireg,"of",length(names(list_expr))))
+      t0=Sys.time()
+      COND<- list_expr[[ireg]]
+      #add a line to substract mean of gene expression row by row in each condition
+      CONDav <- scale(COND,scale=F)
+      bicorL[[ireg]]<- bicor(t(as.matrix(CONDav))) # iteration to adapt to the seq chosen
+  }
+  
+  names(bicorL)<-names(list_expr)
+  collectGarbage()
+
+    t0=Sys.time()
+    softPower=pow
+    print(softPower)
+
+    dissTOM<-applydiffcoex(softPower,bicorL,signtype=signType)
+    print(Sys.time()-t0) #41.17 min
+    collectGarbage()
+  geneTree = hclust(as.dist(dissTOM), method = "average")
+  #print(Sys.time()-t0)
+  collectGarbage()
+  dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+                        method="hybrid",cutHeight=.996,
+                        deepSplit = T, pamRespectsDendro = FALSE,
+                        minClusterSize = minModuleSize)
+  dynamicColors = labels2colors(dynamicMods)
+#  print(paste("dynamicColors =",length(unique(dynamicColors)),unique(dynamicColors)))
+  #print(Sys.time()-t0)
+  collectGarbage()
+
+  Datall <- t(as.data.frame(list_expr))
+
+  collectGarbage()
+  mergedColor<-mergeCloseModules(Datall,dynamicColors,cutHeight=mergeHeight)$color
+  print(paste("mergedColor =",length(unique(mergedColor)),unique(mergedColor)))
+  print(Sys.time()-t0)
+  collectGarbage()
+
+  #' Plot the dendrogram and colors underneath
+#  pdf(file=paste(outDir,"/plots/",datDescr,"_power",softPower,"_dendogram.pdf",sep=""),width=10,paper = 'a4r')
+#  plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColor), "Hybrid Tree Cut",
+#    dendroLabels = FALSE, hang = 0.03,addGuide = TRUE, 
+#    guideHang = 0.05,main = paste("Cluster Dendrogram ",datDescr," (power ",softPower,")",sep=""))
+#  dev.off()
+
+#  print(Sys.time()-t0)
+    mstat=as.data.frame(table(dynamicColors))
+    mstat=mstat[order(mstat[,2],decreasing=T),]
+    msta0=mstat[(mstat[,1]=='grey'),]
+    msta0$module='M0'
+    mstat=mstat[!(mstat[,1]=='grey'),]
+    mstat$module=paste0('M',1:nrow(mstat))
+    mstat=rbind(mstat,msta0)
+      colnames(mstat)=c('color','ngenes','module')
+    mstat$color=as.character(mstat$color)
+
+if(datDescr!=''){mstat$module=paste(mstat$module,datDescr,sep="_")}   ##  add info after module name
+
+
+## module membership ------------------------------------------
+  module_list=list()
+    for(imod in 1:nrow(mstat)){
+        module_list[[mstat$module[imod]]]=rownames(list_expr[[1]])[mergedColor==mstat$color[imod]]        ##  assuming all module gene names are in the same order, if not, modules are probably unreliable anyhow
+    }
+    module_list[['bkgrnd']]=rownames(list_expr[[1]])
+
+
+  module_expr=list()
+  for(ilis in 1:length(list_expr)){
+## module expression ------------------------------------------
+    for(imod in 1:length(module_list)){
+        module_expr[[names(list_expr)[ilis]]][[names(module_list)[imod]]]=list_expr[[names(list_expr)[ilis]]][module_list[[names(module_list)[imod]]],]
+    }
+  }
+
+
+## add bkgrnd info to mstat
+    mbg=as.data.frame('bkgrnd')
+    mbg$length=ncol(list_expr[[1]])
+    mbg$name='bkgrnd'
+
+      colnames(mbg)=colnames(mstat)
+  mstat=rbind(mstat,mbg)
+
+  readme='\n\tModules are named based on size M1 - biggest, M0 - unclustered, bkgrnd - all input genes, output contains :
+    \t1.\tmodule_list - list containing names of genes in each module
+    \t2.\tmodule_expr - expression matrix of all genes in module / input dataset
+    \t3.\tmstat       - key used to name modules, includes module size
+    \n'
+  cat(readme)
+  return(invisible(list(module_list=module_list,module_expr=module_expr,mstat=mstat,readme=readme)))
+
+}
