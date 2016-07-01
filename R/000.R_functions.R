@@ -6277,7 +6277,7 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
     \t1.\tmodule_list - list containing names of genes in each module
     \t2.\tmodule_expr - expression matrix of all genes in module / input dataset
     \t3.\tmstat       - key used to name modules, includes module size
-    \t4.\geneTree     - object to plot the WGCNA style dendrogram
+    \t4.\tGeneTree     - object to plot the WGCNA style dendrogram
     \n'
   cat(readme)
   return(invisible(list(module_list=module_list,module_expr=module_expr,mstat=mstat,plotobj=geneTree,readme=readme)))
