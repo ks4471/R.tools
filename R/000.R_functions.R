@@ -989,7 +989,8 @@ Heat<-function(cor.measures,rowclust=T,colclust=T,ncols=101,cexrow=0.7,cexcol=0.
     if(min<0 & max>=0){heat_colors =c(colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols)); symmkey=T;ncols=ncols-1}
     if(min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
     if(min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
-  heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col = heat_colors,trace="none",dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+  cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col = heat_colors,trace="none",dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+  return(invisible(cor_heat))
 }
 
 
@@ -1834,7 +1835,7 @@ if(dat_descr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add 
 
 
 
-wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power = 6,signType = "signed",...){
+wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power = 6,signType = "signed",max_block_n=20000,...){
  cat("\tNOTE :\tInput data (list_expr) is expected as a list with each entry : rows = genes, columns = samples\n")
 # cat("\tWARNING :\tthe checkMissingData option for WGCNA is disabled, set checkMissingData=T in the code to make robust to missing, alternatively use sd.check or is.missing to determine/remove non-varying or missing values\n")
   library(WGCNA)
@@ -1856,7 +1857,7 @@ wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power = 6,si
      
 # Blocking options ------------------------------------------
   ,blocks = NULL
-  ,maxBlockSize = 20000        ##  ensure no separation is performed // if outdated machine ~4GB RAM, may need to change this to ~5,000, or better yet, consider upgrading
+  ,maxBlockSize = max_blocks        ##  ensure no separation is performed // if outdated machine ~4GB RAM, may need to change this to ~5,000, or better yet, consider upgrading
   ,blockSizePenaltyPower = 5
     ,randomSeed = 12345
      
@@ -3437,16 +3438,16 @@ clust.analyse<-function(cov_mat,do_plots=c(T,T,T,T),sanity=F,box_sig=0.95,clust.
 }
 
 
-clust<-function(cov_mat){
-    cat("\tINPUTS\t:   cov_mat rows - samples , columns - covariates (numeric or factor)\n")
+#pclust<-function(cov_mat){
+#    cat("\tINPUTS\t:   cov_mat rows - samples , columns - covariates (numeric or factor)\n")
 
-  library(pvclust)
+#  library(pvclust)
   # Ward Hierarchical Clustering with Bootstrapped p values
-    fit <- pvclust((cov_mat), method.hclust="ward.D2", method.dist="euclidean")
-    plot(fit) # dendogram with p values
+#    fit <- pvclust((cov_mat), method.hclust="ward.D2", method.dist="euclidean")
+#    plot(fit) # dendogram with p values
     # add rectangles around groups highly supported by the data
-    pvrect(fit, alpha=.95) 
-}
+#    pvrect(fit, alpha=.95) 
+#}
 
 
 
@@ -5830,9 +5831,9 @@ net.cons<-function(alis,blis,abg=NA,bbg=NA,do_plots=T,p_thresh=0.01,main="Maximu
 
 
 net.overlap<-function(alis,abg=NA,do_plots=T,...){
-# cat('\tUSE:\tcalculte overlaps between two lists')
-# cat('\tUSE:\toptional - add backgrounds for bg.common() - not implemented')
-#cat('\tNOTE:\tbg_list - options: 'NA' - one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)\n\n')
+# cat('\t USE:\t calculte overlaps between two lists')
+# cat('\t USE:\t optional - add backgrounds for bg.common() - not implemented')
+#cat('\t NOTE:\t bg_list - options: 'NA' - one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)\n\n')
 
 ##===================================================================================================================================
 ## generate background as per options, if list provided (same length as modules)=================================
@@ -6274,10 +6275,10 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
   mstat=rbind(mstat,mbg)
 
   readme='\n\tModules are named based on size M1 - biggest, M0 - unclustered, bkgrnd - all input genes, output contains :
-    \t1.\tmodule_list - list containing names of genes in each module
-    \t2.\tmodule_expr - expression matrix of all genes in module / input dataset
-    \t3.\tmstat       - key used to name modules, includes module size
-    \t4.\tGeneTree     - object to plot the WGCNA style dendrogram
+    \t1. module_list - list containing names of genes in each module
+    \t2. module_expr - expression matrix of all genes in module / input dataset
+    \t3. mstat       - key used to name modules, includes module size
+    \t4. GeneTree     - object to plot the WGCNA style dendrogram
     \n'
   cat(readme)
   return(invisible(list(module_list=module_list,module_expr=module_expr,mstat=mstat,plotobj=geneTree,readme=readme)))
