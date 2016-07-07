@@ -3089,24 +3089,6 @@ cat("\t\tPerforming single gene analysis on",nrow(expr_mat),"genes\n")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Heatm<-function(cor.measures,min=-1,max=1,rowclust=F,colclust=F,ncols=101,dendrogram="none",main="",mode="cor",sig=T,cexrow=0.7,cexcol=0.7,margin=c(12,12)){
   library(gplots)
 # print("Heatmap( 'matrix to use' , 'min value for legend cols' , 'max ..' , 'clust by rows', 'clust by cols' , 'ncols to use for legend', 'dendrogram=c('none','row','column','both')' )")
@@ -3499,11 +3481,6 @@ rmerge.list<-function(dat_lis,all=F){
    cat('\tnrows output:',nrow(dat_lis[[1]])==nrow(lis_merge),'\n')                    ##  keeping track of nrows final output
   return(lis_merge)
 }
-
-
-
-
-
 
 
 univarlm<-function(data_mat,colname_y_var){
@@ -6194,7 +6171,7 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
       t0=Sys.time()
       COND<- list_expr[[ireg]]
       #add a line to substract mean of gene expression row by row in each condition
-      CONDav <- scale(COND,scale=F)
+#      CONDav <- scale(COND,scale=F)		##  the data is likely scaled already (ie if removed a covariate etc)
       bicorL[[ireg]]<- bicor(t(as.matrix(CONDav))) # iteration to adapt to the seq chosen
   }
   
@@ -6236,7 +6213,7 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
 #  dev.off()
 
 #  print(Sys.time()-t0)
-    mstat=as.data.frame(table(dynamicColors))
+    mstat=as.data.frame(table(mergedColor))
     mstat=mstat[order(mstat[,2],decreasing=T),]
     msta0=mstat[(mstat[,1]=='grey'),]
     msta0$module='M0'
