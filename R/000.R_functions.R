@@ -4593,6 +4593,48 @@ library('parallel')
 
 
 
+fet<-function(sampl,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail,bkgrnd.fail,...){
+# alternative ='greater'
+# phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
+
+#fisher.test(matrix(c(x, 13-x, 5-x, 34+x), 2, 2), alternative='less');
+# Numerical parameters in order:
+# (success-in-sample, success-in-left-part, failure-in-sample, failure-in-left-part).
+
+	if(!counts){
+	    bkgrnd=bkgrnd[!(bkgrnd%in%sampl)]
+	    fet=list(samp.success=sum(sampl%in%success),bkgrnd.success=sum(bkgrnd%in%success),samp.fail=sum(!(sampl%in%success)),bkgrnd.fail=sum(!(bkgrnd%in%success)))
+	    test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
+	    test_out=fisher.test(test_mat,...)
+	
+#		print(test_mat)
+
+	    fet$n.genes=length(sampl)
+	    fet$FETp=(test_out$p.value)
+	    fet$fetOR=round(test_out$estimate,digits=3)
+	    fet$lowerCI=round(test_out$conf.int[1],digits=3)
+	    fet$upperCI=round(test_out$conf.int[2],digits=3)
+#		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
+	    return(invisible((fet)))
+	}
+
+	if(counts){
+		fet=list(samp.success=samp.success,bkgrnd.success=bkgrnd.success,samp.fail=samp.fail,bkgrnd.fail=bkgrnd.fail)
+		test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
+		test_out=fisher.test(test_mat,...)
+    
+#    	 print(test_mat)
+
+		fet$n.genes=sum(samp.success,samp.fail)
+		fet$FETp=(test_out$p.value)
+		fet$fetOR=round(test_out$estimate,digits=3)
+		fet$lowerCI=round(test_out$conf.int[1],digits=3)
+		fet$upperCI=round(test_out$conf.int[2],digits=3)
+#		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
+		return(invisible((fet)))
+
+	}
+}
 
 
 
@@ -4948,48 +4990,6 @@ gsea.run<-function(
 
 
 
-fet<-function(samp,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail,bkgrnd.fail,...){
-# alternative ='greater'
-# phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
-
-#fisher.test(matrix(c(x, 13-x, 5-x, 34+x), 2, 2), alternative='less');
-# Numerical parameters in order:
-# (success-in-sample, success-in-left-part, failure-in-sample, failure-in-left-part).
-
-	if(!counts){
-	    bkgrnd=bkgrnd[!(bkgrnd%in%sampl)]
-	    fet=list(samp.success=sum(sampl%in%success),bkgrnd.success=sum(bkgrnd%in%success),samp.fail=sum(!(sampl%in%success)),bkgrnd.fail=sum(!(bkgrnd%in%success)))
-	    test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
-	    test_out=fisher.test(test_mat,...)
-	
-#		print(test_mat)
-
-	    fet$n.genes=length(sampl)
-	    fet$FETp=round(test_out$p.value,digits=3)
-	    fet$fetOR=round(test_out$estimate,digits=3)
-	    fet$lowerCI=round(test_out$conf.int[1],digits=3)
-	    fet$upperCI=round(test_out$conf.int[2],digits=3)
-#		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
-	    return(invisible((fet)))
-	}
-
-	if(counts){
-		fet=list(samp.success=samp.success,bkgrnd.success=bkgrnd.success,samp.fail=samp.fail,bkgrnd.fail=bkgrnd.fail)
-		test_mat=matrix(unlist(fet),nrow=2,dimnames=list(c('samp','bkgrnd'),c('success','fail')))
-		test_out=fisher.test(test_mat,...)
-    
-#    	 print(test_mat)
-
-		fet$n.genes=sum(samp.success,samp.fail)
-		fet$FETp=round(test_out$p.value,digits=3)
-		fet$fetOR=round(test_out$estimate,digits=3)
-		fet$lowerCI=round(test_out$conf.int[1],digits=3)
-		fet$upperCI=round(test_out$conf.int[2],digits=3)
-#		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
-		return(invisible((fet)))
-
-	}
-}
 
 
 
@@ -6060,14 +6060,10 @@ lcount<-function(x,length){
 
 
 
-
-
-
 overlap<-function (A, B){
-
-    both <- union(A, B)
-    inA <- both %in% A
-    inB <- both %in% B
+    both = union(A, B)
+    inA = both %in% A
+    inB = both %in% B
     return(table(inA, inB))
 }
 
