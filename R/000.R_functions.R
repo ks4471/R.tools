@@ -6168,7 +6168,7 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
       COND<- list_expr[[ireg]]
       #add a line to substract mean of gene expression row by row in each condition
 #      CONDav <- scale(COND,scale=F)		##  the data is likely scaled already (ie if removed a covariate etc)
-      bicorL[[ireg]]<- bicor(t(as.matrix(CONDav))) # iteration to adapt to the seq chosen
+      bicorL[[ireg]]<- bicor(t(as.matrix(COND))) # iteration to adapt to the seq chosen
   }
   
   names(bicorL)<-names(list_expr)
