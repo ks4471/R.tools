@@ -6257,3 +6257,178 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
   return(invisible(list(module_list=module_list,module_expr=module_expr,mstat=mstat,plotobj=geneTree,readme=readme)))
 
 }
+
+
+
+
+
+
+cmap.meta<-function(lmod,de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
+##  - lmod - list of modules - for each module 2 lists of gene ids "ENSG" - "up" & "down" - genes up/down-regulated between treatment and control
+#de_thresh=0.01
+#n_genes=5
+mstat=list()
+sigen=list()
+k=1
+
+dkey=gsub('DE_Drug_(.*)_Cell_.*_Array_.*_Conc_.*_Conc_.*_time_.*_res','\\1',names(degb))
+	matst(names(metsum)%in%dkey)
+ukey=unique(dkey)
+
+#idru='wortmannin'
+cat('\n\tperform enrichment test for module genes in cmap\n')
+	for(idru in ukey){
+
+		if(idru%in%names(metsum)){
+			dummy=metsum[[idru]]
+				rownames(dummy)=gsub('_at','',rownames(dummy))
+			dummy=dummy[rownames(dummy)%in%bkg,]
+
+			dummy$log.fc=dummy$logFC.mean
+			dummy$adj.p=dummy$randmMod.fdr
+			dummy=dummy[,c('log.fc','adj.p')]
+
+
+
+		holder=list()
+	#		holder$n.bg=nrow(dummy)
+	#		holder$n.bg.all=nrow(dummy)
+			holder$n.bg.sig=rownames(dummy[dummy$adj.p<de_thresh,])
+			holder$n.bg.sig_up=rownames(dummy[dummy$adj.p<de_thresh & dummy$log.fc>0,])
+			holder$n.bg.sig_down=rownames(dummy[dummy$adj.p<de_thresh  & dummy$log.fc<0,])
+
+			sigen[[paste0('mixedM_',idru)]]$bkg=(holder)
+
+		if(length(holder$n.bg.sig)>n_genes){
+
+	#	if(idru%in%names(metsum)){mstat$meta[[idru]]$bg=as.data.frame(humpty)}
+	#	if(!idru%in%names(metsum)){mstat$single[[idru]]$bg=as.data.frame(humpty)}
+
+		for(imod in names(lmod)){
+			if('up' %in% names(lmod[[imod]])){
+
+				dumpty=dummy[rownames(dummy)%in%lmod[[imod]]$up,]
+				holder[[imod]]$up_downreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc<0,]
+				holder[[imod]]$up_upreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc>0,]
+
+				mstat[[paste0('mixedM_',idru)]][[paste(imod,'up_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
+				mstat[[paste0('mixedM_',idru)]][[paste(imod,'up_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			}
+
+			if('down' %in% names(lmod[[imod]])){
+
+				dumpty=dummy[rownames(dummy)%in%lmod[[imod]]$down,]
+				holder[[imod]]$down_downreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc<0,]
+				holder[[imod]]$down_upreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc>0,]
+
+				mstat[[paste0('mixedM_',idru)]][[paste(imod,'down_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
+				mstat[[paste0('mixedM_',idru)]][[paste(imod,'down_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			}
+			sigen[[paste0('mixedM_',idru)]][[paste(imod,'down_upreg',sep='.')]]=(holder[[imod]])
+		}
+		rm(dumpty)
+		}
+		k=lcount(k,length(ukey))
+		rm(dummy)
+		rm(holder)
+
+		}
+		if(!(idru%in%names(metsum))){
+			dummy=degen[dkey==idru]
+			if(length(dummy)>1){		##  if removing the above constraint will need to introduce another loop for each experiment within same drug
+				cat(idru,length(dummy))
+			}
+
+			if(length(dummy)==1){
+				dummy=dummy[[1]]
+					rownames(dummy)=gsub('_at','',rownames(dummy))
+				dummy=dummy[rownames(dummy)%in%bkg,]
+
+				dummy$log.fc=dummy$logFC
+				dummy$adj.p=dummy$adj.P.Val
+				dummy=dummy[,c('log.fc','adj.p')]
+			}
+
+		holder=list()
+	#		holder$n.bg=nrow(dummy)
+	#		holder$n.bg.all=nrow(dummy)
+			holder$n.bg.sig=rownames(dummy[dummy$adj.p<de_thresh,])
+			holder$n.bg.sig_up=rownames(dummy[dummy$adj.p<de_thresh & dummy$log.fc>0,])
+			holder$n.bg.sig_down=rownames(dummy[dummy$adj.p<de_thresh  & dummy$log.fc<0,])
+
+			sigen[[paste0('single_',idru)]]$bkg=(holder)
+
+
+		if(length(holder$n.bg.sig)>n_genes){
+
+	#	if(idru%in%names(metsum)){mstat$meta[[idru]]$bg=as.data.frame(humpty)}
+	#	if(!idru%in%names(metsum)){mstat$single[[idru]]$bg=as.data.frame(humpty)}
+
+		for(imod in names(lmod)){
+			if('up' %in% names(lmod[[imod]])){
+
+				dumpty=dummy[rownames(dummy)%in%lmod[[imod]]$up,]
+				holder[[imod]]$up_downreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc<0,]
+				holder[[imod]]$up_upreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc>0,]
+
+				mstat[[paste0('single_',idru)]][[paste(imod,'up_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
+				mstat[[paste0('single_',idru)]][[paste(imod,'up_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			}
+
+			if('down' %in% names(lmod[[imod]])){
+
+				dumpty=dummy[rownames(dummy)%in%lmod[[imod]]$down,]
+				holder[[imod]]$down_downreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc<0,]
+				holder[[imod]]$down_upreg=dumpty[dumpty$adj.p<de_thresh & dumpty$log.fc>0,]
+
+				mstat[[paste0('single_',idru)]][[paste(imod,'down_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
+				mstat[[paste0('single_',idru)]][[paste(imod,'down_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			}
+			sigen[[paste0('single_',idru)]][[paste(imod,'down_upreg',sep='.')]]=(holder[[imod]])
+		}
+		rm(dumpty)
+		}
+		k=lcount(k,length(ukey))
+		rm(dummy)
+		rm(holder)
+
+		}
+	}
+
+
+#	str(mstat[['mixedM_wortmannin']])
+#	str(sigen[['mixedM_wortmannin']])
+#	(sigen[['mixedM_wortmannin']][['E2F1.M5.down_upreg']]$down_upreg)
+
+
+	sigdru=list()
+	sigsum=list()
+cat('\n\tcompiling results..\n\n')
+	for(idru in names(mstat)){
+		humpty=mstat[[idru]]
+		dumpty=as.data.frame(matrix(unlist(humpty),nrow=length(humpty),byrow=T))
+			rownames(dumpty)=names(humpty)
+			colnames(dumpty)=colnames(humpty[[1]])
+
+	#	if(sum(dumpty$FETp<0.05)>=1){
+			sigdru[[idru]]=dumpty
+			sigsum[[idru]]=(dumpty[,'FETp',drop=F])
+				colnames(sigsum[[idru]])=as.character(idru)	#paste0('Drug_',as.character(idru))
+	#	}
+
+	}
+
+	sigsum=as.data.frame(sigsum)
+#		Head(sigsum)
+
+	readme='\tcmap differentially expressed genes from drug treatment, raw and meta-analysis
+		\t\tNOTE :  currently individual experiments used to create the meta-analysis results are ignored
+		\t\tsigen    - lists of genes used to calculate fisher exact test in mstat
+		\t\tsigdru   - summary results - summary fisher exact test statistics
+		\t\tsigsum   - summary results - p-values of enrichment only
+'
+cat(readme)
+	return(invisible(list(sigsum=sigsum,sigdru=sigdru,sigen=sigen,readme=readme)))
+}
+
+
