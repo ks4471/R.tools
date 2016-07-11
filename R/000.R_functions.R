@@ -6463,7 +6463,7 @@ cat('\n\tcompiling results..\n\n')
 
 	}
 
-	sigsum=as.data.frame(sigsum)
+	sigsum=t(as.data.frame(sigsum))
 #		Head(sigsum)
 
 	readme='\tcmap differentially expressed genes from drug treatment, raw and meta-analysis
