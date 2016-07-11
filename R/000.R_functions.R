@@ -24,11 +24,13 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 
 #library(devtools)
 
+#t1=Sys.time()
 #library(colorout)
 #devtools::install_github("ks471/R.helper")
 #devtools::install_github("ks471/clickyOSX")
 #devtools::install_github("ks471/clickyLinux")
 
+#Sys.time()-t1
 
 #library(R.helper)
 #library(clickyOSX)
@@ -4870,6 +4872,9 @@ gplots_dat=list()
 
 
 spatiotemp<-function(dat_lis,mod_gene,scale_data=F,row_clust=T,use_cols=NA,ncols=10,...){
+#cat('\n\tNOTE: this function requires an object "name_here", available from:\n https://\n\n')	##  not yet but needs to be implemented
+
+
 #### spatiotemproral transcriptome of human brain data:
 #Load('~/Dropbox/PROJ/spatem/dtb/expr/GSE25219_GPL5175.exon_array.HUGO_GENE_Mapped.ngene13830.log26.nsamp1192.rin6.5_pmi24.covar_pmi_rin.Rdata')
 
@@ -6264,6 +6269,8 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 
 
 cmap.meta<-function(lmod,de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
+cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/xjg3xpyxwjgodyw/DTB.full_info.sig.randM.fisher.DE_genes_single.Rdata?dl=0\n\n')
+
 ##  - lmod - list of modules - for each module 2 lists of gene ids "ENSG" - "up" & "down" - genes up/down-regulated between treatment and control
 #de_thresh=0.01
 #n_genes=5
