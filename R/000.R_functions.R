@@ -6291,8 +6291,23 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 
 
 
-cmap.meta<-function(lmod,de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
+cmap.meta<-function(lmod,bkg,de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
 cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/xjg3xpyxwjgodyw/DTB.full_info.sig.randM.fisher.DE_genes_single.Rdata?dl=0\n\n')
+####   input format :
+##> str(bkg)
+# chr [1:13210] "ENSG00000121410" "ENSG00000175899" "ENSG00000166535" ...
+#> str(lmod)
+#List of 4
+# $ dif.hubs :List of 1
+#  ..$ up: chr [1:130] "ENSG00000198826" "ENSG00000105011" "ENSG00000066279" "ENSG00000087586" ...
+# $ E2F1.hubs:List of 1
+#  ..$ up: chr [1:66] "ENSG00000198826" "ENSG00000066279" "ENSG00000087586" "ENSG00000178999" ...
+# $ E2F1.M5  :List of 2
+#  ..$ down: chr [1:12] "ENSG00000127837" "ENSG00000159842" "ENSG00000149925" "ENSG00000100307" ...
+#  ..$ up  : chr [1:101] "ENSG00000198826" "ENSG00000066279" "ENSG00000156802" "ENSG00000176208" ...
+# $ M5       :List of 2
+#  ..$ down: chr [1:216] "ENSG00000127837" "ENSG00000165029" "ENSG00000127220" "ENSG00000159842" ...
+#  ..$ up  : chr [1:262] "ENSG00000159251" "ENSG00000198826" "ENSG00000105011" "ENSG00000066279" ...
 
 ##  - lmod - list of modules - for each module 2 lists of gene ids "ENSG" - "up" & "down" - genes up/down-regulated between treatment and control
 #de_thresh=0.01
@@ -6301,7 +6316,7 @@ mstat=list()
 sigen=list()
 k=1
 
-dkey=gsub('DE_Drug_(.*)_Cell_.*_Array_.*_Conc_.*_Conc_.*_time_.*_res','\\1',names(degb))
+dkey=gsub('DE_Drug_(.*)_Cell_.*_Array_.*_Conc_.*_Conc_.*_time_.*_res','\\1',names(degen))
 	matst(names(metsum)%in%dkey)
 ukey=unique(dkey)
 
@@ -6453,9 +6468,9 @@ cat('\n\tcompiling results..\n\n')
 
 	readme='\tcmap differentially expressed genes from drug treatment, raw and meta-analysis
 		\t\tNOTE :  currently individual experiments used to create the meta-analysis results are ignored
-		\t\tsigen    - lists of genes used to calculate fisher exact test in mstat
-		\t\tsigdru   - summary results - summary fisher exact test statistics
-		\t\tsigsum   - summary results - p-values of enrichment only
+		\t\t$sigsum   - summary results - p-values of enrichment only
+		\t\t$sigdru   - summary results - summary fisher exact test statistics
+		\t\t$sigen    - lists of genes used to calculate fisher exact test in mstat
 '
 cat(readme)
 	return(invisible(list(sigsum=sigsum,sigdru=sigdru,sigen=sigen,readme=readme)))
