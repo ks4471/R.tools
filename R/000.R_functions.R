@@ -4107,8 +4107,9 @@ options(warn=0)
 
 
 
-clicky.run<-function(module_genes_list,module_bkrnd,clicky_dir,dat_descr='',id_type='hsapiens__gene_symbol'){
-  #hsapiens__ensembl_gene_stable_id
+clicky.run<-function(module_genes_list,module_bkrnd,clicky_dir,dat_descr='',id_type='hsapiens__gene_symbol',os_type='osx'){
+##  os_type='osx' ; os_type='linux'
+##  hsapiens__ensembl_gene_stable_id
 #cat('\tUSE : creates temp directory and runs clicky enrichments on a list of module gene names - list$ModuleName$ModuleGenes')
 #  system(paste0("mkdir ",clicky_dir,"/tmp_in_files/"))
 
@@ -4131,13 +4132,27 @@ clicky.run<-function(module_genes_list,module_bkrnd,clicky_dir,dat_descr='',id_t
     cat('\t',names(module_genes_list)[imod],dat_descr,'\t',length(module_genes_list[[imod]]),'\t',length(module_bkrnd),'\n')
 
     write.table(module_genes_list[[imod]],file="tmp_in_files/tmp_genelist.txt", quote=F, sep="\t", row.names=F, col.names=F)
-  
-  system(paste0("python ",clicky_dir,"/bin/runner_modified_commandline_osx.py "
-                ,working_dir,"tmp_genelist.txt "
-                ,working_dir,"tmp_bkgrnd.txt "
-                ,working_dir," "
-                ,paste0(names(module_genes_list)[imod],dat_descr)
-                ," hsapiens ",id_type," ",id_type," 0.05"))
+
+	if(os_type=='osx'){
+	  system(paste0("python ",clicky_dir,"/bin/runner_modified_commandline_osx.py "
+	                ,working_dir,"tmp_genelist.txt "
+	                ,working_dir,"tmp_bkgrnd.txt "
+	                ,working_dir," "
+	                ,paste0(names(module_genes_list)[imod],'_',dat_descr)
+	                ," hsapiens ",id_type," ",id_type," 0.05"))
+
+	}
+
+	if(os_type=='linux'){
+		  system(paste0("python ",clicky_dir,"/bin/clicky_python_commandline_linux.py "
+		                ,working_dir,"tmp_genelist.txt "
+		                ,working_dir,"tmp_bkgrnd.txt "
+		                ,working_dir," "
+		                ,paste0(names(module_genes_list)[imod],'_',dat_descr)
+		                ," hsapiens ",id_type," ",id_type," 0.05"))
+
+		}
+
          
 # rm(enrich_list)
 # enrich_list=gestalt_read(enrich_type=c("GO","Commons","KEGG","WIKI"),
@@ -6104,6 +6119,14 @@ idconvert<-function(ids,verbose=T){
 }
 
 
+idconvert.ensg<-function(dat_lis){
+##  conveting list of vectors containing only official HUGO gene names (rownames) to ENSG
+
+	for(ilis in names(dat_lis)){
+		dat_lis[[ilis]]=idmap.ensg[idmap.ensg$gene%in%(dat_lis[[ilis]]),'ids']
+	}
+	return(dat_lis)
+}
 
 
 
