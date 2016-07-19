@@ -6480,7 +6480,7 @@ cat('\n\tcompiling results..\n\n')
 				colnames(sigsum[[idru]])=paste(as.character(idru))#,colnames(sigsum[[idru]]))
 				colnames(sigpc1[[idru]])=paste(as.character(idru))#,colnames(sigpcs[[idru]]))
 
-			sigpc2[[idru]]=(dumpty[,c('n_hits_pc'),drop=F])
+			sigpc2[[idru]]=(dumpty[,c('n_mod_pc'),drop=F])
 				colnames(sigpc2[[idru]])=paste(as.character(idru))#,colnames(sigpcs[[idru]]))
 
 
