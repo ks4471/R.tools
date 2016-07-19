@@ -4610,6 +4610,8 @@ library('parallel')
 
 
 
+
+
 fet<-function(sampl,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fail,bkgrnd.fail,...){
 # alternative ='greater'
 # phyper(success_in_sample, success_in_bkgd, failure_in_bkgd, sample_size, lower.tail=TRUE)
@@ -4628,9 +4630,9 @@ fet<-function(sampl,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fai
 
 	    fet$n.genes=length(sampl)
 	    fet$FETp=(test_out$p.value)
-	    fet$fetOR=round(test_out$estimate,digits=3)
-	    fet$lowerCI=round(test_out$conf.int[1],digits=3)
-	    fet$upperCI=round(test_out$conf.int[2],digits=3)
+	    fet$fetOR=round(test_out$estimate) #,digits=3 
+	    fet$lowerCI=round(test_out$conf.int[1])#,digits=3
+	    fet$upperCI=round(test_out$conf.int[2])#,digits=3
 #		fet$samp.success=paste(sampl[sampl%in%success],collapse=' ')
 	    return(invisible((fet)))
 	}
@@ -6420,6 +6422,17 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 				mstat[[paste0('single_',idru)]][[paste(imod,'up_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
 			}
 
+#sampl=rownames(dumpty)
+#bkgrnd=rownames(dummy)
+#success=holder$n.bg.sig_down
+
+#success=holder$n.bg.sig_up
+
+#table(sampl%in%bkgrnd)
+#table(success%in%sampl)
+#table(success%in%bkgrnd)
+
+
 			if('down' %in% names(lmod[[imod]])){
 
 				dumpty=dummy[rownames(dummy)%in%lmod[[imod]]$down,]
@@ -6431,11 +6444,11 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 			}
 			sigen[[paste0('single_',idru)]][[paste(imod,'down_upreg',sep='.')]]=(holder[[imod]])
 		}
-		rm(dumpty)
+#		rm(dumpty)
 		}
 		k=lcount(k,length(ukey))
-		rm(dummy)
-		rm(holder)
+#		rm(dummy)
+#		rm(holder)
 
 		}
 	}
@@ -6448,6 +6461,8 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 	sigdru=list()
 	sigsum=list()
+	sigpc1=list()
+	sigpc2=list()
 cat('\n\tcompiling results..\n\n')
 	for(idru in names(mstat)){
 		humpty=mstat[[idru]]
@@ -6455,25 +6470,56 @@ cat('\n\tcompiling results..\n\n')
 			rownames(dumpty)=names(humpty)
 			colnames(dumpty)=colnames(humpty[[1]])
 
+		dumpty$n_hits_pc=dumpty$samp.success/(dumpty$samp.success+dumpty$bkgrnd.success)
+		dumpty$n_mod_pc=dumpty$samp.success/(dumpty$n.genes)
+
 	#	if(sum(dumpty$FETp<0.05)>=1){
 			sigdru[[idru]]=dumpty
-			sigsum[[idru]]=(dumpty[,'FETp',drop=F])
-				colnames(sigsum[[idru]])=as.character(idru)	#paste0('Drug_',as.character(idru))
+			sigsum[[idru]]=(dumpty[,c('FETp'),drop=F])
+			sigpc1[[idru]]=(dumpty[,c('n_hits_pc'),drop=F])
+				colnames(sigsum[[idru]])=paste(as.character(idru))#,colnames(sigsum[[idru]]))
+				colnames(sigpc1[[idru]])=paste(as.character(idru))#,colnames(sigpcs[[idru]]))
+
+			sigpc2[[idru]]=(dumpty[,c('n_hits_pc'),drop=F])
+				colnames(sigpc2[[idru]])=paste(as.character(idru))#,colnames(sigpcs[[idru]]))
+
+
+
+##				colnames(sigsum[[idru]])=paste(as.character(idru),colnames(sigsum[[idru]]),sep='.')	#paste0('Drug_',as.character(idru))
 	#	}
 
 	}
 
 	sigsum=t(as.data.frame(sigsum))
+	sigpc1=t(as.data.frame(sigpc1))
+	sigpc2=t(as.data.frame(sigpc2))
+
+#sigsum['single_etoposide',]
+#sigsum['single_monobenzone',]
+#sigsum['single_trifluridine',]
+
+#sigpcs['single_etoposide',]
+#sigpcs['single_monobenzone',]
+#sigpcs['single_trifluridine',]
+
+
+#mstat['single_dequalinium chloride']
+
+####  M2.up_downreg
+## inf## 'single_dequalinium.chloride'
+## NaN## 'single_dicycloverine'
 #		Head(sigsum)
 
 	readme='\tcmap differentially expressed genes from drug treatment, raw and meta-analysis
 		\t\tNOTE :  currently individual experiments used to create the meta-analysis results are ignored
 		\t\t$sigsum   - summary results - p-values of enrichment only
+		\t\t$sigpc1   - summary results - % of differentially expressed genes in module / background (n.success.module/n.success.bkg)
+		\t\t$sigpc2   - summary results - % of differentially expressed genes in module / all module genes (n.success.module/n.genes.module)
 		\t\t$sigdru   - summary results - summary fisher exact test statistics
 		\t\t$sigen    - lists of genes used to calculate fisher exact test in mstat
 '
 cat(readme)
-	return(invisible(list(sigsum=sigsum,sigdru=sigdru,sigen=sigen,readme=readme)))
+	return(invisible(list(sigsum=(sigsum),sigpc1=(sigpc1),sigpc2=(sigpc2),sigdru=sigdru,sigen=sigen,readme=readme,dumpty=dumpty)))
 }
 
 
