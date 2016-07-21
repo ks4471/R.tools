@@ -3219,6 +3219,8 @@ mats<-function(dat_mat,decreasing=T){
   return(as.matrix(sort(dat_mat,decreasing=decreasing)))
 }
 
+
+
 matst<-function(dat_mat,sort=T,decreasing=T){
   if(sort){
     dummy=as.data.frame(sort(table(dat_mat),decreasing=decreasing))
@@ -3227,12 +3229,11 @@ matst<-function(dat_mat,sort=T,decreasing=T){
     dummy=as.data.frame((table(dat_mat)))
   }
 
-  colnames(dummy)="count"
+  colnames(dummy)=c('data','count')
   dummy$percent=round(dummy$count/sum(as.numeric(dummy$count)),digits=3)
   return(dummy)
 
 }
-
 
 
 
