@@ -3229,7 +3229,12 @@ matst<-function(dat_mat,sort=T,decreasing=T){
     dummy=as.data.frame((table(dat_mat)))
   }
 
-  colnames(dummy)=c('data','count')
+  if(ncol(dummy==1)){
+  	holder=as.data.frame(rownames(dummy))
+  	holder$count=dummy[,1]
+  	dummy=holder
+  }
+  colnames(dummy)=c('entry','count')
   dummy$percent=round(dummy$count/sum(as.numeric(dummy$count)),digits=3)
   return(dummy)
 
@@ -6320,7 +6325,7 @@ sigen=list()
 k=1
 
 dkey=gsub('DE_Drug_(.*)_Cell_.*_Array_.*_Conc_.*_Conc_.*_time_.*_res','\\1',names(degen))
-	matst(names(metsum)%in%dkey)
+#	matst(names(metsum)%in%dkey)
 ukey=unique(dkey)
 
 #idru='wortmannin'
