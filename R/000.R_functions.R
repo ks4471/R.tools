@@ -3229,7 +3229,7 @@ matst<-function(dat_mat,sort=T,decreasing=T){
     dummy=as.data.frame((table(dat_mat)))
   }
 
-  if(ncol(dummy==1)){
+  if(ncol(dummy)==1){
   	holder=as.data.frame(rownames(dummy))
   	holder$count=dummy[,1]
   	dummy=holder
