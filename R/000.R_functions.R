@@ -1859,7 +1859,7 @@ wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power = 6,si
      
 # Blocking options ------------------------------------------
   ,blocks = NULL
-  ,maxBlockSize = max_blocks        ##  ensure no separation is performed // if outdated machine ~4GB RAM, may need to change this to ~5,000, or better yet, consider upgrading
+  ,maxBlockSize = max_block_n        ##  ensure no separation is performed // if outdated machine ~4GB RAM, may need to change this to ~5,000, or better yet, consider upgrading
   ,blockSizePenaltyPower = 5
     ,randomSeed = 12345
      
