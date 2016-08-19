@@ -3993,16 +3993,30 @@ rowstat<-function(data_mat,add=F,round_digits=2,diag_na=T){
 
 
 
-clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=F,plot_cex=0.8,dat_descr='',help=F){
+
+clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,55),help=F,...){
+##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
  if(help){
-  cat('\n\tINPUT :\tdat_mat - matrix, rows=genes, cols=samples\n')
+  cat('\n\tINPUT :\tdat_mat - auto-detect data frame or list of data frames - 1 per condition (samples=columns)\n')
   cat('\tNOTE  :\tcor_method - correlation method to calculate distance see "cor" for options, option: "dist" - distance on raw data, no correlation calculated\n\n')
   cat('\tNOTE  :\tk- specify number of clusters for cutree, can use range i.e. 2:5, if k="dynamic", WGCNA function "cutreeHybrid" is used to cut the tree\n\n')
  }
+ 	dat_is_list=F
+ if(class(dat_mat)=='list'){
+ 	  cat('\t- processing list information\n')
+ 	dat_is_list=T
+ 	colvec=""
+ 	for(ilis in 1:length(dat_mat)){
+ 		colvec=c(colvec,rep(colmix[ilis],ncol(dat_mat[[ilis]])))
+ 	}
+ 	colvec=colvec[-1]
+ 	dat_mat=as.data.frame(dat_mat)
+ 	}
 
-    if(do_plots){
-    	library(WGCNA)	##  moved it here to avoid waiting for clustering only to find the plots failed 
-    }
+   if(do_plots){
+   		library(dendextend)	##  moved it here to avoid waiting for clustering only to find that the library does not exist..
+      library(WGCNA)      ##  required for k='dynamic' only i.e. cutreeHybrid
+   }
 
   if(cor_method=='dist'){
    cat('\t- calculating eucledian distance\n')
@@ -4016,11 +4030,14 @@ clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=F,
 
     clustat=hclust(distmat,method=clust_method)
 
+
   if(k!='dynamic'){
+  	cat('\t- cutree, k=',k,'\n')
     trestat=cutree(clustat,k=k)
     main_text=paste(dat_descr,'\ndistance=',cor_method,'cluster.method=',clust_method,'k =',paste(k,collapse=', '))
   }
   if(k=='dynamic'){
+  	cat('\t- dynamic tree cut - WGCNA function, works best with clust_method="average"\n')
     trestat=cutreeHybrid(clustat,as.matrix(distmat),minClusterSize=2,deepSplit=0)$labels
     main_text=paste(dat_descr,'\ndistance=',cor_method,'cluster.method=',clust_method,'clusters determined by WGCNA: "cutreeHybrid"')
   }
@@ -4032,29 +4049,138 @@ clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=F,
     clust[[as.character(clustnm)[iclust]]]=names(trestat)[trestat==clustnm[iclust]]
   }
     if(do_plots){
-		plotDendroAndColors(
-		clustat
-		,trestat
-		#,cutHeight=300
-		,hang=0.03
-		#,addGuide=TRUE
-		,guideHang=0.05,
-		,main=main_text
-		,cex.colorLabels=plot_cex
-		,cex.dendroLabels=plot_cex
-		,cex.rowText=plot_cex
-	)
+    	cat('\t- plotting results\n')
+    	if(dat_is_list){
+			clusden=as.dendrogram(clustat)
+			labels_colors(clusden) = colvec[order.dendrogram(clusden)]
+			clusden = color_branches(clusden, k = k)
+		
+			par(mar = par_mar)
+			plot(clusden, horiz = TRUE)
+			colored_bars(colvec, clusden, horiz = TRUE)
+
+## colored_bars can be used to show k-means clusters (supports multiple bars, including colvec), as per EG
+#		k234 = cutree(dend, k = 2:4)
+#		colored_bars(cbind(k234[,3:1], col_car_type), dend, rowLabels = c(paste0("k = ", 4:2), "Car Type"))
+
+
+		}
+
+		if(!dat_is_list){
+			plotDendroAndColors(
+			clustat
+			,trestat
+			#,cutHeight=300
+			,hang=0.03
+			#,addGuide=TRUE
+			,guideHang=0.05
+			,main=main_text
+			,cex.colorLabels=plot_cex
+			,cex.dendroLabels=plot_cex
+			,cex.rowText=plot_cex
+			,...)
+		}
 	}
 
-    readme='\n\toutput contains :
+
+#  cat(readme)
+    if(dat_is_list){
+    	    readme='\n\toutput contains :
+            \t1. clust - members of modules based on k
+            \t2. distmat - distance matrix used to perfom hierarchical clustering
+            \t3. clustat - ouput of hcust(distmat)
+            \t4. trestat - output of cutree(clustat)
+            \t5. colvec - vector of colors used
+            \n'
+  return(invisible(list(clust=clust,distmat=distmat,clustat=clustat,trestat=trestat,colvec=colvec,readme=readme)))
+	}
+    if(!dat_is_list){
+    	    readme='\n\toutput contains :
             \t1. clust - members of modules based on k
             \t2. distmat - distance matrix used to perfom hierarchical clustering
             \t3. clustat - ouput of hcust(distmat)
             \t4. trestat - output of cutree(clustat)
             \n'
-#  cat(readme)
-  return(invisible(list(clust=clust,distmat=distmat,clustat=clustat,trestat=trestat)))
+  return(invisible(list(clust=clust,distmat=distmat,clustat=clustat,trestat=trestat,readme=readme)))
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+##_####  fully working clustering version deprecated after expansion to cover lists with different color plots
+
+##_##clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=F,plot_cex=0.8,dat_descr='',help=F,...){
+##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
+##_## if(help){
+##_##  cat('\n\tINPUT :\tdat_mat - matrix, rows=genes, cols=samples\n')
+##_##  cat('\tNOTE  :\tcor_method - correlation method to calculate distance see "cor" for options, option: "dist" - distance on raw data, no correlation calculated\n\n')
+##_##  cat('\tNOTE  :\tk- specify number of clusters for cutree, can use range i.e. 2:5, if k="dynamic", WGCNA function "cutreeHybrid" is used to cut the tree\n\n')
+##_## }
+
+##_##    if(do_plots){
+##_##    	library(WGCNA)	##  moved it here to avoid waiting for clustering only to find the plots failed 
+##_##    }
+
+##_##  if(cor_method=='dist'){
+##_##   cat('\t- calculating eucledian distance\n')
+##_##        distmat=dist(t(dat_mat))
+##_##  }
+
+##_##  if(cor_method!='dist'){
+##_##   cat('\t- calculating distance based on',cor_method,'correlation\n')
+##_##        distmat=as.dist(1-abs(t(cor(dat_mat,method=cor_method))))
+##_##    }
+
+##_##    clustat=hclust(distmat,method=clust_method)
+
+##_##  if(k!='dynamic'){
+##_##    trestat=cutree(clustat,k=k)
+##_##    main_text=paste(dat_descr,'\ndistance=',cor_method,'cluster.method=',clust_method,'k =',paste(k,collapse=', '))
+##_##  }
+##_##  if(k=='dynamic'){
+##_##    trestat=cutreeHybrid(clustat,as.matrix(distmat),minClusterSize=2,deepSplit=0)$labels
+##_##    main_text=paste(dat_descr,'\ndistance=',cor_method,'cluster.method=',clust_method,'clusters determined by WGCNA: "cutreeHybrid"')
+##_##  }
+#   cutree$labels
+
+##_##  clustnm=(unique(trestat))
+##_##  clust=list()
+##_##  for(iclust in 1:length(clustnm)){
+##_##    clust[[as.character(clustnm)[iclust]]]=names(trestat)[trestat==clustnm[iclust]]
+##_##  }
+##_##    if(do_plots){
+##_##		plotDendroAndColors(
+##_##		clustat
+##_##		,trestat
+##_##		#,cutHeight=300
+##_##		,hang=0.03
+##_##		#,addGuide=TRUE
+##_##		,guideHang=0.05,
+##_##		,main=main_text
+##_##		,cex.colorLabels=plot_cex
+##_##		,cex.dendroLabels=plot_cex
+##_##		,cex.rowText=plot_cex
+##_##		,...
+##_##	)
+##_##	}
+
+##_##    readme='\n\toutput contains :
+##_##            \t1. clust - members of modules based on k
+##_##            \t2. distmat - distance matrix used to perfom hierarchical clustering
+##_##            \t3. clustat - ouput of hcust(distmat)
+##_##            \t4. trestat - output of cutree(clustat)
+##_##            \n'
+##_###  cat(readme)
+##_##  return(invisible(list(clust=clust,distmat=distmat,clustat=clustat,trestat=trestat,readme=readme)))
+##_##}
 
 
 
@@ -6160,29 +6286,151 @@ check.data<-function(dat_lis){
 }
 
 
-applydiffcoex <- function(beta2,corr_mat_list,signtype=signType){
-  correl=vector(mode="list", length=length(corr_mat_list));
-  compDij=vector(mode="list", length=length(corr_mat_list));
-  #compute the cij0 (for all the seven conditions)
-  for (k in 1:length(corr_mat_list)){
-    #we convert each element in the list in a matrix
-    datmat=as.matrix(corr_mat_list[[k]]) 
-    #compute sign(corr)*(corr)^2 and store it in a correlation vector
-    correl[[k]]= sign(datmat)*(datmat)^2
-    diag(correl[[k]])=0
-  }
+
+applydiffcoex <- function(beta2,corr_mat_list,signtype=signType) # for multiple conditions
+{
+  correl=vector(mode="list", length=length(corr_mat_list)); # empty (for adjacencies)
+  compDij=vector(mode="list", length=length(corr_mat_list)); # empty
   
-  #we compute cij0 (reduce applies the binary function to all the elements in the list).
-  cij0 = Reduce("+",correl)/length(correl);
+  #compute the cij0 (for all the conditions)
+  for (k in 1:length(corr_mat_list))
+  {
+    datmat=as.matrix(corr_mat_list[[k]])
+    correl[[k]]= sign(datmat)*(datmat)^2
+    diag(correl[[k]])=0 # change the diagonal to 0 instead of 1
+  }
+  # correl holds information about adjacency: sign(corr)*(corr)^2
+  
+  
+  cij0 = Reduce("+",correl)/length(correl); # Reduce adds two matrices (correl is a list of matrices)
+  ## A general-purpose adder:
+  #Example
+  #add <- function(x) Reduce("+", x)
+  #add(list(1, 2, 3))
+  ## Like sum(), but can also used for adding matrices etc., as it will
+  ## use the appropriate '+' method in each reduction step.
+  
   #compute Dij
-  for (element in 1:length(correl)){
+  for (element in 1:length(correl))
+  {
     compDij[[element]]=abs(correl[[element]]- cij0)/2; 
   }
-  Dij=(1/(length(corr_mat_list)-1))*Reduce("+", compDij)^(beta2/2)
-  dissTOM=TOMdist(Dij, TOMType = signtype);
+  
+     Dij=(1/(length(corr_mat_list)-1))*Reduce("+", compDij)^(beta2/2) # compDij is a list of matrices
+  
+  dissTOM=TOMdist(Dij, TOMType = signtype); # WGCNA function
   collectGarbage()
   return(dissTOM)
 }
+
+
+#===================================================================================================================================
+# # DiffCoEx (same as Kirill's but with some options and explanations)
+#===================================================================================================================================
+wgcna.diffcoex_L <- function (list_expr, pow = 6, minModuleSize = 40, mergeHeight = 0.15, datDescr = "", signType = "unsigned") 
+{
+  print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
+  library("WGCNA")
+  enableWGCNAThreads()
+  print("Can deal with only one softpower (pow) at a time ")
+  set.seed(0)
+  
+  bicorL <- list() # correlation of gene expression
+  for (ireg in 1:length(list_expr)) {
+    print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■")
+    print(paste(names(list_expr)[ireg], ireg, "of", length(names(list_expr))))
+    t0 = Sys.time()
+    
+    COND <- list_expr[[ireg]]
+    # CONDav <- scale(COND, scale = F)
+    CONDav=COND
+    bicorL[[ireg]] <- bicor(t(as.matrix(CONDav))) # bicor correlation of conditions
+    
+  }
+  
+  names(bicorL) <- names(list_expr)
+  collectGarbage()
+  t0 = Sys.time()
+  
+  softPower = pow
+  print(softPower)
+  
+# dissTOM <- applydiffcoex(softPower, bicorL, signtype = signType) # * 
+  dissTOM <- diffcoex_paper(softPower, bicorL, signtype = signType) # * 
+  print(Sys.time() - t0)
+  collectGarbage()
+  
+  geneTree = hclust(as.dist(dissTOM), method = "average")
+  collectGarbage()
+  
+  dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM, 
+                              method = "hybrid", cutHeight = 0.996, deepSplit = T, 
+                              pamRespectsDendro = FALSE, minClusterSize = minModuleSize)
+  
+  dynamicColors = labels2colors(dynamicMods)
+  collectGarbage()
+  
+  Datall <- t(as.data.frame(list_expr)) # merge the conditions
+  collectGarbage()
+  
+  mergedColor <- mergeCloseModules(Datall, dynamicColors, cutHeight = mergeHeight)$color
+  
+  print(paste("mergedColor =", length(unique(mergedColor)), 
+              unique(mergedColor)))
+  print(Sys.time() - t0)
+  collectGarbage()
+  mstat = as.data.frame(table(mergedColor)) # using dynamicColors not Merged
+  mstat = mstat[order(mstat[, 2], decreasing = T), ]
+  msta0 = mstat[(mstat[, 1] == "grey"), ]
+  msta0$module = "M0"
+  mstat = mstat[!(mstat[, 1] == "grey"), ]
+  mstat$module = paste0("M", 1:nrow(mstat))
+  mstat = rbind(mstat, msta0)
+  colnames(mstat) = c("color", "ngenes", "module")
+  mstat$color = as.character(mstat$color)
+  
+  if (datDescr != "") {
+    mstat$module = paste(mstat$module, dat_descr, sep = "_")
+  }
+  
+  module_list = list()
+  for (imod in 1:nrow(mstat)) {
+    module_list[[mstat$module[imod]]] = rownames(list_expr[[1]])[mergedColor == 
+                                                                   mstat$color[imod]]
+  }
+  
+  module_list[["bkgrnd"]] = rownames(list_expr[[1]])
+  
+  module_expr = list()
+  for (ilis in 1:length(list_expr)) {
+    for (imod in 1:length(module_list)) {
+      module_expr[[names(list_expr)[ilis]]][[names(module_list)[imod]]] = list_expr[[names(list_expr)[ilis]]][module_list[[names(module_list)[imod]]], 
+                                                                                                              ]
+    }
+  }
+  mbg = as.data.frame("bkgrnd")
+  mbg$length = nrow(list_expr[[1]])
+  mbg$name = "bkgrnd"
+  colnames(mbg) = colnames(mstat)
+  mstat = rbind(mstat, mbg)
+  readme = "\n\tModules are named based on size M1 - biggest, M0 - unclustered, bkgrnd - all input genes, output contains :\n    \t1. module_list - list containing names of genes in each module\n    \t2. module_expr - expression matrix of all genes in module / input dataset\n    \t3. mstat       - key used to name modules, includes module size\n    \t4. GeneTree     - object to plot the WGCNA style dendrogram\n    \n"
+  cat(readme)
+  return(invisible(list(module_list = module_list, module_expr = module_expr, 
+                        mstat = mstat, plotobj = geneTree, readme = readme)))
+}
+
+
+diffcoex_paper <- function(beta2,bicorL,signtype=signType){
+  AdjMatC1=sign(bicorL[[1]])*(bicorL[[1]])^2
+  AdjMatC2=sign(bicorL[[2]])*(bicorL[[2]])^2
+  message("Condition - Control")
+  
+  diag(AdjMatC1)<-0
+  diag(AdjMatC2)<-0
+  beta1=beta2
+  
+  dissTOMC1C2=TOMdist((abs(AdjMatC1-AdjMatC2)/2)^(beta1/2))
+} # for 2 conditions (condition-control)
 
 
 
