@@ -2858,7 +2858,7 @@ if(plot_pcs[3]==T){
 
 
 
-pcplot<-function(dat_list,colmix="",pch=16,dat_descr="",main="",legend_space=8,...){
+pcplot<-function(dat_list,scale_dat=F,colmix="",pch=16,dat_descr="",main="",legend_space=8,...){
    cat("\tUSE\t: use list of multiple datasets to plot PC1vPC2\n")
    cat("\tNOTE\t: list1 - expect a list of expression matrices, rows=genes, columns=samples |*| assumes same row order\n")
    cat("\tNOTE\t: if legend is clipping the plot, increase plot width or legend_space param\n")
@@ -2902,13 +2902,20 @@ pcplot<-function(dat_list,colmix="",pch=16,dat_descr="",main="",legend_space=8,.
       datcol=c(datcol,rep(datleg[idat,"color"],datleg$n[idat]))
     }
 
+    dat_lis=as.data.frame(dat_list)
+    ##  scale and center the data before plotting
+    if(scale_dat){
+    	cat('\t- scale and center data (by columns)\n')
+    	dat_lis=scale(dat_lis,scale=T,center=T)
+    }
 
-    pcs=prcomp(t(as.data.frame(dat_list)))
+
+    pcs=prcomp(t(dat_lis))
     pcstat=round(as.matrix(summary(pcs)$importance["Proportion of Variance",1:2]),digits=3)*100
 #  legend_space=8
   # creates a plot with a wide right margin
   cat('\t calculating PCs, will take time with big datasets\n')
-      par(mar=c(5,4,4, legend_space))
+      par(mar=c(5,4,(4+nrow(datleg)), legend_space))
     plot(pcs$x[,1:2],col=datcol,pch=pch,frame.plot=F,xlab=paste("PC1 ",pcstat[1],"%",sep=""),ylab=paste("PC2 ",pcstat[2],"%",sep=""),main=paste0(dat_descr,"\n",main),...)
 
   # create a new plot overlay (with no left margin) with legend on the topright
@@ -3994,7 +4001,7 @@ rowstat<-function(data_mat,add=F,round_digits=2,diag_na=T){
 
 
 
-clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,55),help=F,...){
+clust<-function(dat_mat,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,55),help=F,...){
 ##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
  if(help){
   cat('\n\tINPUT :\tdat_mat - auto-detect data frame or list of data frames - 1 per condition (samples=columns)\n')
@@ -4013,6 +4020,10 @@ clust<-function(dat_mat,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,
  	dat_mat=as.data.frame(dat_mat)
  	}
 
+ if(scale_dat){
+ 	cat('\t- scale and center data (by columns)\n')
+ 	dat_mat=scale(dat_mat,scale=T,center=T)
+ }
    if(do_plots){
    		library(dendextend)	##  moved it here to avoid waiting for clustering only to find that the library does not exist..
       library(WGCNA)      ##  required for k='dynamic' only i.e. cutreeHybrid
