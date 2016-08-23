@@ -4001,7 +4001,7 @@ rowstat<-function(data_mat,add=F,round_digits=2,diag_na=T){
 
 
 
-clust<-function(dat_mat,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,55),help=F,...){
+clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,55),help=F,...){
 ##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
  if(help){
   cat('\n\tINPUT :\tdat_mat - auto-detect data frame or list of data frames - 1 per condition (samples=columns)\n')
@@ -4061,14 +4061,15 @@ clust<-function(dat_mat,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist'
   }
     if(do_plots){
     	cat('\t- plotting results\n')
-    	if(dat_is_list){
+    	if(dat_is_list|horiz){
 			clusden=as.dendrogram(clustat)
-			labels_colors(clusden) = colvec[order.dendrogram(clusden)]
+			if(dat_is_list){labels_colors(clusden) = colvec[order.dendrogram(clusden)]}
 			clusden = color_branches(clusden, k = k)
 		
 			par(mar = par_mar)
 			plot(clusden, horiz = TRUE)
-			colored_bars(colvec, clusden, horiz = TRUE)
+
+			if(dat_is_list){colored_bars(colvec, clusden, horiz = TRUE)}
 
 ## colored_bars can be used to show k-means clusters (supports multiple bars, including colvec), as per EG
 #		k234 = cutree(dend, k = 2:4)
@@ -5972,7 +5973,7 @@ net.cons<-function(alis,blis,abg=NA,bbg=NA,do_plots=T,p_thresh=0.01,main="Maximu
 
 
 
-net.overlap<-function(alis,abg=NA,do_plots=T,...){
+net.overlap<-function(alis,abg=NA,do_plots=T,rev_col=F,...){
 # cat('\t USE:\t calculte overlaps between two lists')
 # cat('\t USE:\t optional - add backgrounds for bg.common() - not implemented')
 #cat('\t NOTE:\t bg_list - options: 'NA' - one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015(Science)\n\n')
@@ -6057,7 +6058,10 @@ net.overlap<-function(alis,abg=NA,do_plots=T,...){
   if(do_plots){
     library(corrplot)
     diag(cons_stat$pc)=0.000001
-    corrplot(make.numeric(cons_stat$pc),p.mat=make.numeric(cons_stat$pc)*100,sig.level=0.001,col=rev(c(colrb)),cl.align="l",tl.col="black",method='circle',is.corr=F,insig='p-value',...)#,cl.lim=c(0,70)
+
+    if(!rev_col){corrplot(make.numeric(cons_stat$pc),p.mat=make.numeric(cons_stat$pc)*100,sig.level=0.001,col=rev(c(colrb)),cl.align="l",tl.col="black",method='circle',is.corr=F,insig='p-value',...)}#,cl.lim=c(0,70)
+    if(rev_col){corrplot(make.numeric(cons_stat$pc),p.mat=make.numeric(cons_stat$pc)*100,sig.level=0.001,col=c(colrb),cl.align="l",tl.col="black",method='circle',is.corr=F,insig='p-value',...)}#,cl.lim=c(0,70)
+    
     diag(cons_stat$pc)=1
   }
   return(invisible(cons_stat))
@@ -6338,7 +6342,7 @@ applydiffcoex <- function(beta2,corr_mat_list,signtype=signType) # for multiple 
 #===================================================================================================================================
 # # DiffCoEx (same as Kirill's but with some options and explanations)
 #===================================================================================================================================
-wgcna.diffcoex_L <- function (list_expr, pow = 6, minModuleSize = 40, mergeHeight = 0.15, datDescr = "", signType = "unsigned") 
+wgcna_diffcoex_L <- function (list_expr, pow = 6, minModuleSize = 40, mergeHeight = 0.15, datDescr = "", signType = "unsigned") 
 {
   print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
   library("WGCNA")
@@ -6558,8 +6562,8 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 
 
 
-cmap.meta<-function(lmod,bkg,de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
-cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/xjg3xpyxwjgodyw/DTB.full_info.sig.randM.fisher.DE_genes_single.Rdata?dl=0\n\n')
+cmap.meta<-function(lmod,bkg='NA',de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
+cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/4rlij8qwy4nkzkc/004.DTB.full_info.sig.randM.fisher.DE_genes_single_complete_batch.scored.Rdata?dl=0\n\n')
 ####   input format :
 ##> str(bkg)
 # chr [1:13210] "ENSG00000121410" "ENSG00000175899" "ENSG00000166535" ...
@@ -6582,6 +6586,11 @@ cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available
 mstat=list()
 sigen=list()
 k=1
+
+if(bkg=='NA'){
+	cat('\tusing default background - all cmap genes')
+	bkg=unique(c(rownames(metsum[[1]]),rownames(degen[[1]])))
+}
 
 dkey=gsub('DE_Drug_(.*)_Cell_.*_Array_.*_Conc_.*_Conc_.*_time_.*_res','\\1',names(degen))
 #	matst(names(metsum)%in%dkey)
@@ -6784,7 +6793,7 @@ cat('\n\tcompiling results..\n\n')
 		\t\t$sigen    - lists of genes used to calculate fisher exact test in mstat
 '
 cat(readme)
-	return(invisible(list(sigsum=(sigsum),sigpc1=(sigpc1),sigpc2=(sigpc2),sigdru=sigdru,sigen=sigen,readme=readme,dumpty=dumpty)))
+	return(invisible(list(sigsum=(sigsum),sigpc1=(sigpc1),sigpc2=(sigpc2),sigdru=sigdru,sigen=sigen,readme=readme)))#,dumpty=dumpty)))
 }
 
 
