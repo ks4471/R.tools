@@ -40,10 +40,6 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 ##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
 #devtools::use_data(x)	# saves to working directory by default
 
-
-
-
-
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 # nohup for R scrpts
@@ -52,6 +48,8 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
+
+
 ## extracting files using cmd / mac os
 # tar xvf file.tar
 # gunzip file.gz
@@ -59,7 +57,28 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+##  running long jobs using 'screen'   ##  http://aperiodic.net/screen/quick_reference
+# screen -ls 									##  look up existing screen / ids
+# screen -S new_screen_name 					##  create new screen obj
+# ctrl + a + d  								##  consecutive -> detach current screen
+# screen -e new_screen_name						##  resume 'new_screen_name' - if it is still running
+
+
+
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+##  WARNING : MANUALLY select the file below based on covariates corrected (contains both rma and plier)
+#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+###+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ es in the folder OTHER than the ones matching the format below
+##   i.e. "02.WGCNA.MODULES.hipp.plier-gcbgPEER.bb.sex.age.pmi.cod.merge.height=0.25.genes14646.samples102powr5.bicor.R"
+###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #fnames=list.files("/Users/Shkura/Dropbox/Cognition/GWAS/magma/hrh.magma/out/netw.enrich", pattern = ".out", full.names = TRUE)
@@ -107,9 +126,11 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #library(crayon)
 
 
-# ----------------------------------------------------------------------------------------------------- #
+
 #########################################################################################################
+# ----------------------------------------------------------------------------------------------------- #
 # Alternate way to calculate PC1    ----------------------------------------------------
+# ----------------------------------------------------------------------------------------------------- #
 # removing the first Principal component from data and reconstructing full matrix
 #SVD=svd(t(scale(t(Ccombi[2:(ncol(Ccombi)-3)]))))
 #str(SVD)
@@ -127,16 +148,6 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 #   print(paste("--------------------",names(list_expr)[ireg],"---------------------",ireg,"of",length(names(list_expr))))
 
 #   cat(round(j/ncol(Matrix),digits=2),"\r");flush.console()
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-##  WARNING : MANUALLY select the file below based on covariates corrected (contains both rma and plier)
-#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-###+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ es in the folder OTHER than the ones matching the format below
-##   i.e. "02.WGCNA.MODULES.hipp.plier-gcbgPEER.bb.sex.age.pmi.cod.merge.height=0.25.genes14646.samples102powr5.bicor.R"
-###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
@@ -5141,18 +5152,6 @@ Venn<-function(dat_lis,main='',...){
 
 
 
-gsea.run<-function(
-  path_GSEA="/Users/adelahay/Documents/Andree/projets/iGENEE_ICL/data_and_scripts/R_scripts/GSEA/",
-  file_gene_sets_with_path,rank_file_with_path,chip_file_with_path,nperm=10000,name_run,max_clust_size=5000,min_clust_size=10,path_out_folder){
-  system(paste("mkdir ",path_out_folder,sep=""))
-  options(scipen=999)
-  ##-Xmx5000mm flags the amount of memory available to java. The default is -Xmx512m
-  system(paste("java -cp ",path_GSEA, "gsea2-2.2.1.jar -Xmx11000mm xtools.gsea.GseaPreranked -gmx ",file_gene_sets_with_path," -collapse false -mode Max_probe -norm meandiv -nperm ",nperm,
-               " -rnk ",rank_file_with_path, " -scoring_scheme classic -rpt_label ",name_run, " -chip ",chip_file_with_path, " -include_only_symbols true -make_sets true -plot_top_x 20 -rnd_seed timestamp -set_max ",
-               max_clust_size, " -set_min ",min_clust_size," -zip_report false -out ",path_out_folder, " -gui false",sep=""))
-}
-
-
 
 
 
@@ -6128,9 +6127,9 @@ cyt.connect<-function(cor_mat,thresh=0.001,use_pcor=T){
 }
 
 
-install.bioc<-function(package_name){
+install.bioc<-function(pkg_name){
 	source("https://bioconductor.org/biocLite.R")
-	biocLite(package_name)
+	biocLite(pkg_name)
 }
 
 
@@ -6229,11 +6228,18 @@ lcount<-function(x,length){
 
 
 
-overlap<-function (A, B){
+overlap<-function(A,B,n=5){
     both = union(A, B)
     inA = both %in% A
     inB = both %in% B
-    return(table(inA, inB))
+    
+    intr=intersect(A,B)
+
+    print(table(inA, inB))
+    cat('\n\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
+    cat('\tinA  notB :\t',	paste(sort(A[!(A%in%intr)][1:n]),collapse=',  '),'\n')
+    cat('\tinB  notA :\t',	paste(sort(B[!(B%in%intr)][1:n]),collapse=',  '),'\n')
+    return(invisible(table(inA, inB)))
 }
 
 
@@ -6764,10 +6770,16 @@ cat('\n\tcompiling results..\n\n')
 
 	}
 
+	dnam=names(sigsum)
 	sigsum=t(as.data.frame(sigsum))
-	sigpc1=t(as.data.frame(sigpc1))
-	sigpc2=t(as.data.frame(sigpc2))
+		rownames(sigsum)=dnam
 
+	dnam=names(sigpc1)
+	sigpc1=t(as.data.frame(sigpc1))
+		rownames(sigpc1)=dnam
+	dnam=names(sigpc2)
+	sigpc2=t(as.data.frame(sigpc2))
+		rownames(sigpc2)=dnam
 #sigsum['single_etoposide',]
 #sigsum['single_monobenzone',]
 #sigsum['single_trifluridine',]
