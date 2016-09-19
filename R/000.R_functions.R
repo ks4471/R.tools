@@ -3890,6 +3890,18 @@ Load(dtb_loc)
 }
 
 
+ppi.interact<-function(query,dtb_loc='~/Dropbox/PROJ/ppi/dtb/processed/allDTB_collate_macro.GeneMania.Hippie.iRefWeb.Rdata'){
+### NOTE : loaded dtb name is 'macro', first interactor column name='a', second interactor column name='b'
+  cat('\n\tloading database file\n')
+Load(dtb_loc)
+  neta=macro[(macro$a%in%query | macro$b%in%query),]
+#   Head(neta)
+    cat('\t number of unique genes interacting :',length(unique(c(neta$a,neta$b))),pc(length(unique(c(neta$a,neta$b))),length(query)),'\n')
+
+    cat('\tperforming filtering step, takes a long time based on number of interactors\n')
+#  neta=ppi.dbfilt(neta)
+  return(invisible(neta)) 
+}
 
 ppi.net<-function(dtb,query,genex,geney,degree=1){
 
@@ -6573,7 +6585,7 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 
 cmap.meta<-function(lmod,bkg='NA',de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
 
-cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/4rlij8qwy4nkzkc/004.DTB.full_info.sig.randM.fisher.DE_genes_single_complete_batch.scored.Rdata?dl=0\n\n')
+cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/5nyydp1y5htikba/004.DTB.full_info.single_DEG.meta_randM.batch_corrected.scored.Rdata?dl=0\n\n')
 
 # INPUT: lmod - list of module names (for each expect chracter vector $up $down of ENSG, if unavailable, arbitrarily assign all genes to $up or $down)
 ####   input format :
@@ -6598,12 +6610,12 @@ cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available
 mstat=list()
 sigen=list()
 k=1
-
+options(warn=-1)
 if(bkg=='NA'){
 	cat('\tusing default background - all cmap genes')
 	bkg=unique(c(rownames(metsum[[1]]),rownames(degen[[1]])))
 }
-
+options(warn=0)
 dkey=gsub('DE_Drug_(.*)_Cell_.*_Array_.*_Conc_.*_Conc_.*_time_.*_res','\\1',names(degen))
 #	matst(names(metsum)%in%dkey)
 ukey=unique(dkey)
@@ -6808,7 +6820,7 @@ cat('\n\tcompiling results..\n\n')
 		\t\t$sigpc1   - summary results - % of differentially expressed genes in module / background (n.success.module/n.success.bkg)
 		\t\t$sigpc2   - summary results - % of differentially expressed genes in module / all module genes (n.success.module/n.genes.module)
 		\t\t$sigdru   - summary results - summary fisher exact test statistics
-		\t\t$sigen    - lists of genes used to calculate fisher exact test in mstat
+		\t\t$sigen    - lists of genes used to calculate fisher exact test statistics above
 '
 cat(readme)
 	return(invisible(list(sigsum=(sigsum),sigpc1=(sigpc1),sigpc2=(sigpc2),sigdru=sigdru,sigen=sigen,readme=readme)))#,dumpty=dumpty)))
