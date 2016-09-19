@@ -2532,15 +2532,6 @@ frac<-function(subset,full,num=T,sig_fig=2){
 }
 
 
-rmduplicates<-function(matrix,colName){
-  clean=matrix[!duplicated(matrix[,which(colnames(matrix)==colName)]),]
-
-      cat("     ",sum(duplicated(matrix[,which(colnames(matrix)==colName)]))," duplicates removed  || ",round(nrow(clean)/nrow(matrix),digits=3)*100,"% of data remaining || ",sum(duplicated(clean[,which(colnames(clean)==colName)])),"dupilicates remaining \n")
-return(invisible(clean))
-      }
-
-
-
 
 
 list.as.df<-function(in_list){
@@ -3629,6 +3620,15 @@ duplicates<-function(dat_vec,...){
   return(dat_vec[duplicated(dat_vec)])
 }
 
+rm.duplicates<-function(matrix,colName){
+  clean=matrix[!duplicated(matrix[,which(colnames(matrix)==colName)]),]
+
+      cat("     ",sum(duplicated(matrix[,which(colnames(matrix)==colName)]))," duplicates removed  || ",round(nrow(clean)/nrow(matrix),digits=3)*100,"% of data remaining || ",sum(duplicated(clean[,which(colnames(clean)==colName)])),"dupilicates remaining \n")
+return(invisible(clean))
+}
+
+
+
 
 get.duplicates<-function(dat_mat,col_dup,...){
   ndup=sort(table(dat_mat[,col_dup]),decreasing=T)
@@ -3641,7 +3641,7 @@ get.duplicates<-function(dat_mat,col_dup,...){
 
   if(length(ndup)>1){
   #   Head(ndup)
-    cat("\ttop duplicates\n")
+    cat("\t",length(ndup),"duplicates found, top duplicates:\n")
     print(as.matrix(ndup[1:min(15,length(ndup))]))
   
     dat_dup=dat_mat[(dat_mat[,col_dup]%in%names(ndup)),]
@@ -6236,6 +6236,10 @@ overlap<-function(A,B,n=5){
     intr=intersect(A,B)
 
     print(table(inA, inB))
+
+    cat('\n\n\tlength(A) :  ',length(A),'\t% unique(A)  :  ',round(length(unique(A))/length(A),digits=3))
+    cat('\n\tlength(B) :  ',length(B),'\t% unique(B)  :  ',round(length(unique(B))/length(B),digits=3),'\n')
+    
     cat('\n\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
     cat('\tinA  notB :\t',	paste(sort(A[!(A%in%intr)][1:n]),collapse=',  '),'\n')
     cat('\tinB  notA :\t',	paste(sort(B[!(B%in%intr)][1:n]),collapse=',  '),'\n')
@@ -6266,25 +6270,24 @@ idconvert<-function(ids,verbose=T){
 	cat('\tnum genes recognised : ',sum(ids%in%idmap$ids),', ',frac(sum(ids%in%idmap$ids),length(ids),num=T)*100,'%\n',sep='')
 	}
 	idmap$ids=toupper(idmap$ids)
-#	idmap[idmap$ids%in%ids,c('gene','ids','name')]
+##  idmap[idmap$ids%in%ids,c('gene','ids','name')]
 
 	return(idmap[idmap$ids%in%ids,c('gene','ids','name')])
-#	for(igen )
-
+##  for(igen )
 }
 
 
 idconvert.ensg<-function(dat_lis){
 ##  conveting list of vectors containing only official HUGO gene names (rownames) to ENSG
-
+	dat_out=list()
 	for(ilis in names(dat_lis)){
-		dat_lis[[ilis]]=idmap.ensg[idmap.ensg$gene%in%(dat_lis[[ilis]]),'ids']
+		dat_out[[ilis]]=idmap.ensg[idmap.ensg$gene%in%(dat_lis[[ilis]]),'ids']
+
+		cat('\t',names(dat_lis[ilis]),'% genes mapped',round(length(dat_out[[ilis]])/length(dat_lis[[ilis]]),digits=3),'\n')
 	}
-	return(dat_lis)
+
+	return(dat_out)
 }
-
-
-
 
 
 check.data<-function(dat_lis){
@@ -6569,7 +6572,10 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 
 
 cmap.meta<-function(lmod,bkg='NA',de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
+
 cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/4rlij8qwy4nkzkc/004.DTB.full_info.sig.randM.fisher.DE_genes_single_complete_batch.scored.Rdata?dl=0\n\n')
+
+# INPUT: lmod - list of module names (for each expect chracter vector $up $down of ENSG, if unavailable, arbitrarily assign all genes to $up or $down)
 ####   input format :
 ##> str(bkg)
 # chr [1:13210] "ENSG00000121410" "ENSG00000175899" "ENSG00000166535" ...
