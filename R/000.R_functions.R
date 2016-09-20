@@ -3649,7 +3649,6 @@ get.duplicates<-function(dat_mat,col_dup,...){
   
     dat_unq=unique(dat_mat[!(dat_mat[,col_dup]%in%names(ndup)),])
   
-    
   return(invisible(list(n.duplicated=ndup,duplicates=dat_dup,unique=dat_unq)))
   }
 }
@@ -6825,5 +6824,74 @@ cat('\n\tcompiling results..\n\n')
 cat(readme)
 	return(invisible(list(sigsum=(sigsum),sigpc1=(sigpc1),sigpc2=(sigpc2),sigdru=sigdru,sigen=sigen,readme=readme)))#,dumpty=dumpty)))
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
+#	cat('\tNOTE:\t- function requires synu & synd objects from: /Data/pubchem/dtb/extras/compound.CID_Synonym_filtered.sep2016.duplicates.Rdata\n')
+#	query - expect vector of drug names
+	if(!tolower){
+		query=unique(query)
+			cat('\tmapping',length(query),'compounds - same case matches\n')
+
+		mapped=synu[synu$synonym%in%query,,drop=F]
+		cat('\t\t',length(unique(mapped$synonym))/length(query),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
+
+		if(loose){
+			ambigous=synd[synd$synonym%in%query,,drop=F]
+			cat('\t\t',length(unique(ambigous$synonym))/length(query),'\tambigous matches - names that match multiple compounds\n')
+		}
+		if(grep){
+			partial=synu[grepl(paste(query,collapse='|'),synu$synonym),,drop=F]
+			cat('\t\t',length(unique(partial$synonym))/length(query),'\tgrep matches in "unique" names\n')
+		}
+	}
+
+	if(tolower){
+		query=unique(tolower(query))
+			cat('\tmapping',length(query),'compounds - all lower case\n')
+
+		mapped=synu[synu$lower%in%query,,drop=F]
+		cat('\t\t',length(unique(mapped$lower))/length(query),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
+
+		if(loose){
+			ambigous=synd[synd$lower%in%query,,drop=F]
+			cat('\t\t',length(unique(ambigous$lower))/length(query),'\tambigous matches - names that match multiple compounds\n')
+		}
+		if(grep){
+			partial=synu[grepl(paste(query,collapse='|'),synu$lower),,drop=F]
+			cat('\t\t',length(unique(partial$lower))/length(query),'\tgrep matches in "unique" names\n')
+		}
+	}
+
+	if(!loose&!grep){
+		return(list(mapped=mapped))
+	}
+	if(loose&!grep){
+		return(list(mapped=mapped,ambigous=ambigous))
+	}
+	if(loose&grep){
+		return(list(mapped=mapped,ambigous=ambigous,partial=partial))
+	}
+	cat('\n')
+}
+
+
+
+
+
 
 
