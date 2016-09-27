@@ -6856,11 +6856,16 @@ pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
 
 
 
-annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to){
+annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='median'){
+##  OPTIONS : supported "combine_method" = c('mean','median','sum') ## sum for RNA-seq : transcript per million (TPM) if mapped such that reads are not shared across transcripts (eg cufflinks), else median is more appropriate
 ##  process expression matrix with corresponding annotation matrix
 ##  - re-mapping id types and taking median of non-uniquly mapping ids
 ##  - annot_from & annot_to - expect the name of colname containing current and new ids respectively
 
+
+	if(!combine_method%in%c('mean','median','sum')){
+		stop(paste0('combine_method="',combine_method,'" not currently supported'))
+	}
 
 ##  identify multiple id to gene mappings and take median expression
 	ids=intersect(annot_mat[,annot_from],rownames(expr_mat))
@@ -6892,13 +6897,17 @@ annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to){
 	udup=unique(dupl[,annot_to])
 
 	if(length(udup)>1){
-		cat('\n\tmerge',length(udup),'genes, using meadian on all mapped probes :\n')
+		cat('\n\tmerge',length(udup),'genes, using ',combine_method,' on all mapped probes :\n')
 #		idup=udup[5]
 		dupmed=list()
 		k=1
 		for(idup in udup){
 			humpty=expr_mat[as.character(dupl[dupl[,annot_to]==idup,annot_from]),]
-			holder=apply(humpty,2,median,na.rm=T)
+
+			if(combine_method=='median'){holder=apply(humpty,2,median,na.rm=T)}
+			if(combine_method=='mean'){holder=apply(humpty,2,mean,na.rm=T)}
+			if(combine_method=='sum'){holder=apply(humpty,2,sum,na.rm=T)}
+			
 			dupmed[[idup]]=holder
 #			dumpty=cor(humpty,holder)
 #			diag(dumpty)=NA
