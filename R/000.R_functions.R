@@ -1288,7 +1288,7 @@ hist.norm<-function(x,normCurv=T,col='lightgray',points=F,density=F,prob=F,...){
 
 
 
-hist.dens<-function(x,normCurv=F,points=F,col='lightgray',density=T,prob=T,...){  #density=F, # need to add some sort of axis scaling is not very compatible
+hist.dens<-function(x,points=F,col='lightgray',density=T,prob=T,...){  #density=F, # need to add some sort of axis scaling is not very compatible
   y=hist(x,breaks=max(10,sqrt(length(x)+100)),prob=prob,...)
 
 
@@ -1301,13 +1301,6 @@ hist.dens<-function(x,normCurv=F,points=F,col='lightgray',density=T,prob=T,...){
   }
   if(points){rug(x,)}   # add tick marks below histogram
 
-  if(normCurv){
-     if(prob){warning("\tWARNING: normal curve fit is currently optimised for prob=F\n")}
-    a=min(x,na.rm=T)
-    b=max(x,na.rm=T)
-    xx=seq(a-(b-a)/10,b+(b-a)/10,length=100)
-    lines(sort(xx),dnorm(sort(xx),median(x,na.rm=T),sd(x,na.rm=T))*sum(y$counts*diff(y$breaks)),col='dodgerblue')
-    }
     return(invisible(y))
 
 # to work need to construct the plot_cols and corresponding plot_lines & add a layout param dependent on legend=T to provide space for it on the left
