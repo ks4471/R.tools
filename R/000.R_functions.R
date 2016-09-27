@@ -988,11 +988,14 @@ if(mode=="pval"){
 
 
 
-Heat<-function(cor.measures,rowclust=T,colclust=T,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),...){
+Heat<-function(cor.measures,Rowv=T,Colv=T,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",...){
 
-  if(rowclust & colclust){dendrogram="both"}
-  if(rowclust & !colclust){dendrogram="row"}
-  if(!rowclust & colclust){dendrogram="column"}
+if(class(Rowv)=='logical'&class(Colv)=='logical'){
+  if(Rowv & Colv){dendrogram="both"}
+  if(Rowv & !Colv){dendrogram="row"}
+  if(!Rowv & Colv){dendrogram="column"}
+	
+}
 # can feasibly include a parameter for dendrogram as well, for more plottting flexibility
 
     library(gplots)
@@ -1002,10 +1005,9 @@ Heat<-function(cor.measures,rowclust=T,colclust=T,ncols=101,cexrow=0.7,cexcol=0.
     if(min<0 & max>=0){heat_colors =c(colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols)); symmkey=T;ncols=ncols-1}
     if(min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
     if(min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
-  cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col = heat_colors,trace="none",dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+  cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col = heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
   return(invisible(cor_heat))
 }
-
 
 
 write.delim<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",sep="\t",...){
@@ -3194,14 +3196,14 @@ if(mode=="pval"){
 
 
 
-Load<-function(obj_path){
+Load<-function(obj_path,...){
 #  obj=ls()
 #  obj=ls()
 #  all_obj=load(obj_path)
  # print(as.matrix(sort(ls()[!(ls() %in% obj)]),decreasing=T))
 #  print(parent.frame())
 #  if(exists("readme")){cat(readme)}  # needs to be the one read-in
-  return(as.matrix(sort(load(obj_path, parent.frame()),decreasing=F)))
+  return(as.matrix(sort(load(obj_path, parent.frame(),...),decreasing=F)))
 
 #  return(load(obj_path, parent.frame()))
 }
@@ -3637,6 +3639,7 @@ get.duplicates<-function(dat_mat,col_dup,...){
 
   if(length(ndup)<1){
     cat("\tno duplicates found in column :",col_dup,"\n")
+    return(invisible(list(n.duplicated="",duplicates="",unique=dat_mat)))
   }
 
   if(length(ndup)>1){
@@ -3991,12 +3994,12 @@ if(verbose){
 #cat('\tstuffs\n')
 
 
-overlap <- function(A,B){
-    both    <-  union(A,B)
-    inA     <-  both %in% A
-    inB     <-  both %in% B
-    return(table(inA,inB))
-}
+#overlap<-function(A,B){
+#    both=union(A,B)
+#    inA=both %in% A
+#    inB=both %in% B
+#    return(table(inA,inB))
+#}
 
 #set.seed(1)
 #A <- sample(letters[1:20],10,replace=TRUE)
@@ -4833,9 +4836,9 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
   Load(paste(inpath,"/hmscDF.Rdata",sep="")) #"hmscDF" human ENSid orthologous of mice single cell enriched by class dataframe
   
   ### create a matrix for results
-  cFET <- matrix(nrow = length(clusters_list), ncol = 14)
-  row.names(cFET) <- names (clusters_list)
-  colnames(cFET) <- c("cell class","FET p.value","FET FDR","OR","[95% OR CI] inf","OR [95% OR CI] sup",
+  cFET=matrix(nrow = length(clusters_list), ncol = 14)
+  row.names(cFET)=names (clusters_list)
+  colnames(cFET)=c("cell class","FET p.value","FET FDR","OR","[95% OR CI] inf","OR [95% OR CI] sup",
                       "module cell enriched genes","module out cell enriched genes",
                       "non module cell enriched genes","non module out cell enriched genes",
                       "gene names of in modules cell enriched genes","module size","cell enriched genes size",
@@ -4843,77 +4846,77 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
   )
   print("Cell background is the genes with one2one human orthologous of mice genes used to build the list of cell class enriched genes by Zeisel et al 2015 (Science)")
   
-  resMsc<- list()
+  resMsc=list()
   for (ccl in 1:length(hmscDF)){ # ccl: cell class
-    cclENS<-hmscDF[[ccl]]
+    cclENS=hmscDF[[ccl]]
     ### function to fill the matrix of results
     #for (i in 1:length(clusters_list)){
     FUNC = function(i){
-      Ms<-length(clusters_list[[i]]) #Ms: module size
-      CB<- HUMQb[,'hsapiens_homolog_ensembl_gene'] #CB: cell background
-      Cs<-length(cclENS) #Cs: cell enriched genes size
-      MCBp<-length(intersect(CB,clusters_list[[i]]))/Ms #MCBp: % of genes in module in cell background
+      Ms=length(clusters_list[[i]]) #Ms: module size
+      CB=HUMQb[,'hsapiens_homolog_ensembl_gene'] #CB: cell background
+      Cs=length(cclENS) #Cs: cell enriched genes size
+      MCBp=length(intersect(CB,clusters_list[[i]]))/Ms #MCBp: % of genes in module in cell background
 
       #cFET
       print(paste(names(clusters_list[i]),", cell class:",names(hmscDF)[ccl]))
       #calculate the number Mc of module i cell enriched genes (Mc: in module AND in cell class)
-      Mc <- length(intersect(cclENS,clusters_list[[i]]))
-      McID<- paste(unlist(HUMQb[which(CB %in% intersect(cclENS,clusters_list[[i]])),'external_gene_name']),collapse=", ")
+      Mc=length(intersect(cclENS,clusters_list[[i]]))
+      McID=paste(unlist(HUMQb[which(CB %in% intersect(cclENS,clusters_list[[i]])),'external_gene_name']),collapse=", ")
       #calculate the number NMc of remaining genes not in module but in cell class
-      NMc<- length(cclENS)-Mc
+      NMc=length(cclENS)-Mc
       #calculate the number Mnc of genes in module but not in cell class
-      Mnc<- length(intersect(CB,clusters_list[[i]]))-Mc
+      Mnc=length(intersect(CB,clusters_list[[i]]))-Mc
       #calculate the number NMnc of genes out of module AND not in cell class
-      NMnc<- length(CB)-(Mc+NMc+Mnc)
+      NMnc=length(CB)-(Mc+NMc+Mnc)
       # contingency matrice for Fisher Exact Test FET all DNMs and ns DNMs
-      matr <- matrix(c(Mc,NMc,Mnc,NMnc), nrow = 2)
+      matr=matrix(c(Mc,NMc,Mnc,NMnc), nrow = 2)
       #FET
-      #FisherM <- fisher.test(matr,alternative = "greater")
-      FisherM <- fisher.test(matr)
-      Fisher.p <- FisherM$p.value
-      Fisher.or <- FisherM$estimate
-      Fisher.cinf <- FisherM$conf.int[1]
-      Fisher.cis <- FisherM$conf.int[2]
+      #FisherM=fisher.test(matr,alternative = "greater")
+      FisherM=fisher.test(matr)
+      Fisher.p=FisherM$p.value
+      Fisher.or=FisherM$estimate
+      Fisher.cinf=FisherM$conf.int[1]
+      Fisher.cis=FisherM$conf.int[2]
       cFET[i,]=c(names(hmscDF)[ccl],Fisher.p,NA,Fisher.or,Fisher.cinf,Fisher.cis,Mc,Mnc,NMc,NMnc,McID,Ms,Cs,MCBp)
     }
-    cfet <- mclapply(1:length(clusters_list),FUNC,mc.cores=detectCores())
+    cfet=mclapply(1:length(clusters_list),FUNC,mc.cores=detectCores())
     #The cfet output object of the mclapply function is a list of n vectors cFET[i,] in the good order
     for (i in 1:length(clusters_list)){
-      cFET[i,]<-cfet[[i]]
+      cFET[i,]=cfet[[i]]
     }
-    cFET[,"FET FDR"]<- p.adjust(cFET[,"FET p.value"],method="fdr")
+    cFET[,"FET FDR"]=p.adjust(cFET[,"FET p.value"],method="fdr")
     write.table(cFET, sep = '\t', file = paste(outpath,"/",names(hmscDF)[ccl],"_cFET_",runname,".txt",sep=""), row.names = TRUE, quote = FALSE, col.names = NA)
-    resMsc[[ccl]]<-cFET
+    resMsc[[ccl]]=cFET
   }  
-  names(resMsc) <- names(hmscDF)
+  names(resMsc)=names(hmscDF)
   if(selection==T){
-    select<- which(as.numeric(resMsc[[1]][,"FET FDR"]) < 0.2)
+    select=which(as.numeric(resMsc[[1]][,"FET FDR"]) < 0.2)
     print(paste("number of selected modules for ", names(resMsc)[1]," :",length(select)))
     if (length(select)==1){
-      SignifT<- resMsc[[1]][c(select,NA),]
-      SignifT<- SignifT[-which(is.na(rownames(SignifT)) ==T),]
+      SignifT=resMsc[[1]][c(select,NA),]
+      SignifT=SignifT[-which(is.na(rownames(SignifT)) ==T),]
     }else{
-      SignifT<- resMsc[[1]][select,]
+      SignifT=resMsc[[1]][select,]
     }
     for (ccl in 2:length(resMsc)){
-      select<- which(as.numeric(resMsc[[ccl]][,"FET FDR"]) < 0.2)
+      select=which(as.numeric(resMsc[[ccl]][,"FET FDR"]) < 0.2)
       print(paste("number of selected modules for ", names(resMsc)[ccl]," :",length(select)))
       if (length(select)==1){
-        SignifT<- rbind(SignifT,resMsc[[ccl]][c(select,NA),])
-        SignifT<- SignifT[-which(is.na(rownames(SignifT)) ==T),]
+        SignifT=rbind(SignifT,resMsc[[ccl]][c(select,NA),])
+        SignifT=SignifT[-which(is.na(rownames(SignifT)) ==T),]
       }else{
-        SignifT<- rbind(SignifT,resMsc[[ccl]][select,])
+        SignifT=rbind(SignifT,resMsc[[ccl]][select,])
       }          
     }
     write.table(SignifT, sep = '\t', file =paste(outpath,'/significant_cFET_',runname,'.txt',sep=''), row.names = TRUE, quote = FALSE, col.names = NA) 
   }else{
-    allT<- resMsc[[1]]
+    allT=resMsc[[1]]
     for (ccl in 2:length(resMsc)){
-      allT<- rbind(allT,resMsc[[ccl]])
+      allT=rbind(allT,resMsc[[ccl]])
     }
     write.table(allT, sep = '\t', file =paste(outpath,'/ALL_cFET_',runname,'.txt',sep=''), row.names = TRUE, quote = FALSE, col.names = NA) 
   }
-  return(resMsc)      
+  return(resMsc)
 }
 
 
@@ -6185,49 +6188,6 @@ install.dependencies<-function(){
 
 
 
-annot_combine<-function(expr_mat,annot_mat,annot_from,annot_to){
-##  process expression matrix with corresponding annotation matrix
-##  - re-mapping id types and taking median of non-uniquly mapping ids
-##  - annot_from & annot_to - expect the name of colname containing current and new ids respectively
-
-
-##  identify multiple id to gene mappings and take median expression
-	dupli=get.duplicates(annot_mat,'name')
-	duplg=names(dupli$n.duplicated)
-
-	 cat('\n\tobserved correlations between "probes" mapping to the same "gene"\n')
-	dup=list()
-	for(igen in duplg){
-		humpty=expr_mat[annot_mat[annot_mat[,annot_to]==igen,annot_from],]
-		dummy=cor(t(humpty))
-		cat('\t',igen,'        \t',round(dummy[1,2:ncol(dummy)],digits=3),'\n')
-
-		dumpty=(as.data.frame(apply(humpty,2,median)))
-#			colnames(dumpty)=igen
-		dup[[igen]]=dumpty
-
-	}
-
-	dup=t(as.data.frame(dup))
-		rownames(dup)=duplg
-
-##  re-map ids for 'unique' ids to gene mapping
-	ids=intersect(annot_mat[!(annot_mat[,annot_to]%in%duplg),annot_from],rownames(expr_mat))
-	unc=expr_mat[ids,]
-		rownames(annot_mat)=annot_mat[,annot_from]
-	annot_mat=annot_mat[ids,]
-		rownames(unc)=annot_mat[,annot_to]
-
-
-		cat('\n\tuniquely mapping ids:',nrow(unc),', ',round(nrow(unc)/nrow(expr_mat),digits=2)*100,'%    multiple mapping ids :',nrow(dup),', ',round(nrow(dup)/nrow(expr_mat),digits=2)*100,'%\n')
-
-	expr_out=rbind(unc,dup)
-		cat('\tfinal output contains',nrow(expr_out),', ',round(nrow(expr_out)/nrow(expr_mat),digits=2)*100,'%\n')
-	return(invisible(expr_out))
-
-}
-
-
 
 
 
@@ -6585,6 +6545,7 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 cmap.meta<-function(lmod,bkg='NA',de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
 
 cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/5nyydp1y5htikba/004.DTB.full_info.single_DEG.meta_randM.batch_corrected.scored.Rdata?dl=0\n\n')
+cat('\n\tNOTE: currently list of drugs to test is taked from "degen" only, adding a drug name/data to only "metsum" will not perform enrichments\n\n')
 
 # INPUT: lmod - list of module names (for each expect chracter vector $up $down of ENSG, if unavailable, arbitrarily assign all genes to $up or $down)
 ####   input format :
@@ -6636,7 +6597,7 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 		holder=list()
 	#		holder$n.bg=nrow(dummy)
-	#		holder$n.bg.all=nrow(dummy)
+			holder$n.bg.all=rownames(dummy)
 			holder$n.bg.sig=rownames(dummy[dummy$adj.p<de_thresh,])
 			holder$n.bg.sig_up=rownames(dummy[dummy$adj.p<de_thresh & dummy$log.fc>0,])
 			holder$n.bg.sig_down=rownames(dummy[dummy$adj.p<de_thresh  & dummy$log.fc<0,])
@@ -6695,7 +6656,7 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 		holder=list()
 	#		holder$n.bg=nrow(dummy)
-	#		holder$n.bg.all=nrow(dummy)
+			holder$n.bg.all=nrow(dummy)
 			holder$n.bg.sig=rownames(dummy[dummy$adj.p<de_thresh,])
 			holder$n.bg.sig_up=rownames(dummy[dummy$adj.p<de_thresh & dummy$log.fc>0,])
 			holder$n.bg.sig_down=rownames(dummy[dummy$adj.p<de_thresh  & dummy$log.fc<0,])
@@ -6848,15 +6809,15 @@ pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
 			cat('\tmapping',length(query),'compounds - same case matches\n')
 
 		mapped=synu[synu$synonym%in%query,,drop=F]
-		cat('\t\t',length(unique(mapped$synonym))/length(query),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
+		cat('\t\t',round(length(unique(mapped$synonym))/length(query),digits=2),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
 
-		if(loose){
-			ambigous=synd[synd$synonym%in%query,,drop=F]
-			cat('\t\t',length(unique(ambigous$synonym))/length(query),'\tambigous matches - names that match multiple compounds\n')
-		}
+#		if(loose){
+#			ambigous=synd[synd$synonym%in%query,,drop=F]
+#			cat('\t\t',round(length(unique(ambigous$synonym))/length(query),digits=2),'\tambigous matches - names that match multiple compounds\n')
+#		}
 		if(grep){
 			partial=synu[grepl(paste(query,collapse='|'),synu$synonym),,drop=F]
-			cat('\t\t',length(unique(partial$synonym))/length(query),'\tgrep matches in "unique" names\n')
+			cat('\t\t',round(length(unique(partial$synonym))/length(query),digits=2),'\tgrep matches in "unique" names\n')
 		}
 	}
 
@@ -6865,15 +6826,15 @@ pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
 			cat('\tmapping',length(query),'compounds - all lower case\n')
 
 		mapped=synu[synu$lower%in%query,,drop=F]
-		cat('\t\t',length(unique(mapped$lower))/length(query),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
+		cat('\t\t',round(length(unique(mapped$lower))/length(query),digits=2),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
 
-		if(loose){
-			ambigous=synd[synd$lower%in%query,,drop=F]
-			cat('\t\t',length(unique(ambigous$lower))/length(query),'\tambigous matches - names that match multiple compounds\n')
-		}
+#		if(loose){
+#			ambigous=synd[synd$lower%in%query,,drop=F]
+#			cat('\t\t',round(length(unique(ambigous$lower))/length(query),digits=2),'\tambigous matches - names that match multiple compounds\n')
+#		}
 		if(grep){
 			partial=synu[grepl(paste(query,collapse='|'),synu$lower),,drop=F]
-			cat('\t\t',length(unique(partial$lower))/length(query),'\tgrep matches in "unique" names\n')
+			cat('\t\t',round(length(unique(partial$lower))/length(query),digits=2),'\tgrep matches in "unique" names\n')
 		}
 	}
 
@@ -6893,5 +6854,65 @@ pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
 
 
 
+
+
+annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to){
+##  process expression matrix with corresponding annotation matrix
+##  - re-mapping id types and taking median of non-uniquly mapping ids
+##  - annot_from & annot_to - expect the name of colname containing current and new ids respectively
+
+
+##  identify multiple id to gene mappings and take median expression
+	ids=intersect(annot_mat[,annot_from],rownames(expr_mat))
+		cat('\n\texpr_mat',round(length(ids)/nrow(expr_mat),digits=3)*100,'%  ids intresect with annot_mat\n')
+		cat('\tannot_mat',annot_from,round(length(ids)/length(unique(annot_mat[,annot_from]))*100,digits=3),'%  ids intresect with expr_mat\n')
+
+	expr_mat=expr_mat[ids,]
+	annot_mat=annot_mat[annot_mat[,annot_from]%in%ids,]
+
+	cat('\n\tremove non-specific (duplicated) ids in',annot_from,' :\n')
+	annot_mat=get.duplicates(annot_mat,annot_from)$unique
+	cat('\n\tget genes with multiple ids in',annot_to,' :\n')
+	dupli=get.duplicates(annot_mat,annot_to)
+	unic=dupli$unique
+	dupl=dupli$duplicates
+
+	if(nrow(unic)>0){
+		ids=intersect(unic[,annot_from],rownames(expr_mat))
+		expu=expr_mat[sort(ids),]
+			rownames(unic)=unic[,annot_from]
+		unic=unic[rownames(expu),]
+		matst(rownames(expu)==rownames(unic))
+		matst(unic[,annot_from]==rownames(unic))
+			rownames(expu)=unic[,annot_to]
+
+		 cat('\n\t',frac(nrow(expu),nrow(expr_mat))*100,'%  ids uniquely mapped\n')
+	}
+
+	udup=unique(dupl[,annot_to])
+
+	if(length(udup)>1){
+		cat('\n\tmerge',length(udup),'genes, using meadian on all mapped probes :\n')
+#		idup=udup[5]
+		dupmed=list()
+		k=1
+		for(idup in udup){
+			humpty=expr_mat[as.character(dupl[dupl[,annot_to]==idup,annot_from]),]
+			holder=apply(humpty,2,median,na.rm=T)
+			dupmed[[idup]]=holder
+#			dumpty=cor(humpty,holder)
+#			diag(dumpty)=NA
+#			dumpty=c(min(dumpty,na.rm=T),max(dumpty,na.rm=T),length(dumpty))
+#			cat('\t\t\t',paste(round(dumpty,digits=2),collapse=",\t"),'\n')
+			k=lcount(k,length(udup))
+		}
+		dupmed=t(as.data.frame(dupmed))
+	}
+
+	expr_out=rbind(expu,dupmed)
+		cat('\n\tfinal output contains',nrow(expr_out),' genes, ',round(nrow(expr_out)/nrow(expr_mat),digits=2)*100,'% of original input\n')
+	return(invisible(expr_out))
+
+}
 
 
