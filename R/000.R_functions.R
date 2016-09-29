@@ -1005,6 +1005,10 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
     if(min<0 & max>=0){heat_colors =c(colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols)); symmkey=T;ncols=ncols-1}
     if(min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
     if(min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
+
+    if(min==0 & max>=0){heat_colors=c(colorRampPalette(c("white","#F0E442","darkred"))(ncols+1));symmkey=F}
+    if(min==0 & max<=0){heat_colors=c(colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols+1));symmkey=F}
+
   cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
   return(invisible(cor_heat))
 }
@@ -6872,7 +6876,7 @@ pubchem.idmatch<-function(query,pubchem_db){
 # INPUTS: pubchem_db -  colnames("pubchem_CID" "synonym"     "lower") lower=tolower(pubchem_db$synonym
 # INPUTS: query - character string of synonyms to search the "lower"
 	query=unique(tolower(query))
-	cat('\n\tconvert',length(query),'synonyms to pubchem IDs\n')
+	cat('\n\tconvert',length(query),'unique synonyms to pubchem IDs :\n')
 	holder=pubchem_db[pubchem_db$lower%in%query,]
 	cat('\t\t',length(unique(holder$query)),'of',length(unique(query)),'ids mapped',round(length(unique(holder$query))/length(unique(query)),digits=3)*100,'%\n')
 
