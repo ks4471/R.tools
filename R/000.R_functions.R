@@ -988,7 +988,7 @@ if(mode=="pval"){
 
 
 
-Heat<-function(cor.measures,Rowv=T,Colv=T,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",...){
+Heat<-function(cor.measures,Rowv=T,Colv=T,values=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",...){
 
 if(class(Rowv)=='logical'&class(Colv)=='logical'){
   if(Rowv & Colv){dendrogram="both"}
@@ -1003,15 +1003,25 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
     max=ceiling(max(cor.measures))
     cat('\tmin=',min,', max=',max,'\n') 
     if(min<0 & max>=0){heat_colors =c(colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols)); symmkey=T;ncols=ncols-1}
-    if(min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
-    if(min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
+    if(mingrey & min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
+    if(mingrey & min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
 
-    if(min==0 & max>=0){heat_colors=c(colorRampPalette(c("white","#F0E442","darkred"))(ncols+1));symmkey=F}
-    if(min==0 & max<=0){heat_colors=c(colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols+1));symmkey=F}
+    if(!mingrey & min==0 & max>=0){heat_colors=c(colorRampPalette(c("white","#F0E442","darkred"))(ncols+1));symmkey=F}
+    if(!mingrey & min==0 & max<=0){heat_colors=c(colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols+1));symmkey=F}
+
 
   cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+
+  if(values){
+  	celdat=round(query,digits=2)
+  	celdat[celdat==min(celdat)]=""
+  cor_heat=heatmap.2((cor.measures),cellnote=celdat,notecex=values.cex,,notecol="black",breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+  }
+
   return(invisible(cor_heat))
 }
+
+
 
 
 write.delim<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",sep="\t",...){
