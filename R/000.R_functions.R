@@ -81,7 +81,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-#fnames=list.files("/Users/Shkura/Dropbox/Cognition/GWAS/magma/hrh.magma/out/netw.enrich", pattern = ".out", full.names = TRUE)
+#fnames=list.files("/Users/Shkura/Dropbox/Cognition/GWAS/magma/hrh.magma/out/netw.enrich", pattern=".out", full.names=TRUE)
 #basename
 #dirname
 #basename(fnames)
@@ -96,7 +96,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 ## useful concept : add a readme.object.in.saved.R.object when saving file create a "method" / "description" of the file for easier handover / re-analysis
 ##  readme.lires=
 #            "\tlires - differentially expressed genes in the hippocampus compared to 3 other brain regions FC, OC, TC Hardy UKBEC dataset n=102\n
-#            \tdesm = design matrix file for limma\n
+#            \tdesm=design matrix file for limma\n
 #            limma used for this code.file : 003.DifferentiallyExpressedGenes.limma.R     |\n|     adj.P - calculated based using FDR, CX excluded because it is very differentially expressed compared to the other 3 - all genes were differential with CX"
 ##  save(lires,desm,readme,file="~/Dropbox/CapricaPrime/RU/dtb/secondary/HC.differentially.expressed.v.FC.OC.TC.R")
 
@@ -154,7 +154,7 @@ https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0
 
 #specify the name of the object in the R binary file you just loaded ||  can use this to load R binary files instead of 'load':
 
-#file_path = "/User/dy/my_R_data/a_data_set.RData"
+#file_path="/User/dy/my_R_data/a_data_set.RData"
 #attach(file_path, pos=2, name=choose_a_name, warn.conflict=T)
 #'warn.conflicts=T' is the default option
 
@@ -593,7 +593,7 @@ if(help==T){
       cat("\tOPTIONS:\tfactors - column numbers to convert to factor instead of numeric  |  default='none'\n")
       cat("\tNOTE:\tcharacter columns can be converted to numeric 'categories' by as.numeric (default)\n\n")
       }
-# for any correlation analysis like linear modeling non-numeric categories eg 'sex' should always be converted to factor, numeric 1 = male, 2=female is considered 2>1 vs 1!=2 if as.factor
+# for any correlation analysis like linear modeling non-numeric categories eg 'sex' should always be converted to factor, numeric 1=male, 2=female is considered 2>1 vs 1!=2 if as.factor
 
 # cat("converting",class(Matrix),"dimensions :",dim(Matrix),"\n")
 
@@ -805,9 +805,9 @@ if(check_rows==T){
   num_row=apply(dat_num,1,sd)
 
   numvarrow=names(num_row)[num_row==0]
-    if(length(numvarrow)){cat("\trow - values do not vary (sd=0) :\t",paste(numvarrow,collapse=", "),"\n")}
+    if(length(numvarrow)){cat("\t",length(numvarrow),"rows - values do not vary (sd=0) , first ",min(20,length(numvarrow)),":\n",paste(numvarrow[1:min(20,length(numvarrow))],collapse=", "),"\n")}
   facvarrow=names(fac_row)[fac_row==1]
-    if(length(facvarrow)){cat("\trow - contains single value :\t\t",paste(facvarrow,collapse=", "),"\n")}
+    if(length(facvarrow)){cat("\t",length(facvarrow),"rows - contain single value 'factor', first ",min(20,length(facvarrow)),":\n",paste(facvarrow[1:min(20,length(facvarrow))],collapse=", "),"\n")}
   facvaridr=names(fac_row)[fac_row==nrow(dat_fac)]
     if(length(facvaridr)){cat("\trow - as many levels as rows :\t\t",paste(facvaridr,collapse=", "),"\n")}
   rowind=!(rownames(dat_mat)%in% c(numvarrow,facvarrow,facvaridr))
@@ -848,9 +848,9 @@ psig<-function(dat_mat,p_col,sort=F){
 # extract p-value form linear model
 lmp <- function (modelobject) {
     if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
-    f = summary(modelobject)$fstatistic
-    p = pf(f[1],f[2],f[3],lower.tail=F)
-    attributes(p) = NULL
+    f=summary(modelobject)$fstatistic
+    p=pf(f[1],f[2],f[3],lower.tail=F)
+    attributes(p)=NULL
     return(p)
 }
 
@@ -876,7 +876,7 @@ lplot<-function(x,n,legend=T,xlab="",ylab="",main="",adjust=0,thresh=0.01){
   coords=max((adjust+1),1):min(11,(ncol(x)+(adjust)))
 print(coords)
   par(mar=c(8.1,8.1,4.1,2.1),mgp=c(7,1,0))
-  pchl=c(21:25,15:20)   # col - specifies color of 15:20 and border color in 21:25, bg = color of 21:25, nothing in 15:20
+  pchl=c(21:25,15:20)   # col - specifies color of 15:20 and border color in 21:25, bg=color of 21:25, nothing in 15:20
   coll=c(   # color pallete optimised for omitting 1, if plotting using all the alternatives for 4:5, 7:8 are more useful
   "#0072B2" 
   ,"#E69F00"
@@ -918,13 +918,13 @@ plot(seq(floor(range(x[,(which(x==max(x,na.rm=T),arr=T))[1,2]])[1]),ceiling(rang
     points(x[,i-(adjust)],pch=pchl[i],bg=coll[i],col=coll[i])
   }
   if(legend==T){
-    legend(x="topright",pch=pchl[coords],box.lwd = 0,box.col = "white",col=coll[coords],pt.bg=coll[coords],legend=colnames(x)[1:min(11,ncol(x))],cex=1)
+    legend(x="topright",pch=pchl[coords],box.lwd=0,box.col="white",col=coll[coords],pt.bg=coll[coords],legend=colnames(x)[1:min(11,ncol(x))],cex=1)
   }}
 
 
 
 
-Heatmap<-function(cor.measures,min=-1,max=1,rowclust=F,colclust=F,ncols=101,dendrogram="none",main="",mode="cor",sig=T,cexrow=0.7,cexcol=0.7,margin=c(5,5),lheight=c(0.1,0.9),lwidth=c(0.7,0.3),lmatrix = rbind(c(4,3),c(1,2))){
+Heatmap<-function(cor.measures,min=-1,max=1,rowclust=F,colclust=F,ncols=101,dendrogram="none",main="",mode="cor",sig=T,cexrow=0.7,cexcol=0.7,margin=c(5,5),lheight=c(0.1,0.9),lwidth=c(0.7,0.3),lmatrix=rbind(c(4,3),c(1,2))){
   library(gplots)
 # print("Heatmap( 'matrix to use' , 'min value for legend cols' , 'max ..' , 'clust by rows', 'clust by cols' , 'ncols to use for legend', 'dendrogram=c('none','row','column','both')' )")
 # min=-1
@@ -936,9 +936,9 @@ Heatmap<-function(cor.measures,min=-1,max=1,rowclust=F,colclust=F,ncols=101,dend
 
 if(mode=="cor"){
   print("plotting correlation based matrix")
-#  heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col = colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=0.7,   cexRow=0.7,   lheight = lheight,symkey=T,main=main,lmat=lmatrix)#,lwid=c(0.5,0.5))
-   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col = colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,   symkey=T,main=main,lwid=lwidth,lmat=lmatrix)
-#   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col = colorRampPalette(c("#08306b","#08519c","#2171b5","#4292c6","#6baed6","#9ecae1","#c6dbef","#deebf7","#f7fbff","white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,   symkey=T,main=main,lwid=lwidth,lmat=lmatrix)
+#  heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col=colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=0.7,   cexRow=0.7,   lheight=lheight,symkey=T,main=main,lmat=lmatrix)#,lwid=c(0.5,0.5))
+   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col=colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,   symkey=T,main=main,lwid=lwidth,lmat=lmatrix)
+#   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col=colorRampPalette(c("#08306b","#08519c","#2171b5","#4292c6","#6baed6","#9ecae1","#c6dbef","#deebf7","#f7fbff","white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,   symkey=T,main=main,lwid=lwidth,lmat=lmatrix)
 
 #"white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"
 }
@@ -967,17 +967,17 @@ if(mode=="pval"){
         }
       }
     }
-#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,
-    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,   
-#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,   
+#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,
+    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,   
+#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,   
 
 
   }
   if(sig==F){
     print("plotting p-value based matrix, no cellnotes")
-#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,    
-    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)
-#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)
+#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,    
+    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)
+#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)
 
   }
 }
@@ -1005,7 +1005,7 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
     if(min<0 & max>=0){heat_colors =c(colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols)); symmkey=T;ncols=ncols-1}
     if(min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
     if(min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
-  cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col = heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+  cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
   return(invisible(cor_heat))
 }
 
@@ -1032,19 +1032,19 @@ DAVID_enrich_list<-function(backg,clusters_list,idType= "ENSEMBL_GENE_ID", query
     result<-addList(david, inputIds=clusters_list[[i]], idType=idType, listName=names(clusters_list)[i],listType=query_type)
   
     setAnnotationCategories(david, "GOTERM_BP_ALL")
-    GOBPchart <- getFunctionalAnnotationChart(david, threshold = 0.1)
+    GOBPchart <- getFunctionalAnnotationChart(david, threshold=0.1)
     GOBPchart=GOBPchart[GOBPchart$FDR < 5,]
     setAnnotationCategories(david, "GOTERM_MF_ALL")
-    GOMFchart <- getFunctionalAnnotationChart(david, threshold = 0.1)
+    GOMFchart <- getFunctionalAnnotationChart(david, threshold=0.1)
     GOMFchart=GOMFchart[GOMFchart$FDR < 5,]
     setAnnotationCategories(david, "GOTERM_CC_ALL")
-    GOCCchart <- getFunctionalAnnotationChart(david, threshold = 0.1)
+    GOCCchart <- getFunctionalAnnotationChart(david, threshold=0.1)
     GOCCchart=GOCCchart[GOCCchart$FDR < 5,]
     setAnnotationCategories(david, "KEGG_PATHWAY")
-    KEGGchart <- getFunctionalAnnotationChart(david, threshold = 0.1)
+    KEGGchart <- getFunctionalAnnotationChart(david, threshold=0.1)
     KEGGchart=KEGGchart[KEGGchart$FDR < 5,]
     setAnnotationCategories(david, "OMIM_DISEASE")
-    OMIMchart <- getFunctionalAnnotationChart(david, threshold = 0.1)
+    OMIMchart <- getFunctionalAnnotationChart(david, threshold=0.1)
     OMIMchart=OMIMchart[OMIMchart$FDR < 5,]
 #   DAVID_clusters[[i]]=list("GOBPchart"=GOBPchart,"GOMFchart"=GOMFchart,"GOCCchart"=GOCCchart,"KEGGchart"=KEGGchart,"OMIMchart"=OMIMchart)
     DAVID_clusters[[i]]=list(GOBPchart,GOMFchart,GOCCchart,KEGGchart,OMIMchart)
@@ -1098,33 +1098,33 @@ plot_DAVID_enrich<-function(david_list_enrichments,out_path,name_module,module_i
   library(ggplot2)  
 
 if(module_info!=""){
-  dir.create(file.path(out_path, module_info), showWarnings = F)   # suppresses warnings generated if folder already exists
+  dir.create(file.path(out_path, module_info), showWarnings=F)   # suppresses warnings generated if folder already exists
   out_path=paste(out_path,module_info,sep="")
 
 }
 
-#    dir.create(file.path(out_path, "david.annot"), showWarnings = F)   # suppresses warnings generated if folder already exists
-#    dir.create(file.path(paste(out_path,"/david.annot",sep=""), "plots_GO"), showWarnings = F)   # suppresses warnings generated if folder already exists
-#    dir.create(file.path(paste(out_path,"/david.annot",sep=""), "plots_KEGG"), showWarnings = F)   # suppresses warnings generated if folder already exists
-#    dir.create(file.path(paste(out_path,"/david.annot",sep=""), "plots_OMIM"), showWarnings = F)   # suppresses warnings generated if folder already exists
+#    dir.create(file.path(out_path, "david.annot"), showWarnings=F)   # suppresses warnings generated if folder already exists
+#    dir.create(file.path(paste(out_path,"/david.annot",sep=""), "plots_GO"), showWarnings=F)   # suppresses warnings generated if folder already exists
+#    dir.create(file.path(paste(out_path,"/david.annot",sep=""), "plots_KEGG"), showWarnings=F)   # suppresses warnings generated if folder already exists
+#    dir.create(file.path(paste(out_path,"/david.annot",sep=""), "plots_OMIM"), showWarnings=F)   # suppresses warnings generated if folder already exists
 
-    dir.create(file.path(out_path, "david_GO"), showWarnings = F)   # suppresses warnings generated if folder already exists
-    dir.create(file.path(out_path, "david_KEGG"), showWarnings = F)   # suppresses warnings generated if folder already exists
-    dir.create(file.path(out_path, "david_OMIM"), showWarnings = F)   # suppresses warnings generated if folder already exists
+    dir.create(file.path(out_path, "david_GO"), showWarnings=F)   # suppresses warnings generated if folder already exists
+    dir.create(file.path(out_path, "david_KEGG"), showWarnings=F)   # suppresses warnings generated if folder already exists
+    dir.create(file.path(out_path, "david_OMIM"), showWarnings=F)   # suppresses warnings generated if folder already exists
 
 
   #combine GO terms results in single table
   GO_table=do.call(rbind,david_list_enrichments[1:3])
   if(nrow(GO_table)>0){
       GO_table=GO_table[with(GO_table, order(FDR,decreasing=T)), ]
-      GO_table$minusLog10BH= -log((GO_table$FDR/100), base = 10)
+      GO_table$minusLog10BH= -log((GO_table$FDR/100), base=10)
       GO_table$Term=gsub("GO:[0-9]+~","",GO_table$Term)
       #add here if dim > 0, save pdf, add KEGG and OMIM
       if(nrow(GO_table) > 10){number_plot=10}else{number_plot=nrow(GO_table)}
         pdf(file=paste(out_path,"/david_GO/",module_info,"GO_functional_enrich_plot_",name_module,module_info,".pdf",sep=""),height=4,width=6)
-          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y = minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
-          geom_bar(colour="black",stat= "identity", width=.4, fill = "darkred") + ggtitle(paste("GO ",name_module,module_info,sep="")) +
-          theme_bw(base_size = 12, base_family = "") + coord_flip()
+          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
+          geom_bar(colour="black",stat= "identity", width=.4, fill="darkred") + ggtitle(paste("GO ",name_module,module_info,sep="")) +
+          theme_bw(base_size=12, base_family="") + coord_flip()
           print(GOBPplot)
         dev.off()
 
@@ -1136,13 +1136,13 @@ if(module_info!=""){
   if(nrow(david_list_enrichments$KEGGchart)>0){
       GO_table=david_list_enrichments$KEGGchart
       GO_table=GO_table[with(GO_table, order(FDR,decreasing=T)), ]
-      GO_table$minusLog10BH= -log((GO_table$FDR/100), base = 10)
+      GO_table$minusLog10BH= -log((GO_table$FDR/100), base=10)
       GO_table$Term=unlist(lapply(strsplit(GO_table$Term,":"),function(x){x=x[2]}))
       if(nrow(GO_table) > 10){number_plot=10}else{number_plot=nrow(GO_table)}
         pdf(file=paste(out_path,"/david_KEGG/",module_info,"KEGG_functional_enrich_plot_",name_module,".pdf",sep=""),height=4,width=6)
-          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y = minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
-          geom_bar(colour="black",stat= "identity", width=.4, fill = "darkgrey") + ggtitle(paste("KEGG ",name_module,module_info,sep="")) +
-          theme_bw(base_size = 12, base_family = "") + coord_flip()
+          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
+          geom_bar(colour="black",stat= "identity", width=.4, fill="darkgrey") + ggtitle(paste("KEGG ",name_module,module_info,sep="")) +
+          theme_bw(base_size=12, base_family="") + coord_flip()
           print(GOBPplot)
         dev.off()
   
@@ -1151,14 +1151,14 @@ if(module_info!=""){
   if(nrow(david_list_enrichments$OMIMchart)>0){
       GO_table=david_list_enrichments$OMIMchart
       GO_table=GO_table[with(GO_table, order(FDR,decreasing=T)), ]
-      GO_table$minusLog10BH= -log((GO_table$FDR/100), base = 10)
+      GO_table$minusLog10BH= -log((GO_table$FDR/100), base=10)
       GO_table$Term=unlist(lapply(strsplit(GO_table$Term,":"),function(x){x=x[2]}))
       #add here if dim > 0, save pdf, add KEGG and OMIM
       if(nrow(GO_table) > 10){number_plot=10}else{number_plot=nrow(GO_table)}
         pdf(file=paste(out_path,"/david_OMIM/",module_info,"OMIM_functional_enrich_plot_",name_module,module_info,".pdf",sep=""),height=4,width=6)
-          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y = minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
-          geom_bar(colour="black",stat= "identity", width=.4, fill = "darkgrey") + ggtitle(paste("OMIM ",name_module,module_info,sep="")) +
-          theme_bw(base_size = 12, base_family = "") + coord_flip()
+          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
+          geom_bar(colour="black",stat= "identity", width=.4, fill="darkgrey") + ggtitle(paste("OMIM ",name_module,module_info,sep="")) +
+          theme_bw(base_size=12, base_family="") + coord_flip()
           print(GOBPplot)
         dev.off()
 
@@ -1283,7 +1283,7 @@ hist.norm<-function(x,normCurv=T,col='lightgray',points=F,density=F,prob=F,...){
     return(invisible(y))
 
 # to work need to construct the plot_cols and corresponding plot_lines & add a layout param dependent on legend=T to provide space for it on the left
-#    legend(x="topright",pch=16,box.lwd = 0,box.col = "white",col=plot_cols,legend=plot_lines)
+#    legend(x="topright",pch=16,box.lwd=0,box.col="white",col=plot_cols,legend=plot_lines)
 }
 
 
@@ -1304,7 +1304,7 @@ hist.dens<-function(x,points=F,col='lightgray',density=T,prob=T,...){  #density=
     return(invisible(y))
 
 # to work need to construct the plot_cols and corresponding plot_lines & add a layout param dependent on legend=T to provide space for it on the left
-#    legend(x="topright",pch=16,box.lwd = 0,box.col = "white",col=plot_cols,legend=plot_lines)
+#    legend(x="topright",pch=16,box.lwd=0,box.col="white",col=plot_cols,legend=plot_lines)
 }
 
 
@@ -1336,59 +1336,59 @@ EE_FET <- function(clusters_list){
   ### annotation of genes with ENS gene ID
   library(biomaRt)
   ensembl=useMart("ensembl")
-  HUMensembl = useMart('ensembl',dataset = 'hsapiens_gene_ensembl')
+  HUMensembl=useMart('ensembl',dataset='hsapiens_gene_ensembl')
   eeGene <- EE$Gene
   nseeGene <- nsEE$Gene
   nafeGene <-NAFE[,'CCDS_r14']
   nsnafeGene <-nsNAFE[,'CCDS_r14']
   
-  eeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters = 'external_gene_name', values = eeGene, mart = HUMensembl)
-  nseeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters = 'external_gene_name', values = nseeGene, mart = HUMensembl)
-  nafeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters = 'external_gene_name', values = nafeGene, mart = HUMensembl)
-  nsnafeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters = 'external_gene_name', values = nsnafeGene, mart = HUMensembl)
+  eeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=eeGene, mart=HUMensembl)
+  nseeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nseeGene, mart=HUMensembl)
+  nafeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nafeGene, mart=HUMensembl)
+  nsnafeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nsnafeGene, mart=HUMensembl)
   
   ## keep in mind that there are sometimes several ENS gene id for only 1 external_gene_name
   #length(which(duplicated(eeENS$external_gene_name) == TRUE))
   #[1] 29
   
   ### create a matrix for results
-  EE_FET_clusters <- matrix(nrow = length(clusters_list), ncol = 6)
+  EE_FET_clusters <- matrix(nrow=length(clusters_list), ncol=6)
   row.names(EE_FET_clusters) <- names (clusters_list)
   colnames(EE_FET_clusters) <- c("FET p.value all DNMs","OR all DNMs","[95% CI] all DNMs","FET Pvalue nsDNMs","OR nsDNMs","[95% CI] nsDNMs")  
   
   ### function to fill the matrix of results
   for (i in 1:length(clusters_list)){
     ## function to calculate the number Mc of DNMs in CTRL involving a gene of the cluster i
-    y <- lapply(clusters_list[[i]],FUN = function(x) {nafeENS[which(nafeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mc <- sum(sapply(as.matrix(unique(y)),FUN = function(ym) {length(which(NAFE[,'CCDS_r14'] == ym ))}))
+    y <- lapply(clusters_list[[i]],FUN=function(x) {nafeENS[which(nafeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mc <- sum(sapply(as.matrix(unique(y)),FUN=function(ym) {length(which(NAFE[,'CCDS_r14'] == ym ))}))
     
     ## number NMc of remaining DNMs in CTRL involving a gene not in the cluster i
     NMc <- nrow(NAFE)-Mc
     
     ##function to calculate the number Mee of DNMs in EE involving a gene of the cluster i
-    z <- lapply(clusters_list[[i]],FUN = function(x) {eeENS[which(eeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mee <- sum(sapply(as.matrix(unique(z)),FUN = function(zm) {length(which(EE$Gene == zm ))}))
+    z <- lapply(clusters_list[[i]],FUN=function(x) {eeENS[which(eeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mee <- sum(sapply(as.matrix(unique(z)),FUN=function(zm) {length(which(EE$Gene == zm ))}))
     
     ## number NMee of remaining DNMs in EE involving a gene not in the cluster i  
     NMee <- nrow(EE)-Mee
     
     ## function to calculate the number Mnsc of nsDNMs in CTRL NAFE involving a gene of the cluster i
-    nsy <- lapply(clusters_list[[i]],FUN = function(x) {nsnafeENS[which(nsnafeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mnsc <- sum(sapply(as.matrix(unique(nsy)),FUN = function(ym) {length(which(nsNAFE[,'CCDS_r14'] == ym ))}))
+    nsy <- lapply(clusters_list[[i]],FUN=function(x) {nsnafeENS[which(nsnafeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mnsc <- sum(sapply(as.matrix(unique(nsy)),FUN=function(ym) {length(which(nsNAFE[,'CCDS_r14'] == ym ))}))
     
     ## number NMnsc of remaining nsDNMs in CTRL involving a gene not in the cluster i
     NMnsc <- nrow(nsNAFE)-Mnsc
     
     ##function to calculate the number Mnsee of nsDNMs in EE involving a gene of the cluster i
-    nsz <- lapply(clusters_list[[i]],FUN = function(x) {nseeENS[which(nseeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mnsee <- sum(sapply(as.matrix(unique(nsz)),FUN = function(zm) {length(which(nsEE$Gene == zm ))}))
+    nsz <- lapply(clusters_list[[i]],FUN=function(x) {nseeENS[which(nseeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mnsee <- sum(sapply(as.matrix(unique(nsz)),FUN=function(zm) {length(which(nsEE$Gene == zm ))}))
     
     ## number NMnsee of remaining nsDNMs in EE involving a gene not in the cluster i  
     NMnsee <- nrow(nsEE)-Mnsee
 
     # contingency matrice for Fisher Exact Test FET all DNMs and ns DNMs
-    matrALL <- matrix(c(Mee,Mc,NMee,NMc), nrow = 2)
-    matrNS <- matrix(c(Mnsee,Mnsc,NMnsee,NMnsc), nrow = 2)
+    matrALL <- matrix(c(Mee,Mc,NMee,NMc), nrow=2)
+    matrNS <- matrix(c(Mnsee,Mnsc,NMnsee,NMnsc), nrow=2)
     
     # FET
     FisherMEE <- fisher.test(matrALL)
@@ -1402,7 +1402,7 @@ EE_FET <- function(clusters_list){
     
     EE_FET_clusters[i,]=c(FisherMEEp,FisherMEEor,FisherMEEci,FisherMnsEEp,FisherMnsEEor,FisherMnsEEci)
   }
-  write.table(EE_FET_clusters, sep = '\t', file = 'EE_FET_clusters.txt', row.names = TRUE, quote = FALSE, col.names = NA)
+  write.table(EE_FET_clusters, sep='\t', file='EE_FET_clusters.txt', row.names=TRUE, quote=FALSE, col.names=NA)
   return(EE_FET_clusters)
 }
 
@@ -1433,12 +1433,12 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
       enrich[imod,"n.genes.module"]=length(module[[imod]])
       enrich[imod,"pc.overlap.genes"]=round(length(idy)/length(module[[imod]]),digits=3)
 
-    ##   type 1 = z-test (USE THIS ONE)
+    ##   type 1=z-test (USE THIS ONE)
       if(type==1){
         cat("\t'z-test' enrichment   ||   ",imod,"\t: ",which(names(module)==imod),"of",length(names(module)),"\n")
         module_p<-mean(-log10(module_final[,2]),na.rm=TRUE)  
       }
-    ##  type 2 = fishers combined p-value
+    ##  type 2=fishers combined p-value
       else if(type==2){
         cat("  'fisher's combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
         df<-2*length(module_final[,2])
@@ -1446,7 +1446,7 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
         temp2<- -2*sum(temp1)
         module_p<-pchisq(temp2,df,lower.tail=FALSE)
       }
-    ##  type 3 = stouffer combined p-value
+    ##  type 3=stouffer combined p-value
       else if(type==3){
         cat("  'stouffer combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
         temp1<-qnorm(1-module_final[,2])/sqrt(length(module_final[,2]))
@@ -1559,12 +1559,12 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
       enrich[imod,"n.genes.module"]=length(module[[imod]])
       enrich[imod,"pc.overlap.genes"]=round(length(idy)/length(module[[imod]]),digits=3)
 
-    ##   type 1 = z-test (USE THIS ONE)
+    ##   type 1=z-test (USE THIS ONE)
       if(type==1){
         cat("  'z-test' enrichment     ||     ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
         module_p<-mean(-log10(module_final[,2]),na.rm=TRUE)  
       }
-    ##  type 2 = fishers combined p-value
+    ##  type 2=fishers combined p-value
       else if(type==2){
         cat("  'fisher's combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
         df<-2*length(module_final[,2])
@@ -1572,7 +1572,7 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
         temp2<- -2*sum(temp1)
         module_p<-pchisq(temp2,df,lower.tail=FALSE)
       }
-    ##  type 3 = stouffer combined p-value
+    ##  type 3=stouffer combined p-value
       else if(type==3){
         cat("  'stouffer combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
         temp1<-qnorm(1-module_final[,2])/sqrt(length(module_final[,2]))
@@ -1631,7 +1631,7 @@ smt<-function(x){
 
 
 wgcnaPickBeta<-function(list_expr,saveTable=F,savePlots=F,outDir=getwd(),datDescr=""){
-print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
+print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows=genes, columns=samples")
 print("   - currently does not return the tables - information is printed // can also be saved as plots and tables")
 
   library('WGCNA')
@@ -1653,13 +1653,13 @@ print("   - currently does not return the tables - information is printed // can
     pdf(file=paste(outDir,"plots/WGCNA.PowerPLOT-(beta).",datDescr,".",names(list_expr)[ireg],".Power",thChoice$power,".pdf",sep=""),width=15,height=5)
 
     #sizeGrWindow(9, 5)
-    par(mfrow = c(1,3))
-    cex1 = 0.9
+    par(mfrow=c(1,3))
+    cex1=0.9
 
     # Scale-free topology fit index as a function of the soft-thresholding power
     plot(thChoice$fitIndices[2:10,"Power"], -sign(thChoice$fitIndices[2:10,"slope"])*thChoice$fitIndices[2:10,"SFT.R.sq"],
       xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
-      main = paste("Scale independence"))
+      main=paste("Scale independence"))
     text(thChoice$fitIndices[2:10,"Power"], -sign(thChoice$fitIndices[2:10,"slope"])*thChoice$fitIndices[2:10,"SFT.R.sq"],
       labels=thChoice$fitIndices[2:10,"Power"],cex=cex1,col="red")
     # this line corresponds to using an R^2 cut-off of h
@@ -1668,13 +1668,13 @@ print("   - currently does not return the tables - information is printed // can
     # Mean connectivity as a function of the soft-thresholding power
     plot(thChoice$fitIndices[2:10,"Power"], thChoice$fitIndices[2:10,"mean.k."],
       xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
-      main = paste("Mean connectivity"))
+      main=paste("Mean connectivity"))
     text(thChoice$fitIndices[2:10,"Power"], thChoice$fitIndices[2:10,"mean.k."],
       labels=thChoice$fitIndices[2:10,"Power"], cex=cex1,col="red")
 
 
     plot(thChoice$fitIndices[2:10,"mean.k."],-sign(thChoice$fitIndices[2:10,"slope"])*thChoice$fitIndices[2:10,"SFT.R.sq"],xlim=c(ceiling(max(thChoice$fitIndices[2:10,"mean.k."])),0)
-      ,ylab="Mean Connectivity",xlab="Scale Free Topology Model Fit,signed R^2",type="n",main = paste("Scale independence"))
+      ,ylab="Mean Connectivity",xlab="Scale Free Topology Model Fit,signed R^2",type="n",main=paste("Scale independence"))
 
     text(thChoice$fitIndices[2:10,"mean.k."],-sign(thChoice$fitIndices[2:10,"slope"])*thChoice$fitIndices[2:10,"SFT.R.sq"],labels=thChoice$fitIndices[c(2:10),"Power"],cex=1,col="red")
     abline(h=0.8,col="red")
@@ -1692,7 +1692,7 @@ print("   - currently does not return the tables - information is printed // can
 
 
 wgcna.beta<-function(expr_mat,corFn='cor',networkType='signed',corOptions='spearman',...){
- cat('\tNOTE\t: use - apply WGCNA pickSoftThreshold() to matrix: samples = columns, genes = rows\n\n')
+ cat('\tNOTE\t: use - apply WGCNA pickSoftThreshold() to matrix: samples=columns, genes=rows\n\n')
 if(corFn=='cor'){cat('\t\t correlation function: ',corFn,' - ',corOptions,', network type: ',networkType,'\n\n',sep='')}
 if(corFn=='bicor'){cat('\t\t correlation function',corFn,'network type:',networkType,'\n\n')}
 
@@ -1717,74 +1717,74 @@ wgcna.mods<-function(expr_mat,softPower=7,signType='signed',mergeCutHei=0.15,dat
 
      modules=blockwiseModules(t(expr_mat),   # Input data, expect: samples - rows, genes - columns
       # Data checking options ----------------------------------------------
-         checkMissingData = TRUE,
+         checkMissingData=TRUE,
        
       # Options for splitting data into blocks ----------------------------------------------
-         blocks = NULL,
-         maxBlockSize = 30000,
-         blockSizePenaltyPower = 5,
-         randomSeed = 12345,
+         blocks=NULL,
+         maxBlockSize=30000,
+         blockSizePenaltyPower=5,
+         randomSeed=12345,
        
       # if load TOM from previously saved file  ----------------------------------------------
-      loadTOM = FALSE,
+      loadTOM=FALSE,
        
       # Network construction arguments: correlation options ----------------------------------------------
-         corType = "bicor",            # pearson - default
-         maxPOutliers = 1, 
-         quickCor = 0,
-         pearsonFallback = "individual",
-         cosineCorrelation = FALSE,
+         corType="bicor",            # pearson - default
+         maxPOutliers=1, 
+         quickCor=0,
+         pearsonFallback="individual",
+         cosineCorrelation=FALSE,
        
       # Adjacency function options ----------------------------------------------
-         power = softPower,
-         networkType = signType,      # options 'signed', 'unsigned', default = 'signed'
+         power=softPower,
+         networkType=signType,      # options 'signed', 'unsigned', default='signed'
        
       # Topological overlap options ----------------------------------------------
-         TOMType = "signed",
-         TOMDenom = "min",
+         TOMType="signed",
+         TOMDenom="min",
        
       # Saving or returning TOM ----------------------------------------------
-         getTOMs = NULL,
-         saveTOMs = FALSE, 
-         saveTOMFileBase = "blockwiseTOM",
+         getTOMs=NULL,
+         saveTOMs=FALSE, 
+         saveTOMFileBase="blockwiseTOM",
    
     # Basic tree cut options ========================================================================
-         deepSplit = 2,                # default=2 simplified version of tree-cutting  (may be worth looking at tree first and defining proper threshold)
-         detectCutHeight = 0.995,    # dendrogram cut height for module detection. See cutreeDynamic for more details
-         minModuleSize = minModSize,   # minimum module size for module detection. See cutreeDynamic for more details
+         deepSplit=2,                # default=2 simplified version of tree-cutting  (may be worth looking at tree first and defining proper threshold)
+         detectCutHeight=0.995,    # dendrogram cut height for module detection. See cutreeDynamic for more details
+         minModuleSize=minModSize,   # minimum module size for module detection. See cutreeDynamic for more details
         
       # Advanced tree cut options----------------------------------------------
-         maxCoreScatter = NULL,         # maximum scatter of the core for a branch to be a cluster, given as the fraction of cutHeight relative to the 5th   percentile of joining heights. See cutreeDynamic for more details
-         minGap = NULL,
-         maxAbsCoreScatter = NULL, minAbsGap = NULL,
-         minSplitHeight = NULL, minAbsSplitHeight = NULL,
+         maxCoreScatter=NULL,         # maximum scatter of the core for a branch to be a cluster, given as the fraction of cutHeight relative to the 5th   percentile of joining heights. See cutreeDynamic for more details
+         minGap=NULL,
+         maxAbsCoreScatter=NULL, minAbsGap=NULL,
+         minSplitHeight=NULL, minAbsSplitHeight=NULL,
        
-         useBranchEigennodeDissim = FALSE,
-         minBranchEigennodeDissim = mergeCutHei,
+         useBranchEigennodeDissim=FALSE,
+         minBranchEigennodeDissim=mergeCutHei,
        
-         stabilityLabels = NULL,
-         minStabilityDissim = NULL,
+         stabilityLabels=NULL,
+         minStabilityDissim=NULL,
        
-         pamStage = TRUE, pamRespectsDendro = TRUE,
+         pamStage=TRUE, pamRespectsDendro=TRUE,
        
       # Gene reassignment, module trimming, and module "significance" criteria ----------------------------------------------
-         reassignThreshold = 1e-6,
-         minCoreKME = 0.5, 
-#        minCoreKMESize = minModuleSize/3,    minModuleSize not found error..?
-         minKMEtoStay = 0.3,
+         reassignThreshold=1e-6,
+         minCoreKME=0.5, 
+#        minCoreKMESize=minModuleSize/3,    minModuleSize not found error..?
+         minKMEtoStay=0.3,
        
       # Module merging options ----------------------------------------------
-          mergeCutHeight = mergeCutHei, 
-         impute = TRUE, 
-         trapErrors = FALSE, 
+          mergeCutHeight=mergeCutHei, 
+         impute=TRUE, 
+         trapErrors=FALSE, 
        
       # Output options ----------------------------------------------
-         numericLabels = FALSE,
+         numericLabels=FALSE,
        
       # Options controlling behaviour ----------------------------------------------
-         nThreads = 0,
-         verbose = 1,      # options '0', '1' , '2' , '3'
-         indent = 0,...)
+         nThreads=0,
+         verbose=1,      # options '0', '1' , '2' , '3'
+         indent=0,...)
 
   collectGarbage()
 
@@ -1843,8 +1843,8 @@ if(dat_descr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add 
 
 
 
-wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power = 6,signType = "signed",max_block_n=20000,...){
- cat("\tNOTE :\tInput data (list_expr) is expected as a list with each entry : rows = genes, columns = samples\n")
+wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power=6,signType="signed",max_block_n=20000,...){
+ cat("\tNOTE :\tInput data (list_expr) is expected as a list with each entry : rows=genes, columns=samples\n")
 # cat("\tWARNING :\tthe checkMissingData option for WGCNA is disabled, set checkMissingData=T in the code to make robust to missing, alternatively use sd.check or is.missing to determine/remove non-varying or missing values\n")
   library(WGCNA)
   allowWGCNAThreads()
@@ -1861,107 +1861,107 @@ wgcna.consensus<-function(list_expr,dat_descr='',corType='spearman',power = 6,si
   list_expr          ##  lists with $data in each set containing expression: rows=samples, cols=genes
 
 # Data checking options ------------------------------------------
-  ,checkMissingData = T     ##  checks for missing and zero variance in expression.. 
+  ,checkMissingData=T     ##  checks for missing and zero variance in expression.. 
      
 # Blocking options ------------------------------------------
-  ,blocks = NULL
-  ,maxBlockSize = max_block_n        ##  ensure no separation is performed // if outdated machine ~4GB RAM, may need to change this to ~5,000, or better yet, consider upgrading
-  ,blockSizePenaltyPower = 5
-    ,randomSeed = 12345
+  ,blocks=NULL
+  ,maxBlockSize=max_block_n        ##  ensure no separation is performed // if outdated machine ~4GB RAM, may need to change this to ~5,000, or better yet, consider upgrading
+  ,blockSizePenaltyPower=5
+    ,randomSeed=12345
      
 # TOM precalculation arguments, if available ------------------------------------------
-  ,individualTOMInfo = NULL         ##  pre-calculated TOM using blockwiseIndividualTOMs
-     ,useIndivTOMSubset = NULL
+  ,individualTOMInfo=NULL         ##  pre-calculated TOM using blockwiseIndividualTOMs
+     ,useIndivTOMSubset=NULL
      
 # Network construction arguments: correlation options ------------------------------------------
-# ,corType = "pearson"
-     ,maxPOutliers = 1        ##  used only with bicor: Specifies the maximum percentile of data that can be considered outliers on either side of the median separately
-     ,quickCor = 0            ##  handling of missing
-     ,pearsonFallback = "individual"    ## using pearson when mean absolute deviation == zero -> cant perform bicor...
-  ,cosineCorrelation = FALSE
+# ,corType="pearson"
+     ,maxPOutliers=1        ##  used only with bicor: Specifies the maximum percentile of data that can be considered outliers on either side of the median separately
+     ,quickCor=0            ##  handling of missing
+     ,pearsonFallback="individual"    ## using pearson when mean absolute deviation == zero -> cant perform bicor...
+  ,cosineCorrelation=FALSE
      
 # Adjacency function options ------------------------------------------
-# ,power = 6                  ## moved to function inputs
-  ,networkType = signType   ## moved to function inputs  ##  options: "unsigned"’, ‘"signed"’, ‘"signed hybrid" See ‘adjacency’
-     ,checkPower = TRUE
+# ,power=6                  ## moved to function inputs
+  ,networkType=signType   ## moved to function inputs  ##  options: "unsigned"’, ‘"signed"’, ‘"signed hybrid" See ‘adjacency’
+     ,checkPower=TRUE
 # Topological overlap options ------------------------------------------
-  ,TOMType = signType      ## moved to function inputs   ##  options: "none"’, ‘"unsigned"’, ‘"signed"’. If ‘"none"’, adjacency will be used for clustering
-     ,TOMDenom = "min"          ## min - standard, mean - expreimental
+  ,TOMType=signType      ## moved to function inputs   ##  options: "none"’, ‘"unsigned"’, ‘"signed"’. If ‘"none"’, adjacency will be used for clustering
+     ,TOMDenom="min"          ## min - standard, mean - expreimental
 
 # Save individual TOMs?  ------------------------------------------
-  ,saveIndividualTOMs = F    ## TOM saved to disk
-     ,individualTOMFileNames = "individualTOM-Set%s-Block%b.RData"
+  ,saveIndividualTOMs=F    ## TOM saved to disk
+     ,individualTOMFileNames="individualTOM-Set%s-Block%b.RData"
      
 # Consensus calculation options: network calibration ------------------------------------------
-  ,networkCalibration = c("single quantile","full quantile","none")     ## "single", "quantile", "full quantile", "none"
+  ,networkCalibration=c("single quantile","full quantile","none")     ## "single", "quantile", "full quantile", "none"
      
 # Simple quantile calibration options ------------------------------------------
-  ,calibrationQuantile = 0.95
-     ,sampleForCalibration = TRUE
-     ,sampleForCalibrationFactor = 1000
-     ,getNetworkCalibrationSamples = FALSE
+  ,calibrationQuantile=0.95
+     ,sampleForCalibration=TRUE
+     ,sampleForCalibrationFactor=1000
+     ,getNetworkCalibrationSamples=FALSE
      
 # Consensus definition ------------------------------------------
-  ,consensusQuantile = 0       ## <<<<<<<<<<<<<<<<
-     ,useMean = FALSE             ## <<<<<<<<<<<<<<<< use mean instead of consensusQuantile
-     ,setWeights = NULL           ## <<<<<<<<<<<<<<<< for weighted mean
+  ,consensusQuantile=0       ## <<<<<<<<<<<<<<<<
+     ,useMean=FALSE             ## <<<<<<<<<<<<<<<< use mean instead of consensusQuantile
+     ,setWeights=NULL           ## <<<<<<<<<<<<<<<< for weighted mean
      
 # Saving the consensus TOM ------------------------------------------
-  ,saveConsensusTOMs = FALSE
-     ,consensusTOMFileNames = "consensusTOM-block.%b.RData"
+  ,saveConsensusTOMs=FALSE
+     ,consensusTOMFileNames="consensusTOM-block.%b.RData"
      
 # Internal handling of TOMs ------------------------------------------
-  ,useDiskCache = F         ## TRUE = slower but more RAM efficient
-     ,chunkSize = NULL
-     ,cacheBase = ".blockConsModsCache"
-     ,cacheDir = "."
+  ,useDiskCache=F         ## TRUE=slower but more RAM efficient
+     ,chunkSize=NULL
+     ,cacheBase=".blockConsModsCache"
+     ,cacheDir="."
      
 # Alternative consensus TOM input from a previous calculation  ------------------------------------------
-  ,consensusTOMInfo = NULL
+  ,consensusTOMInfo=NULL
      
 # Basic tree cut options  ------------------------------------------
-  ,deepSplit = 2
-  ,detectCutHeight = 0.995
-     ,minModuleSize = 50           ##  default = 20
-     ,checkMinModuleSize = TRUE
+  ,deepSplit=2
+  ,detectCutHeight=0.995
+     ,minModuleSize=50           ##  default=20
+     ,checkMinModuleSize=TRUE
      
 # Advanced tree cut options ------------------------------------------
-  ,maxCoreScatter = NULL
-     ,minGap = NULL
-     ,maxAbsCoreScatter = NULL
-     ,minAbsGap = NULL
-     ,minSplitHeight = NULL
-     ,minAbsSplitHeight = NULL
-     ,useBranchEigennodeDissim = FALSE
-     ,minBranchEigennodeDissim = mergeCutHeight
-     ,stabilityLabels = NULL
-     ,minStabilityDissim = NULL
-  ,pamStage = TRUE
-     ,pamRespectsDendro = TRUE
+  ,maxCoreScatter=NULL
+     ,minGap=NULL
+     ,maxAbsCoreScatter=NULL
+     ,minAbsGap=NULL
+     ,minSplitHeight=NULL
+     ,minAbsSplitHeight=NULL
+     ,useBranchEigennodeDissim=FALSE
+     ,minBranchEigennodeDissim=mergeCutHeight
+     ,stabilityLabels=NULL
+     ,minStabilityDissim=NULL
+  ,pamStage=TRUE
+     ,pamRespectsDendro=TRUE
 
 # Gene reassignment and trimming from a module, and module "significance" criteria ------------------------------------------
-  ,reassignThresholdPS = 1e-4
-#     ,trimmingConsensusQuantile = consensusQuantile    ##  breaks if specified here without outside variables
-     ,minCoreKME = 0.5
-#     ,minCoreKMESize = minModuleSize/3
-     ,minKMEtoStay = 0.2
+  ,reassignThresholdPS=1e-4
+#     ,trimmingConsensusQuantile=consensusQuantile    ##  breaks if specified here without outside variables
+     ,minCoreKME=0.5
+#     ,minCoreKMESize=minModuleSize/3
+     ,minKMEtoStay=0.2
      
 # Module eigengene calculation options ------------------------------------------
-  ,impute = TRUE
-     ,trapErrors = FALSE
+  ,impute=TRUE
+     ,trapErrors=FALSE
      
   #Module merging options
-  ,equalizeQuantilesForModuleMerging = FALSE
-     ,quantileSummaryForModuleMerging = "mean"
-     ,mergeCutHeight = 0.15
-#  ,mergeConsensusQuantile = consensusQuantile    ##  breaks if specified here without outside variables
+  ,equalizeQuantilesForModuleMerging=FALSE
+     ,quantileSummaryForModuleMerging="mean"
+     ,mergeCutHeight=0.15
+#  ,mergeConsensusQuantile=consensusQuantile    ##  breaks if specified here without outside variables
      
 # Output options ------------------------------------------
-  ,numericLabels = FALSE
+  ,numericLabels=FALSE
 # General options ------------------------------------------
-  ,nThreads = 0
-     ,verbose = 2
-     ,indent = 1
+  ,nThreads=0
+     ,verbose=2
+     ,indent=1
      ,...
      )
 
@@ -2034,7 +2034,7 @@ if(dat_descr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add 
 
 
 wgcnaBuildModules<-function(list_expr,pow_range,minModuleSize=40,mergeHeight=0.15,savePlots=F,outDir=getwd(),datDescr="",signType="signed"){
-print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
+print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows=genes, columns=samples")
 if (savePlots==F){print("   - currently does not return the tables - information is printed // can also be saved as plots and tables")}
 
   library('WGCNA')
@@ -2066,26 +2066,26 @@ for(ireg in 1:length(names(list_expr))){
 
 
   wgcnaModules=blockwiseModules(t(as.matrix(list_expr[[names(list_expr)[ireg]]])), 
-      maxBlockSize = 20000,
+      maxBlockSize=20000,
       power=softPower,
       #deepSplit=2,           # simplified version of tree-cutting  (may be worth looking at tree first and defining proper threshold)
-      mergeCutHeight = ihei,
+      mergeCutHeight=ihei,
       #mergeCutHeight=0.25,
-      #detectCutHeight = 0.995,     # dendrogram cut height for module detection. See cutreeDynamic for more details
-      minModuleSize = minModuleSize,         # minimum module size for module detection. See cutreeDynamic for more details
+      #detectCutHeight=0.995,     # dendrogram cut height for module detection. See cutreeDynamic for more details
+      minModuleSize=minModuleSize,         # minimum module size for module detection. See cutreeDynamic for more details
 
       # maxCoreScatter          # maximum scatter of the core for a branch to be a cluster, given as the fraction of cutHeight relative to the 5th
                         # percentile of joining heights. See cutreeDynamic for more details
       corType="bicor",          # pearson - default
-      #reassignThreshold = 0, 
+      #reassignThreshold=0, 
       networkType=signType,
       #TOMtype="signed",  #is default
-      numericLabels = FALSE,
-      #pamStage = 1, pamRespectsDendro = TRUE,
+      numericLabels=FALSE,
+      #pamStage=1, pamRespectsDendro=TRUE,
       #TOMDenom="min",          # min=default/standard, mean - may produce better results but "experimental" atm
-      #saveTOMs = TRUE,
-      #saveTOMFileBase = "femaleMouseTOM",
-      verbose = 1 # options '1' , '2' , '3'
+      #saveTOMs=TRUE,
+      #saveTOMFileBase="femaleMouseTOM",
+      verbose=1 # options '1' , '2' , '3'
     )
 
       mergedColor<-wgcnaModules$colors
@@ -2129,14 +2129,14 @@ for(ireg in 1:length(names(list_expr))){
     #sizeGrWindow(12, 9)    # open a graphics window
 
     plotDendroAndColors(wgcnaModules$dendrograms[[1]], wgcnaModules$colors[wgcnaModules$blockGenes[[1]]],
-    dendroLabels = FALSE, hang = 0.03,
-    addGuide = TRUE, guideHang = 0.05,
+    dendroLabels=FALSE, hang=0.03,
+    addGuide=TRUE, guideHang=0.05,
     main=paste("Cluster Dendrogram",names(list_expr)[ireg],"(power",softPower,")"))
-    #mergedColors = labels2colors(wgcnaModules$colors)    # Convert labels to colors for plotting
+    #mergedColors=labels2colors(wgcnaModules$colors)    # Convert labels to colors for plotting
     #plotDendroAndColors(wgcnaModules$dendrograms[[1]], colors[wgcnaModules$blockGenes[[1]]],
     # "Module colors",
-    # dendroLabels = FALSE, hang = 0.03,
-    # addGuide = TRUE, guideHang = 0.05) # Plot the dendrogram and the module colors underneath
+    # dendroLabels=FALSE, hang=0.03,
+    # addGuide=TRUE, guideHang=0.05) # Plot the dendrogram and the module colors underneath
 
     #quartz(height=7,width=7) # opens a new plot window of specified size
 
@@ -2148,22 +2148,22 @@ for(ireg in 1:length(names(list_expr))){
     ## looking at the clustering of the MEs of the modules --------------------------------------------------------------------------
 
     #me.curr=(MEcurr[,-which(colnames(MEcurr)=="grey")])              # omit grey cluster
-    #MEDiss = 1-cor(me.curr)                          # calculate the distances
+    #MEDiss=1-cor(me.curr)                          # calculate the distances
 
     #MEcurr=wgcnaModules$MEs
     #rownames(MEcurr)=colnames(list_expr[[names(list_expr)[ireg]]])
-    #colnames(MEcurr) = gsub("ME", "", colnames(MEcurr),perl=T)   # get rid of the ME_ prefix in colors
+    #colnames(MEcurr)=gsub("ME", "", colnames(MEcurr),perl=T)   # get rid of the ME_ prefix in colors
     # head(MEcurr)
     # dim(MEcurr)
 
     #write.table(MEcurr,paste("~/caprica/wgcna/tables/WGCNA.MEcurr.table.",bonn_background_restricted,names(list_expr)[ireg],peer,pc1correct_data,paste(covarnm$short,collapse="."),".merge-height=",ihei,".genes",nrow(list_expr[[names(list_expr)[ireg]]]),".samples",ncol(list_expr[[names(list_expr)[ireg]]]),"powr",softPower,".bicor.txt",sep=""),sep="\t",quote=F,row.names=T,col.names=NA)
 
-    #MEDiss = 1-cor(MEcurr)                         # calculate the distances
-    #METree = hclust(as.dist(MEDiss), method = "average")           # Cluster module eigengenes
+    #MEDiss=1-cor(MEcurr)                         # calculate the distances
+    #METree=hclust(as.dist(MEDiss), method="average")           # Cluster module eigengenes
 
 
 
-    #plot(METree, main = paste("Clustering of ",bonn_background_restricted,names(list_expr)[ireg],"module eigengenes (power",softPower,")"), xlab = "", sub = "",cex=0.7)   # Plot the result
+    #plot(METree, main=paste("Clustering of ",bonn_background_restricted,names(list_expr)[ireg],"module eigengenes (power",softPower,")"), xlab="", sub="",cex=0.7)   # Plot the result
     # abline(h=0.3,col="orange")
     # abline(h=0.25,col="red")
     # abline(h=0.20,col="blue")
@@ -2217,7 +2217,7 @@ peer.correct<-function(expDat,covDat=matrix(),sanity=F,cov_match=T,verbose=T){
 
 ### sub-select covariate data based on exprDat -> potentially a problem if not in correct setup /&/ missing / non-matching names
 
-    model = PEER()                          ##  create model object
+    model=PEER()                          ##  create model object
     PEER_setPhenoMean(model, t(expDat))    ##  add observed data
 
     if(nrow(covDat)==1 & ncol(covDat)==1){
@@ -2226,7 +2226,7 @@ peer.correct<-function(expDat,covDat=matrix(),sanity=F,cov_match=T,verbose=T){
 
     if(nrow(covDat)>1 & ncol(covDat)>=1){
         ### add in covariates, can be used to correct the data -> residuals retrieved at the end
-        ### covariates - samples = rows, have to be numeric, :: as.numeric(as.factor())
+        ### covariates - samples=rows, have to be numeric, :: as.numeric(as.factor())
     if(cov_match){
       cat('\tcovariate data matched to expression\n')
       covDat=covDat[rownames(covDat)%in%colnames(expDat),,drop=F]
@@ -2259,10 +2259,10 @@ peer.correct<-function(expDat,covDat=matrix(),sanity=F,cov_match=T,verbose=T){
     ###  2. Observing output
 
     ### You can get the posterior mean of the inferred confounders (NxK matrix), their weights (GxK matrix), precision (inverse variance) of the weights (Kx1 matrix), and the residual dataset (NxG matrix):
-    resid = t(PEER_getResiduals(model))    ##  the residual dataset (NxG matrix)  ## i.e. corrected data for all factors
-    factr   = PEER_getX(model)            ##  the posterior mean of the inferred confounders (NxK matrix)
-    weights   = PEER_getW(model)            ##  weights (GxK matrix) of the inferred confounders (NxK matrix)
-    precision = PEER_getAlpha(model)        ##  precision (inverse variance) of the weights (Kx1 matrix)
+    resid=t(PEER_getResiduals(model))    ##  the residual dataset (NxG matrix)  ## i.e. corrected data for all factors
+    factr  =PEER_getX(model)            ##  the posterior mean of the inferred confounders (NxK matrix)
+    weights  =PEER_getW(model)            ##  weights (GxK matrix) of the inferred confounders (NxK matrix)
+    precision=PEER_getAlpha(model)        ##  precision (inverse variance) of the weights (Kx1 matrix)
 
 #    print(cor(PEER_getX(model), PEER_getCovariates(model)))
     colnames(resid)=colnames(expDat)
@@ -2363,11 +2363,11 @@ peerCovCorrect<-function(listExpr,covDat=matrix(),sanity=F){
 
     ### Now we can create the model object,
 
-    model = PEER()
+    model=PEER()
     PEER_setPhenoMean(model, t(listExpr[[names(listExpr)[i]]]))    ### set the observed data
 
     ### add in covariates, can be used to correct the data -> residuals retrieved at the end
-    ### covariates - samples = rows, have to be numeric, :: as.numeric(as.factor())
+    ### covariates - samples=rows, have to be numeric, :: as.numeric(as.factor())
 
     if(nrow(covDat)!=1 & ncol(covDat)!=1){
 
@@ -2403,17 +2403,17 @@ peerCovCorrect<-function(listExpr,covDat=matrix(),sanity=F){
     ###  2. Observing output
 
     ### You can get the posterior mean of the inferred confounders (NxK matrix), their weights (GxK matrix), precision (inverse variance) of the weights (Kx1 matrix), and the residual dataset (NxG matrix):
-    factors = PEER_getX(model)
+    factors=PEER_getX(model)
       dim(factors)
     # [1] 102  25
-    weights = PEER_getW(model)
+    weights=PEER_getW(model)
       dim(weights)
     # [1] 17410    25
-    precision = PEER_getAlpha(model)
+    precision=PEER_getAlpha(model)
       dim(precision)
     # [1] 25  1
-    peercov[[names(listExpr)[i]]] = PEER_getResiduals(model)
-    peerfac[[names(listExpr)[i]]] = factors
+    peercov[[names(listExpr)[i]]]=PEER_getResiduals(model)
+    peerfac[[names(listExpr)[i]]]=factors
       dim(peercov$cov5peer_vst_filt)
     # [1]  102 17410
 
@@ -2916,10 +2916,10 @@ pcplot<-function(dat_list,scale_dat=F,colmix="",pch=16,dat_descr="",main="",lege
     plot(pcs$x[,1:2],col=datcol,pch=pch,frame.plot=F,xlab=paste("PC1 ",pcstat[1],"%",sep=""),ylab=paste("PC2 ",pcstat[2],"%",sep=""),main=paste0(dat_descr,"\n",main),...)
 
   # create a new plot overlay (with no left margin) with legend on the topright
-      par(fig = c(0,1,0,1), oma = c(0, 4, 0, 0), mar = c(0, 4, 0, 0), new = TRUE)
-#      plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+      par(fig=c(0,1,0,1), oma=c(0, 4, 0, 0), mar=c(0, 4, 0, 0), new=TRUE)
+#      plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
   plot.new()
-    legend(x="topright",pch=16,box.lwd = 0,box.col = "white",col=unique(datcol),legend=names(dat_list))
+    legend(x="topright",pch=16,box.lwd=0,box.col="white",col=unique(datcol),legend=names(dat_list))
 
 # would be nice to add biplot style arrows for key loadings (ie genes)
   return(invisible(list(legend=datleg,data=dat_list,pcs=pcs$x,pcobj=pcs,cols=datcol)))
@@ -2965,9 +2965,9 @@ if(sanity){
   }
 
 #library(WGCNA)
-# sampleTree2 = hclust(dist(expr_mat), method="average")
+# sampleTree2=hclust(dist(expr_mat), method="average")
 
-# traitColors = numbers2colors(cov_mat, signed = FALSE);
+# traitColors=numbers2colors(cov_mat, signed=FALSE);
 # plotDendroAndColors(sampleTree2, traitColors,groupLabels =names(datTraits),main ="Sample dendrogram and trait heatmap")
 #print(dim(cov_mat))
 
@@ -3016,8 +3016,8 @@ if(sanity){
   par(mfrow=c(1,1))
 #  col2= colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7","darkgoldenrod1", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))#"#FFFFFF"
 #  col2= colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582","darkgoldenrod1", "#92C5DE", "#4393C3", "#2166AC", "#053061"))#"#FFFFFF"
-#  corrplot(-log10(univpcP),method = "circle", is.corr=F,
-#    p.mat = univpcP, insig = "blank",sig.level = 0.01,col=rev(col2(100)),cl.align="l",tl.col="black",
+#  corrplot(-log10(univpcP),method="circle", is.corr=F,
+#    p.mat=univpcP, insig="blank",sig.level=0.01,col=rev(col2(100)),cl.align="l",tl.col="black",
 #    mar=c(0,0,4,0),tl.cex=0.7,
 #    title="expression PCs correlation with covars")
     try(Heatmap(univpcP,mode="pval",margin=c(10,5),main="expression PCs correlation with covars"))
@@ -3076,15 +3076,15 @@ cat("\t\tPerforming single gene analysis on",nrow(expr_mat),"genes\n")
   #   boxplot((univgenP[[icov]]),main=paste("gene~",colnames(cov_mat)[icov],"Pval",sep=" "))
 #      boxplot(-log10(univgenP[[icov]]),main=paste(dat_descr,"\nlm( gene ~",colnames(cov_mat)[icov],")",sep=" "),ylab="-log10(P-value)")
       plot.new()
-      legend(x="center",box.lwd = 0,box.col = "white",xpd = TRUE,
+      legend(x="center",box.lwd=0,box.col="white",xpd=TRUE,
         legend=c(paste(sum(univgenP[[icov]]<0.05,na.rm=T)," (",round(sum(univgenP[[icov]]<0.05,na.rm=T)/length(univgenP[[icov]]),digits=2)*100,"%)"," genes P<5%",sep="")
               ,paste(sum(univgenFDR[[icov]]<0.05,na.rm=T)," (",round(sum(univgenFDR[[icov]]<0.05,na.rm=T)/length(univgenFDR[[icov]]),digits=2)*100,"%)"," genes FDR<5%",sep="")
               ),cex=1)
 
   }
   par(mfrow=c(1,1))
-#  par(mar = c(5,4,7,2) + 0.1)
-  par(mar = c(15,4,4,2))
+#  par(mar=c(5,4,7,2) + 0.1)
+  par(mar=c(15,4,4,2))
    boxplot(univgenR,main=paste(dat_descr,"\nlm( gene ~ single-covariate )",sep=" "),ylab="R-squared",ylim=c(0,1),las=2,frame=F,pch=16,cex=0.5)
 
   return(invisible(list("pcs"=pcs,"univpcP"=univpcP,"univpcR"=univpcR,"univP"=univgenP,"univR"=univgenR,"univFDR"=univgenFDR)))
@@ -3107,9 +3107,9 @@ Heatm<-function(cor.measures,min=-1,max=1,rowclust=F,colclust=F,ncols=101,dendro
 
 if(mode=="cor"){
   print("plotting correlation based matrix")
-#  heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col = colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=0.7,   cexRow=0.7,   lheight = lheight,symkey=T,main=main,lmat=lmatrix)#,lwid=c(0.5,0.5))
-   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col = colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=T,main=main)
-#   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col = colorRampPalette(c("#08306b","#08519c","#2171b5","#4292c6","#6baed6","#9ecae1","#c6dbef","#deebf7","#f7fbff","white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,   symkey=T,main=main,lwid=lwidth,lmat=lmatrix)
+#  heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col=colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=0.7,   cexRow=0.7,   lheight=lheight,symkey=T,main=main,lmat=lmatrix)#,lwid=c(0.5,0.5))
+   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col=colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=T,main=main)
+#   heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+1)),col=colorRampPalette(c("#08306b","#08519c","#2171b5","#4292c6","#6baed6","#9ecae1","#c6dbef","#deebf7","#f7fbff","white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,   symkey=T,main=main,lwid=lwidth,lmat=lmatrix)
 
 #"white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"
 }
@@ -3138,17 +3138,17 @@ if(mode=="pval"){
         }
       }
     }
-#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,
-    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=F,main=main)  #cexCol=1,cexRow=0.8,   
-#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,   
+#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,
+    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=F,main=main)  #cexCol=1,cexRow=0.8,   
+#    heatmap.2(-log10(cor.measures),cellnote=(cor.match),notecol="black",breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,   
 
 
   }
   if(sig==F){
     print("plotting p-value based matrix, no cellnotes")
-#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,    
-    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=F,main=main)
-#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col = colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei = lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)
+#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#F0E442","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)  #cexCol=1,cexRow=0.8,    
+    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=F,main=main)
+#    heatmap.2(-log10(cor.measures),breaks=seq(0,max(-log10(cor.measures)),length=(ncols+1)),col=colorRampPalette(c("white","#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"))(ncols),tracecol=F,dendrogram=dendrogram,Rowv=rowclust,Colv=colclust,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,lhei=lheight,symkey=F,main=main,lwid=lwidth,lmat=lmatrix)
 
   }
 }
@@ -3299,7 +3299,7 @@ if(dat_descr!=""){
 #if(make_plot==T & use_grid==F & max(missn)!=0){
 if(make_plot & !use_grid){
     library(gplots)
-  heatmap.2(make.numeric(data_mat),breaks=seq(0,1,length=(3)),col = c("#9ebcda","#e6550d"),tracecol=F,dendrogram='both',Rowv=T,Colv=T,margins=c(12,12),density.info="none",keysize=1,cexCol=0.7,cexRow=0.7,symkey=F)
+  heatmap.2(make.numeric(data_mat),breaks=seq(0,1,length=(3)),col=c("#9ebcda","#e6550d"),tracecol=F,dendrogram='both',Rowv=T,Colv=T,margins=c(12,12),density.info="none",keysize=1,cexCol=0.7,cexRow=0.7,symkey=F)
    
    mtext(dat_descr,adj=1,side=3,line=2)
    mtext(paste0("n.complete : ",n_overlap),adj=1,side=3)
@@ -3308,7 +3308,7 @@ if(make_plot & !use_grid){
 #if(make_plot==T & use_grid==T & max(missn)!=0){
 if(make_plot & use_grid){
     library(gplots)
-  heatmap.2(make.numeric(data_mat),breaks=seq(0,1,length=(3)),col = c("#9ebcda","#e6550d"),tracecol=F,dendrogram='both',Rowv=T,Colv=T,margins=c(12,12),density.info="none",keysize=1,cexCol=0.7,cexRow=0.7,symkey=F,colsep=0:ncol(data_mat),rowsep=0:nrow(data_mat),sepcolor="white",sepwidth=c(0.05,0.05))
+  heatmap.2(make.numeric(data_mat),breaks=seq(0,1,length=(3)),col=c("#9ebcda","#e6550d"),tracecol=F,dendrogram='both',Rowv=T,Colv=T,margins=c(12,12),density.info="none",keysize=1,cexCol=0.7,cexRow=0.7,symkey=F,colsep=0:ncol(data_mat),rowsep=0:nrow(data_mat),sepcolor="white",sepwidth=c(0.05,0.05))
 
    mtext(dat_descr,adj=1,side=3,line=2)
    mtext(paste0("n.complete : ",n_overlap),adj=1,side=3)
@@ -3351,7 +3351,7 @@ cplot<-function(x,y,dat_descr="",legend.pos="topright",...){
       #          ,"  R-sq =",signif(summary(lm(x~y))$r.sq,digits=3)
 #
 #                )
- #               ,box.lwd = 0,box.col = "white")
+ #               ,box.lwd=0,box.col="white")
 }
 
 eplot<-function(x,xlab="",ylab="",main="",legend.pos="topright"){
@@ -3403,9 +3403,9 @@ clust.analyse<-function(cov_mat,do_plots=c(T,T,T,T),sanity=F,box_sig=0.95,clust.
    library(corrplot)
 #   corrplot(colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols))
 #  col2=colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(20)
-###>>   corrplot.mixed((cor_test$r)^2,p.mat=cor_test$p,insig="blank",col=colmixrb,cl.align="l",tl.col="black",order = "hclust",main=paste(cor.method,"samples=",nrow(cov_mat),"ordered using hclust"))
-  corrplot.mixed(cor_mat,col=colmixrb,cl.align="l",tl.col="black",order = "hclust",main=paste(dat_descr,cor.method,"samples=",nrow(cov_mat),"ordered using hclust"))
-#  p.mat = res1[[1]], insig = "blank"
+###>>   corrplot.mixed((cor_test$r)^2,p.mat=cor_test$p,insig="blank",col=colmixrb,cl.align="l",tl.col="black",order="hclust",main=paste(cor.method,"samples=",nrow(cov_mat),"ordered using hclust"))
+  corrplot.mixed(cor_mat,col=colmixrb,cl.align="l",tl.col="black",order="hclust",main=paste(dat_descr,cor.method,"samples=",nrow(cov_mat),"ordered using hclust"))
+#  p.mat=res1[[1]], insig="blank"
 #    title="Maximum % of overlap with p hyper > 0.01"
 
 
@@ -3478,6 +3478,8 @@ rmerge<-function(data_mat1,data_mat2,all=T){
   dat_out=merge(data_mat1,data_mat2,by="row.names",all=all)
     rownames(dat_out)=dat_out$Row.names
   dat_out=dat_out[,-which(colnames(dat_out)=="Row.names")]
+
+  cat('\n\t\tnrow x=',nrow(data_mat1),',  y=',nrow(data_mat2),',  merged=',nrow(dat_out),'\n\n',sep='')
   return(dat_out)
 }
 
@@ -3572,7 +3574,7 @@ meplot<-function(expr_mat,do_plots=T){
   }
   
   lines(expr_mat$x,col="midnightblue",lwd=3)
-  legend("topright", legend = c("gene expression", "ME 'expression'"), bty = "n",lwd = c(2,4), cex = 1, col = c("darkred", "midnightblue"), lty = c(1, 1), pch = c(NA, NA))
+  legend("topright", legend=c("gene expression", "ME 'expression'"), bty="n",lwd=c(2,4), cex=1, col=c("darkred", "midnightblue"), lty=c(1, 1), pch=c(NA, NA))
 
 }
 
@@ -3688,20 +3690,20 @@ sva.fac<-function(expr_mat,non_adjust="",adjust="",nsv=""){
 
     if(non_adjust!=""){
       cat('\tusing specified covars to keep :',ncol(adjust),'variables\n')
-    mod = model.matrix(~.,data=non_adjust)
+    mod=model.matrix(~.,data=non_adjust)
     }
     if(non_adjust==""){
       cat('\tno variables specified to keep\n')
-    mod = model.matrix(~1,data=dummy)
+    mod=model.matrix(~1,data=dummy)
     }
 
     if(adjust!=""){
       cat('\tusing specified covars to adjust for :',ncol(adjust),'variables\n')
-    mod0 = model.matrix(~.,data=adjust)
+    mod0=model.matrix(~.,data=adjust)
     }
     if(adjust==""){
       cat('\tno variables specified to adjust for\n')
-    mod0 = model.matrix(~1,data=dummy)
+    mod0=model.matrix(~1,data=dummy)
     }
 
     if(nsv!=""){
@@ -3709,12 +3711,12 @@ sva.fac<-function(expr_mat,non_adjust="",adjust="",nsv=""){
       cat('\tusing pre-specified n.factors :',nsv,'\n')
     }
     if(nsv==""){
-    nsv = num.sv(expr_mat,mod,method="leek")
+    nsv=num.sv(expr_mat,mod,method="leek")
       cat('\tn factors suggested by sva :',nsv,'\n')
     }
     
 
-    svobj = sva(expr_mat,mod,mod0,n.sv=nsv)
+    svobj=sva(expr_mat,mod,mod0,n.sv=nsv)
 
 }
 
@@ -3975,8 +3977,8 @@ if(verbose){
 	lines(density(upper, na.rm=T), lty=1, lwd=2,col='dodgerblue')
 	par(new=T)
 	lines(density(lower, na.rm=T), lty=1, lwd=2,col='darkred')
-#    legend(x="topright",pch=15,box.lwd = 0,box.col = "white",col=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('n=',nrow(exp_mat)),paste0('n=',nrow(lower)),paste0('n=',nrow(upper))),cex=1)
-    legend(x="topright",pch=15,box.lwd = 0,box.col = "white",col=c('darkgrey','dodgerblue','darkred'),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('density n=',nrow(exp_mat)),paste0('lower n=',nrow(lower)),paste0('upper n=',nrow(upper))),cex=1)
+#    legend(x="topright",pch=15,box.lwd=0,box.col="white",col=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('n=',nrow(exp_mat)),paste0('n=',nrow(lower)),paste0('n=',nrow(upper))),cex=1)
+    legend(x="topright",pch=15,box.lwd=0,box.col="white",col=c('darkgrey','dodgerblue','darkred'),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('density n=',nrow(exp_mat)),paste0('lower n=',nrow(lower)),paste0('upper n=',nrow(upper))),cex=1)
     cat('\tdataset n=',nrow(exp_mat),'lower n=',nrow(lower),'upper n=',nrow(upper),'\n')
   }
     
@@ -4019,7 +4021,7 @@ rowstat<-function(data_mat,add=F,round_digits=2,diag_na=T){
 
 
 
-clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,55),help=F,...){
+clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,20),help=F,...){
 ##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
  if(help){
   cat('\n\tINPUT :\tdat_mat - auto-detect data frame or list of data frames - 1 per condition (samples=columns)\n')
@@ -4081,17 +4083,18 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
     	cat('\t- plotting results\n')
     	if(dat_is_list|horiz){
 			clusden=as.dendrogram(clustat)
-			if(dat_is_list){labels_colors(clusden) = colvec[order.dendrogram(clusden)]}
-			clusden = color_branches(clusden, k = k)
-		
-			par(mar = par_mar)
-			plot(clusden, horiz = TRUE)
+			if(dat_is_list){labels_colors(clusden)=colvec[order.dendrogram(clusden)]}
+			clusden=color_branches(clusden, k=k)
 
-			if(dat_is_list){colored_bars(colvec, clusden, horiz = TRUE)}
+			par_cur=par()$mar
+			par(mar=par_mar)
+			plot(clusden, horiz=TRUE)
+
+			if(dat_is_list){colored_bars(colvec, clusden, horiz=TRUE)}
 
 ## colored_bars can be used to show k-means clusters (supports multiple bars, including colvec), as per EG
-#		k234 = cutree(dend, k = 2:4)
-#		colored_bars(cbind(k234[,3:1], col_car_type), dend, rowLabels = c(paste0("k = ", 4:2), "Car Type"))
+#		k234=cutree(dend, k=2:4)
+#		colored_bars(cbind(k234[,3:1], col_car_type), dend, rowLabels=c(paste0("k=", 4:2), "Car Type"))
 
 
 		}
@@ -4112,7 +4115,7 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
 		}
 	}
 
-
+		par(mar=par_cur)
 #  cat(readme)
     if(dat_is_list){
     	    readme='\n\toutput contains :
@@ -4381,9 +4384,9 @@ gestaltheat<-function(dat_mat,descr,multi_page=F){
             remainder=(nrow(dat_mat)-(k+100))
 
             Heatp(dat_plot,sig=T)
-            par(xpd = NA)
-            mtext(descr, adj = 1, side = 3)
-            par(xpd = F)
+            par(xpd=NA)
+            mtext(descr, adj=1, side=3)
+            par(xpd=F)
 
         }
       if(remainder<0){
@@ -4391,9 +4394,9 @@ gestaltheat<-function(dat_mat,descr,multi_page=F){
         dat_plot=dat_mat[(k+1):(k+(100+remainder)),]
         
         Heatp(dat_plot,sig=T)
-          par(xpd = NA)
-          mtext(descr, adj = 1, side = 3)
-          par(xpd = F)
+          par(xpd=NA)
+          mtext(descr, adj=1, side=3)
+          par(xpd=F)
       }
     }
   }
@@ -4639,11 +4642,11 @@ library('parallel')
 
   Load(paste(inpath,"/PathoGeneENS.Rdata",sep="")) # PathoGene & Patho_ENSgeneID
   Load(paste(inpath,"/ctr_GeneENS.Rdata",sep="")) # ctrGene & ctr_ENSgeneID
-  map <- read.table(file = paste(inpath,'/functional_mut_rate.bias_corrected.local.canonical_tx_only.bed.txt',sep=""),
-                   header = TRUE, sep = '\t', blank.lines.skip = TRUE)
+  map <- read.table(file=paste(inpath,'/functional_mut_rate.bias_corrected.local.canonical_tx_only.bed.txt',sep=""),
+                   header=TRUE, sep='\t', blank.lines.skip=TRUE)
 
   ### create a matrix for results
-  FBET <- matrix(nrow = length(clusters_list), ncol = 23)
+  FBET <- matrix(nrow=length(clusters_list), ncol=23)
   row.names(FBET) <- names (clusters_list)
   colnames(FBET) <- c("module size","patho","FET p.value","FET FDR","OR","[95% OR CI] inf","OR [95% OR CI] sup",
                         "module DNMs in patients","module DNMs in controls",
@@ -4652,7 +4655,7 @@ library('parallel')
                         "gene names of modules DNMs in controls",
                       "BET p.value","BET FDR","Theo Ps (mutation rate of map.M)","Estimated Ps","Ratio Obs/Exp",
                         "[95% EsPs CI] inf","[95% EsPs CI] sup",
-                        "x = nb of DNM in map.M (success)","n = nb of DNM in map/mutation rate all genes of map (trials)",
+                        "x=nb of DNM in map.M (success)","n=nb of DNM in map/mutation rate all genes of map (trials)",
                         #"ENSgeneID of M not in map",
                         "nb ENSgeneID of M not in map"
                       )
@@ -4666,31 +4669,31 @@ library('parallel')
     
     ### function to fill the matrix of results
     #for (i in 1:length(clusters_list)){
-    FUNC = function(i){
+    FUNC=function(i){
       Ms<-length(clusters_list[[i]])
       #### FET
       cat('\t',names(clusters_list)[i],'   \tpatho: ',names(PathoGene)[pat],'\t',pat,'\tof ',length(PathoGene),'\n',sep='')
       ## function to calculate the number Mc of DNMs in CTRL involving a gene of the cluster i
-      y <- lapply(clusters_list[[i]],FUN = function(x) {ctrlENS[which(ctrlENS$ensembl_gene_id == x),'external_gene_name']})
-      Mc <- sum(sapply(as.matrix(unique(y)), FUN = function(ym) {length(which(ctrl_Gene == ym ))}))
+      y <- lapply(clusters_list[[i]],FUN=function(x) {ctrlENS[which(ctrlENS$ensembl_gene_id == x),'external_gene_name']})
+      Mc <- sum(sapply(as.matrix(unique(y)), FUN=function(ym) {length(which(ctrl_Gene == ym ))}))
       McID <- paste(unlist(y),collapse=", ") 
       
       ## number NMc of remaining DNMs in CTRL involving a gene not in the cluster i
       NMc <- length(ctrl_Gene)-Mc
       
       ##function to calculate the number Mee of DNMs in patho involving a gene of the cluster i
-      z <- lapply(clusters_list[[i]],FUN = function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
-      Mp <- sum(sapply(as.matrix(unique(z)), FUN = function(zm) {length(which(DNM_Gene == zm ))}))
+      z <- lapply(clusters_list[[i]],FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
+      Mp <- sum(sapply(as.matrix(unique(z)), FUN=function(zm) {length(which(DNM_Gene == zm ))}))
       MpID <- paste(unlist(z),collapse=", ") 
       
       ## number NMee of remaining DNMs in EE involving a gene not in the cluster i  
       NMp <- length(DNM_Gene)-Mp
       
       # contingency matrice for Fisher Exact Test FET all DNMs and ns DNMs
-      matr <- matrix(c(Mp,Mc,NMp,NMc), nrow = 2)
+      matr <- matrix(c(Mp,Mc,NMp,NMc), nrow=2)
       
       # FET
-      #    FisherM <- fisher.test(matr,alternative = "greater")
+      #    FisherM <- fisher.test(matr,alternative="greater")
       FisherM <- fisher.test(matr)
       Fisher.p <- FisherM$p.value
       Fisher.or <- FisherM$estimate
@@ -4699,26 +4702,26 @@ library('parallel')
       
       #### BET
             
-      # theorical Ps = Theorical probablity of sucess based on mutation rate map
+      # theorical Ps=Theorical probablity of sucess based on mutation rate map
       CL.map.ens <- intersect(clusters_list[[i]],map$Gene)
       #NnID<-paste(setdiff(clusters_list[[i]],map$Gene), collapse=", ")
       nID<-length(setdiff(clusters_list[[i]],map$Gene))
       # if lgd (nonsens + missense)
-      ThPs = sum(sapply(CL.map.ens,FUN=function(x){sum(map[which(map$Gene == x),c("Missense_rate","Nonsense_rate")])}))
+      ThPs=sum(sapply(CL.map.ens,FUN=function(x){sum(map[which(map$Gene == x),c("Missense_rate","Nonsense_rate")])}))
 
-      # nb of trials = nb of DNM falling in all map genes divided by the mutation rate on all map genes
+      # nb of trials=nb of DNM falling in all map genes divided by the mutation rate on all map genes
       patho.map.ens <- intersect(pathoENS$ensembl_gene_id,map$Gene)
-      y <- lapply(patho.map.ens,FUN = function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
-      n <- round(sum(sapply(unique(y), FUN = function(x) {length(which(DNM_Gene == x ))}))/sum(map[,c("Missense_rate","Nonsense_rate")]))
+      y <- lapply(patho.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
+      n <- round(sum(sapply(unique(y), FUN=function(x) {length(which(DNM_Gene == x ))}))/sum(map[,c("Missense_rate","Nonsense_rate")]))
 
-      # nb of sucess = nb of DNM falling in map of the module
-      z <- lapply(CL.map.ens,FUN = function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
-      xz <- sum(sapply(z, FUN = function(x) {length(which(DNM_Gene == x ))}))
+      # nb of sucess=nb of DNM falling in map of the module
+      z <- lapply(CL.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
+      xz <- sum(sapply(z, FUN=function(x) {length(which(DNM_Gene == x ))}))
 
       BET<- binom.test(xz,n,ThPs)
       Binomial.p<-BET$p.value
       EsPs<-BET$estimate
-      RobsE = xz /(n*ThPs)
+      RobsE=xz /(n*ThPs)
       CI.inf<-BET$conf.int [1]
       CI.sup<-BET$conf.int [2]
 
@@ -4735,7 +4738,7 @@ library('parallel')
 
     FBET[,"FET FDR"]<- p.adjust(FBET[,"FET p.value"],method="fdr")
     FBET[,"BET FDR"]<- p.adjust(FBET[,"BET p.value"],method="fdr")
-    write.table(FBET, sep = '\t', file = paste(outpath,"/",names(PathoGene)[pat],"_FBET_",runname,".txt",sep=""), row.names = TRUE, quote = FALSE, col.names = NA)
+    write.table(FBET, sep='\t', file=paste(outpath,"/",names(PathoGene)[pat],"_FBET_",runname,".txt",sep=""), row.names=TRUE, quote=FALSE, col.names=NA)
     npDNM[[pat]]<-FBET
   }  
   names(npDNM) <- names(PathoGene)
@@ -4759,13 +4762,13 @@ library('parallel')
           SignifT<- rbind(SignifT,npDNM[[pat]][select,])
       }          
     }
-    write.table(SignifT, sep = '\t', file =paste(outpath,'/significantFBET_',runname,'.txt',sep=''), row.names = TRUE, quote = FALSE, col.names = NA) 
+    write.table(SignifT, sep='\t', file =paste(outpath,'/significantFBET_',runname,'.txt',sep=''), row.names=TRUE, quote=FALSE, col.names=NA) 
   }else{
     allT<- npDNM[[1]]
     for (pat in 2:length(npDNM)){
       allT<- rbind(allT,npDNM[[pat]])
     }
-    write.table(allT, sep = '\t', file =paste(outpath,'/ALL_FBET_',runname,'.txt',sep=''), row.names = TRUE, quote = FALSE, col.names = NA) 
+    write.table(allT, sep='\t', file =paste(outpath,'/ALL_FBET_',runname,'.txt',sep=''), row.names=TRUE, quote=FALSE, col.names=NA) 
   }
   return(invisible(npDNM))
 }
@@ -4819,7 +4822,7 @@ fet<-function(sampl,bkgrnd,success,counts=F,samp.success,bkgrnd.success,samp.fai
 
 
 
-msCellFET<-function(clusters_list,runname="",inpath = "~/Dropbox/tools/Data_to_load_CellFET",outpath=getwd(),selection=F){
+msCellFET<-function(clusters_list,runname="",inpath="~/Dropbox/tools/Data_to_load_CellFET",outpath=getwd(),selection=F){
 cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
   library(MetaDE)
   library('parallel')
@@ -4829,7 +4832,7 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
   Load(paste(inpath,"/hmscDF.Rdata",sep="")) #"hmscDF" human ENSid orthologous of mice single cell enriched by class dataframe
   
   ### create a matrix for results
-  cFET=matrix(nrow = length(clusters_list), ncol = 14)
+  cFET=matrix(nrow=length(clusters_list), ncol=14)
   row.names(cFET)=names (clusters_list)
   colnames(cFET)=c("cell class","FET p.value","FET FDR","OR","[95% OR CI] inf","OR [95% OR CI] sup",
                       "module cell enriched genes","module out cell enriched genes",
@@ -4844,7 +4847,7 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
     cclENS=hmscDF[[ccl]]
     ### function to fill the matrix of results
     #for (i in 1:length(clusters_list)){
-    FUNC = function(i){
+    FUNC=function(i){
       Ms=length(clusters_list[[i]]) #Ms: module size
       CB=HUMQb[,'hsapiens_homolog_ensembl_gene'] #CB: cell background
       Cs=length(cclENS) #Cs: cell enriched genes size
@@ -4862,9 +4865,9 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
       #calculate the number NMnc of genes out of module AND not in cell class
       NMnc=length(CB)-(Mc+NMc+Mnc)
       # contingency matrice for Fisher Exact Test FET all DNMs and ns DNMs
-      matr=matrix(c(Mc,NMc,Mnc,NMnc), nrow = 2)
+      matr=matrix(c(Mc,NMc,Mnc,NMnc), nrow=2)
       #FET
-      #FisherM=fisher.test(matr,alternative = "greater")
+      #FisherM=fisher.test(matr,alternative="greater")
       FisherM=fisher.test(matr)
       Fisher.p=FisherM$p.value
       Fisher.or=FisherM$estimate
@@ -4878,7 +4881,7 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
       cFET[i,]=cfet[[i]]
     }
     cFET[,"FET FDR"]=p.adjust(cFET[,"FET p.value"],method="fdr")
-    write.table(cFET, sep = '\t', file = paste(outpath,"/",names(hmscDF)[ccl],"_cFET_",runname,".txt",sep=""), row.names = TRUE, quote = FALSE, col.names = NA)
+    write.table(cFET, sep='\t', file=paste(outpath,"/",names(hmscDF)[ccl],"_cFET_",runname,".txt",sep=""), row.names=TRUE, quote=FALSE, col.names=NA)
     resMsc[[ccl]]=cFET
   }  
   names(resMsc)=names(hmscDF)
@@ -4901,13 +4904,13 @@ cat('\tNOTE:\tclusters_list only ENSG ids currently supported')
         SignifT=rbind(SignifT,resMsc[[ccl]][select,])
       }          
     }
-    write.table(SignifT, sep = '\t', file =paste(outpath,'/significant_cFET_',runname,'.txt',sep=''), row.names = TRUE, quote = FALSE, col.names = NA) 
+    write.table(SignifT, sep='\t', file =paste(outpath,'/significant_cFET_',runname,'.txt',sep=''), row.names=TRUE, quote=FALSE, col.names=NA) 
   }else{
     allT=resMsc[[1]]
     for (ccl in 2:length(resMsc)){
       allT=rbind(allT,resMsc[[ccl]])
     }
-    write.table(allT, sep = '\t', file =paste(outpath,'/ALL_cFET_',runname,'.txt',sep=''), row.names = TRUE, quote = FALSE, col.names = NA) 
+    write.table(allT, sep='\t', file =paste(outpath,'/ALL_cFET_',runname,'.txt',sep=''), row.names=TRUE, quote=FALSE, col.names=NA) 
   }
   return(resMsc)
 }
@@ -4984,16 +4987,16 @@ gplots_dat=list()
     for(idat in 1:length(plot_dat)){
     myplot=ggplot() +                                                     # initiate the plot space, saved to myplot variable for later display
       #  - subsequent additions / modifications of the plot can be done by manipulating this space
-      #  geom_point(data = df, aes(y = Module, x = OR),colour = 'red', size = 3) +
+      #  geom_point(data=df, aes(y=Module, x=OR),colour='red', size=3) +
       #  geom_errorbar(data=pdat,aes(x=Module,y=OR,ymin=lower.95..CI,ymax=upper.95..CI),colour="grey60",width=0.2)
       geom_vline(xintercept=1, linetype="dashed")+                         # add vertical line
       #    geom_vline(xintercept=(1), linetype="dashed")+                         # add vertical line
       geom_errorbarh(data=plot_dat[[idat]], aes(y=module,x=fetOR, xmin=lowerCI, xmax=upperCI), colour="black", height=ci_bar_height,size=2)+  # add HORISONTAL error bars, geom_errorbar used for vertical..
-      geom_point(data = plot_dat[[idat]], aes(y = module, x = fetOR), shape=15, cex=plot_dat[[idat]]$point_width, colour=plot_dat[[idat]]$color)+    # add plotting points
-      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits = c(-5000, 5000))
+      geom_point(data=plot_dat[[idat]], aes(y=module, x=fetOR), shape=15, cex=plot_dat[[idat]]$point_width, colour=plot_dat[[idat]]$color)+    # add plotting points
+      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits=c(-5000, 5000))
       #
-      #    coord_cartesian(xlim = c(0, 60)) +                                  # moves the window only
-      coord_cartesian(xlim = x_lim) +    #        coord_cartesian(xlim = c(-0.5, 1))                        # moves the window only
+      #    coord_cartesian(xlim=c(0, 60)) +                                  # moves the window only
+      coord_cartesian(xlim=x_lim) +    #        coord_cartesian(xlim=c(-0.5, 1))                        # moves the window only
       scale_x_continuous(breaks=c(0,1:9,seq(10,2000,by=10))) +
       #    scale_x_continuous(breaks=c(0,1,5,seq(10,2000,by=10))) +
       #  scale_size_area() +
@@ -5003,7 +5006,7 @@ gplots_dat=list()
     #  ggtitle(names(table(dat$serie.name)[idat]))
 
     ## essential if using the ugly mess that is ggplot2, for more options : http://felixfan.github.io/rstudy/2013/11/27/ggplot2-remove-grid-background-margin/ 
-    #  myplot + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
+    #  myplot + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank(), panel.background=element_blank(), axis.line=element_line(colour="black"))
     #
       gplots_dat[[names(plot_dat)[idat]]]=(myplot + theme_bw())
     }
@@ -5017,16 +5020,16 @@ gplots_dat=list()
         }}
     myplot=ggplot() +                                                     # initiate the plot space, saved to myplot variable for later display
       #  - subsequent additions / modifications of the plot can be done by manipulating this space
-      #  geom_point(data = df, aes(y = Module, x = OR),colour = 'red', size = 3) +
+      #  geom_point(data=df, aes(y=Module, x=OR),colour='red', size=3) +
       #  geom_errorbar(data=pdat,aes(x=Module,y=OR,ymin=lower.95..CI,ymax=upper.95..CI),colour="grey60",width=0.2)
       geom_vline(xintercept=1, linetype="dashed")+                         # add vertical line
       #    geom_vline(xintercept=(1), linetype="dashed")+                         # add vertical line
       geom_errorbarh(data=plot_merge, aes(y=module,x=fetOR, xmin=lowerCI, xmax=upperCI), colour="black", height=ci_bar_height,size=2)+  # add HORISONTAL error bars, geom_errorbar used for vertical..
-      geom_point(data=plot_merge, aes(y = module, x = fetOR), shape=15, cex=plot_merge$point_width, colour=plot_merge$color)+    # add plotting points
-      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits = c(-5000, 5000))
+      geom_point(data=plot_merge, aes(y=module, x=fetOR), shape=15, cex=plot_merge$point_width, colour=plot_merge$color)+    # add plotting points
+      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits=c(-5000, 5000))
       #
-      #    coord_cartesian(xlim = c(0, 60)) +                                  # moves the window only
-      coord_cartesian(xlim = x_lim) +    #        coord_cartesian(xlim = c(-0.5, 1))                        # moves the window only
+      #    coord_cartesian(xlim=c(0, 60)) +                                  # moves the window only
+      coord_cartesian(xlim=x_lim) +    #        coord_cartesian(xlim=c(-0.5, 1))                        # moves the window only
       scale_x_continuous(breaks=c(0,1:9,seq(10,2000,by=10))) +
       #    scale_x_continuous(breaks=c(0,1,5,seq(10,2000,by=10))) +
       #  scale_size_area() +
@@ -5038,7 +5041,7 @@ gplots_dat=list()
 
 
     ## essential if using the ugly mess that is ggplot2, for more options : http://felixfan.github.io/rstudy/2013/11/27/ggplot2-remove-grid-background-margin/ 
-    #  myplot + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
+    #  myplot + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank(), panel.background=element_blank(), axis.line=element_line(colour="black"))
     #
       gplots_dat=(myplot + theme_bw())
   }
@@ -5124,19 +5127,19 @@ plot_dat=matrix(NA,nrow=length(dat_lis),ncol=length(dev_stage))
 #        ,col=c('grey60',colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(ncols))
 #        ,col=c('grey60',bluered(ncols))
         ,col=heat_cols
-        ,key.title = NA
-        ,key.xlab = NA
-        ,key.ylab = NA
+        ,key.title=NA
+        ,key.xlab=NA
+        ,key.ylab=NA
         ,trace='none'
         ,srtCol=0
-        ,keysize = 1.1
+        ,keysize=1.1
         ,density.info='none'
         ,colsep=1:(ncol(plot_dat)-1),rowsep=1:(nrow(plot_dat)-1),sepcolor="white",sepwidth=c(0.001,0.001)
 #        ,margins=c(5,5)
         ,...
         )
 #  plot.new()
-        par(new = TRUE)
+        par(new=TRUE)
       mtext('grey - no samples available',adj=1,side=3,line=1)
 #      mtext(dat_descr,adj=1,side=3,line=2)
  #     mtext(paste0("n.complete : ",n_overlap),adj=1,side=3)
@@ -5773,16 +5776,16 @@ gplots_dat=list()
     for(idat in 1:length(plot_dat)){
     myplot=ggplot() +                                                     # initiate the plot space, saved to myplot variable for later display
       #  - subsequent additions / modifications of the plot can be done by manipulating this space
-      #  geom_point(data = df, aes(y = Module, x = OR),colour = 'red', size = 3) +
+      #  geom_point(data=df, aes(y=Module, x=OR),colour='red', size=3) +
       #  geom_errorbar(data=pdat,aes(x=Module,y=OR,ymin=lower.95..CI,ymax=upper.95..CI),colour="grey60",width=0.2)
       geom_vline(xintercept=1, linetype="dashed")+                         # add vertical line
       #    geom_vline(xintercept=(1), linetype="dashed")+                         # add vertical line
       geom_errorbarh(data=plot_dat[[idat]], aes(y=module,x=fetOR, xmin=lowerCI, xmax=upperCI), colour="black", height=ci_bar_height,size=2)+  # add HORISONTAL error bars, geom_errorbar used for vertical..
-      geom_point(data = plot_dat[[idat]], aes(y = module, x = fetOR), shape=15, cex=plot_dat[[idat]]$point_width, colour=plot_dat[[idat]]$color)+    # add plotting points
-      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits = c(-5000, 5000))
+      geom_point(data=plot_dat[[idat]], aes(y=module, x=fetOR), shape=15, cex=plot_dat[[idat]]$point_width, colour=plot_dat[[idat]]$color)+    # add plotting points
+      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits=c(-5000, 5000))
       #
-      #    coord_cartesian(xlim = c(0, 60)) +                                  # moves the window only
-      coord_cartesian(xlim = x_lim) +    #        coord_cartesian(xlim = c(-0.5, 1))                        # moves the window only
+      #    coord_cartesian(xlim=c(0, 60)) +                                  # moves the window only
+      coord_cartesian(xlim=x_lim) +    #        coord_cartesian(xlim=c(-0.5, 1))                        # moves the window only
       scale_x_continuous(breaks=c(0,1:x_lim[2])) +
       #    scale_x_continuous(breaks=c(0,1,5,seq(10,2000,by=10))) +
       #  scale_size_area() +
@@ -5792,7 +5795,7 @@ gplots_dat=list()
     #  ggtitle(names(table(dat$serie.name)[idat]))
 
     ## essential if using the ugly mess that is ggplot2, for more options : http://felixfan.github.io/rstudy/2013/11/27/ggplot2-remove-grid-background-margin/ 
-    #  myplot + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
+    #  myplot + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank(), panel.background=element_blank(), axis.line=element_line(colour="black"))
     #
       gplots_dat[[names(plot_dat)[idat]]]=(myplot + theme_bw())
     }
@@ -5806,16 +5809,16 @@ gplots_dat=list()
         }}
     myplot=ggplot() +                                                     # initiate the plot space, saved to myplot variable for later display
       #  - subsequent additions / modifications of the plot can be done by manipulating this space
-      #  geom_point(data = df, aes(y = Module, x = OR),colour = 'red', size = 3) +
+      #  geom_point(data=df, aes(y=Module, x=OR),colour='red', size=3) +
       #  geom_errorbar(data=pdat,aes(x=Module,y=OR,ymin=lower.95..CI,ymax=upper.95..CI),colour="grey60",width=0.2)
       geom_vline(xintercept=1, linetype="dashed")+                         # add vertical line
       #    geom_vline(xintercept=(1), linetype="dashed")+                         # add vertical line
       geom_errorbarh(data=plot_merge, aes(y=module,x=fetOR, xmin=lowerCI, xmax=upperCI), colour="black", height=ci_bar_height,size=2)+  # add HORISONTAL error bars, geom_errorbar used for vertical..
-      geom_point(data=plot_merge, aes(y = module, x = fetOR), shape=15, cex=plot_merge$point_width, colour=plot_merge$color)+    # add plotting points
-      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits = c(-5000, 5000))
+      geom_point(data=plot_merge, aes(y=module, x=fetOR), shape=15, cex=plot_merge$point_width, colour=plot_merge$color)+    # add plotting points
+      #    xlim(0, 5)                                                         # removes datapoints outside the range == scale_x_continuous(limits=c(-5000, 5000))
       #
-      #    coord_cartesian(xlim = c(0, 60)) +                                  # moves the window only
-      coord_cartesian(xlim = x_lim) +    #        coord_cartesian(xlim = c(-0.5, 1))                        # moves the window only
+      #    coord_cartesian(xlim=c(0, 60)) +                                  # moves the window only
+      coord_cartesian(xlim=x_lim) +    #        coord_cartesian(xlim=c(-0.5, 1))                        # moves the window only
       scale_x_continuous(breaks=c(0,1:x_lim[2])) +
       #    scale_x_continuous(breaks=c(0,1,5,seq(10,2000,by=10))) +
       #  scale_size_area() +
@@ -5827,7 +5830,7 @@ gplots_dat=list()
 
 
     ## essential if using the ugly mess that is ggplot2, for more options : http://felixfan.github.io/rstudy/2013/11/27/ggplot2-remove-grid-background-margin/ 
-    #  myplot + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
+    #  myplot + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank(), panel.background=element_blank(), axis.line=element_line(colour="black"))
     #
       gplots_dat=(myplot + theme_bw())
   }
@@ -5957,7 +5960,7 @@ net.cons<-function(alis,blis,abg=NA,bbg=NA,do_plots=T,p_thresh=0.01,main="Maximu
     library(corrplot)
 
     if(class(abg)!='list'){
-      corrplot(make.numeric(cons_stat$pc_max),method = "circle",is.corr=FALSE
+      corrplot(make.numeric(cons_stat$pc_max),method="circle",is.corr=FALSE
         ,cl.lim=c(0, 1),col=rev(c(colrb)),cl.align="l",tl.col="black"
         ,mar=c(0,0,4,0)
         ,title=main
@@ -5965,8 +5968,8 @@ net.cons<-function(alis,blis,abg=NA,bbg=NA,do_plots=T,p_thresh=0.01,main="Maximu
     }
 
     if(class(abg)=='list'){
-      corrplot(make.numeric(cons_stat$pc_max),method = "circle", is.corr=FALSE
-        ,p.mat = make.numeric(cons_stat$phyper_min), insig = "blank",sig.level = p_thresh
+      corrplot(make.numeric(cons_stat$pc_max),method="circle", is.corr=FALSE
+        ,p.mat=make.numeric(cons_stat$phyper_min), insig="blank",sig.level=p_thresh
         ,cl.lim=c(0, 1),col=rev(c(colrb)),cl.align="l",tl.col="black"
         ,mar=c(0,0,4,0)
         ,title=main
@@ -6193,9 +6196,9 @@ lcount<-function(x,length){
 
 
 overlap<-function(A,B,n=5){
-    both = union(A, B)
-    inA = both %in% A
-    inB = both %in% B
+    both=union(A, B)
+    inA=both %in% A
+    inB=both %in% B
     
     intr=intersect(A,B)
 
@@ -6290,7 +6293,7 @@ applydiffcoex <- function(beta2,corr_mat_list,signtype=signType) # for multiple 
   # correl holds information about adjacency: sign(corr)*(corr)^2
   
   
-  cij0 = Reduce("+",correl)/length(correl); # Reduce adds two matrices (correl is a list of matrices)
+  cij0=Reduce("+",correl)/length(correl); # Reduce adds two matrices (correl is a list of matrices)
   ## A general-purpose adder:
   #Example
   #add <- function(x) Reduce("+", x)
@@ -6306,7 +6309,7 @@ applydiffcoex <- function(beta2,corr_mat_list,signtype=signType) # for multiple 
   
      Dij=(1/(length(corr_mat_list)-1))*Reduce("+", compDij)^(beta2/2) # compDij is a list of matrices
   
-  dissTOM=TOMdist(Dij, TOMType = signtype); # WGCNA function
+  dissTOM=TOMdist(Dij, TOMType=signtype); # WGCNA function
   collectGarbage()
   return(dissTOM)
 }
@@ -6315,9 +6318,9 @@ applydiffcoex <- function(beta2,corr_mat_list,signtype=signType) # for multiple 
 #===================================================================================================================================
 # # DiffCoEx (same as Kirill's but with some options and explanations)
 #===================================================================================================================================
-wgcna_diffcoex_L <- function (list_expr, pow = 6, minModuleSize = 40, mergeHeight = 0.15, datDescr = "", signType = "unsigned") 
+wgcna_diffcoex_L <- function (list_expr, pow=6, minModuleSize=40, mergeHeight=0.15, datDescr="", signType="unsigned") 
 {
-  print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
+  print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows=genes, columns=samples")
   library("WGCNA")
   enableWGCNAThreads()
   print("Can deal with only one softpower (pow) at a time ")
@@ -6327,10 +6330,10 @@ wgcna_diffcoex_L <- function (list_expr, pow = 6, minModuleSize = 40, mergeHeigh
   for (ireg in 1:length(list_expr)) {
     print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■")
     print(paste(names(list_expr)[ireg], ireg, "of", length(names(list_expr))))
-    t0 = Sys.time()
+    t0=Sys.time()
     
     COND <- list_expr[[ireg]]
-    # CONDav <- scale(COND, scale = F)
+    # CONDav <- scale(COND, scale=F)
     CONDav=COND
     bicorL[[ireg]] <- bicor(t(as.matrix(CONDav))) # bicor correlation of conditions
     
@@ -6338,73 +6341,73 @@ wgcna_diffcoex_L <- function (list_expr, pow = 6, minModuleSize = 40, mergeHeigh
   
   names(bicorL) <- names(list_expr)
   collectGarbage()
-  t0 = Sys.time()
+  t0=Sys.time()
   
-  softPower = pow
+  softPower=pow
   print(softPower)
   
-# dissTOM <- applydiffcoex(softPower, bicorL, signtype = signType) # * 
-  dissTOM <- diffcoex_paper(softPower, bicorL, signtype = signType) # * 
+# dissTOM <- applydiffcoex(softPower, bicorL, signtype=signType) # * 
+  dissTOM <- diffcoex_paper(softPower, bicorL, signtype=signType) # * 
   print(Sys.time() - t0)
   collectGarbage()
   
-  geneTree = hclust(as.dist(dissTOM), method = "average")
+  geneTree=hclust(as.dist(dissTOM), method="average")
   collectGarbage()
   
-  dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM, 
-                              method = "hybrid", cutHeight = 0.996, deepSplit = T, 
-                              pamRespectsDendro = FALSE, minClusterSize = minModuleSize)
+  dynamicMods=cutreeDynamic(dendro=geneTree, distM=dissTOM, 
+                              method="hybrid", cutHeight=0.996, deepSplit=T, 
+                              pamRespectsDendro=FALSE, minClusterSize=minModuleSize)
   
-  dynamicColors = labels2colors(dynamicMods)
+  dynamicColors=labels2colors(dynamicMods)
   collectGarbage()
   
   Datall <- t(as.data.frame(list_expr)) # merge the conditions
   collectGarbage()
   
-  mergedColor <- mergeCloseModules(Datall, dynamicColors, cutHeight = mergeHeight)$color
+  mergedColor <- mergeCloseModules(Datall, dynamicColors, cutHeight=mergeHeight)$color
   
   print(paste("mergedColor =", length(unique(mergedColor)), 
               unique(mergedColor)))
   print(Sys.time() - t0)
   collectGarbage()
-  mstat = as.data.frame(table(mergedColor)) # using dynamicColors not Merged
-  mstat = mstat[order(mstat[, 2], decreasing = T), ]
-  msta0 = mstat[(mstat[, 1] == "grey"), ]
-  msta0$module = "M0"
-  mstat = mstat[!(mstat[, 1] == "grey"), ]
-  mstat$module = paste0("M", 1:nrow(mstat))
-  mstat = rbind(mstat, msta0)
-  colnames(mstat) = c("color", "ngenes", "module")
-  mstat$color = as.character(mstat$color)
+  mstat=as.data.frame(table(mergedColor)) # using dynamicColors not Merged
+  mstat=mstat[order(mstat[, 2], decreasing=T), ]
+  msta0=mstat[(mstat[, 1] == "grey"), ]
+  msta0$module="M0"
+  mstat=mstat[!(mstat[, 1] == "grey"), ]
+  mstat$module=paste0("M", 1:nrow(mstat))
+  mstat=rbind(mstat, msta0)
+  colnames(mstat)=c("color", "ngenes", "module")
+  mstat$color=as.character(mstat$color)
   
   if (datDescr != "") {
-    mstat$module = paste(mstat$module, dat_descr, sep = "_")
+    mstat$module=paste(mstat$module, dat_descr, sep="_")
   }
   
-  module_list = list()
+  module_list=list()
   for (imod in 1:nrow(mstat)) {
-    module_list[[mstat$module[imod]]] = rownames(list_expr[[1]])[mergedColor == 
+    module_list[[mstat$module[imod]]]=rownames(list_expr[[1]])[mergedColor == 
                                                                    mstat$color[imod]]
   }
   
-  module_list[["bkgrnd"]] = rownames(list_expr[[1]])
+  module_list[["bkgrnd"]]=rownames(list_expr[[1]])
   
-  module_expr = list()
+  module_expr=list()
   for (ilis in 1:length(list_expr)) {
     for (imod in 1:length(module_list)) {
-      module_expr[[names(list_expr)[ilis]]][[names(module_list)[imod]]] = list_expr[[names(list_expr)[ilis]]][module_list[[names(module_list)[imod]]], 
+      module_expr[[names(list_expr)[ilis]]][[names(module_list)[imod]]]=list_expr[[names(list_expr)[ilis]]][module_list[[names(module_list)[imod]]], 
                                                                                                               ]
     }
   }
-  mbg = as.data.frame("bkgrnd")
-  mbg$length = nrow(list_expr[[1]])
-  mbg$name = "bkgrnd"
-  colnames(mbg) = colnames(mstat)
-  mstat = rbind(mstat, mbg)
-  readme = "\n\tModules are named based on size M1 - biggest, M0 - unclustered, bkgrnd - all input genes, output contains :\n    \t1. module_list - list containing names of genes in each module\n    \t2. module_expr - expression matrix of all genes in module / input dataset\n    \t3. mstat       - key used to name modules, includes module size\n    \t4. GeneTree     - object to plot the WGCNA style dendrogram\n    \n"
+  mbg=as.data.frame("bkgrnd")
+  mbg$length=nrow(list_expr[[1]])
+  mbg$name="bkgrnd"
+  colnames(mbg)=colnames(mstat)
+  mstat=rbind(mstat, mbg)
+  readme="\n\tModules are named based on size M1 - biggest, M0 - unclustered, bkgrnd - all input genes, output contains :\n    \t1. module_list - list containing names of genes in each module\n    \t2. module_expr - expression matrix of all genes in module / input dataset\n    \t3. mstat       - key used to name modules, includes module size\n    \t4. GeneTree     - object to plot the WGCNA style dendrogram\n    \n"
   cat(readme)
-  return(invisible(list(module_list = module_list, module_expr = module_expr, 
-                        mstat = mstat, plotobj = geneTree, readme = readme)))
+  return(invisible(list(module_list=module_list, module_expr=module_expr, 
+                        mstat=mstat, plotobj=geneTree, readme=readme)))
 }
 
 
@@ -6424,7 +6427,7 @@ diffcoex_paper <- function(beta2,bicorL,signtype=signType){
 
 
 wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDescr="",signType="unsigned"){
-  print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows = genes, columns = samples")
+  print("  NOTE : Input data (list_expr) is expected as a list with each entry : rows=genes, columns=samples")
   library('WGCNA')
   enableWGCNAThreads()
   print("Can deal with only one softpower (pow) at a time ")
@@ -6453,14 +6456,14 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
     dissTOM<-applydiffcoex(softPower,bicorL,signtype=signType)
     print(Sys.time()-t0) #41.17 min
     collectGarbage()
-  geneTree = hclust(as.dist(dissTOM), method = "average")
+  geneTree=hclust(as.dist(dissTOM), method="average")
   #print(Sys.time()-t0)
   collectGarbage()
-  dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+  dynamicMods=cutreeDynamic(dendro=geneTree, distM=dissTOM,
                         method="hybrid",cutHeight=.996,
-                        deepSplit = T, pamRespectsDendro = FALSE,
-                        minClusterSize = minModuleSize)
-  dynamicColors = labels2colors(dynamicMods)
+                        deepSplit=T, pamRespectsDendro=FALSE,
+                        minClusterSize=minModuleSize)
+  dynamicColors=labels2colors(dynamicMods)
 #  print(paste("dynamicColors =",length(unique(dynamicColors)),unique(dynamicColors)))
   #print(Sys.time()-t0)
   collectGarbage()
@@ -6474,10 +6477,10 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
   collectGarbage()
 
   #' Plot the dendrogram and colors underneath
-#  pdf(file=paste(outDir,"/plots/",datDescr,"_power",softPower,"_dendogram.pdf",sep=""),width=10,paper = 'a4r')
+#  pdf(file=paste(outDir,"/plots/",datDescr,"_power",softPower,"_dendogram.pdf",sep=""),width=10,paper='a4r')
 #  plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColor), "Hybrid Tree Cut",
-#    dendroLabels = FALSE, hang = 0.03,addGuide = TRUE, 
-#    guideHang = 0.05,main = paste("Cluster Dendrogram ",datDescr," (power ",softPower,")",sep=""))
+#    dendroLabels=FALSE, hang=0.03,addGuide=TRUE, 
+#    guideHang=0.05,main=paste("Cluster Dendrogram ",datDescr," (power ",softPower,")",sep=""))
 #  dev.off()
 
 #  print(Sys.time()-t0)
@@ -6792,65 +6795,8 @@ cat(readme)
 
 
 
-
-
-pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
-#	cat('\tNOTE:\t- function requires synu & synd objects from: /Data/pubchem/dtb/extras/compound.CID_Synonym_filtered.sep2016.duplicates.Rdata\n')
-#	query - expect vector of drug names
-	if(!tolower){
-		query=unique(query)
-			cat('\tmapping',length(query),'compounds - same case matches\n')
-
-		mapped=synu[synu$synonym%in%query,,drop=F]
-		cat('\t\t',round(length(unique(mapped$synonym))/length(query),digits=2),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
-
-#		if(loose){
-#			ambigous=synd[synd$synonym%in%query,,drop=F]
-#			cat('\t\t',round(length(unique(ambigous$synonym))/length(query),digits=2),'\tambigous matches - names that match multiple compounds\n')
-#		}
-		if(grep){
-			partial=synu[grepl(paste(query,collapse='|'),synu$synonym),,drop=F]
-			cat('\t\t',round(length(unique(partial$synonym))/length(query),digits=2),'\tgrep matches in "unique" names\n')
-		}
-	}
-
-	if(tolower){
-		query=unique(tolower(query))
-			cat('\tmapping',length(query),'compounds - all lower case\n')
-
-		mapped=synu[synu$lower%in%query,,drop=F]
-		cat('\t\t',round(length(unique(mapped$lower))/length(query),digits=2),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
-
-#		if(loose){
-#			ambigous=synd[synd$lower%in%query,,drop=F]
-#			cat('\t\t',round(length(unique(ambigous$lower))/length(query),digits=2),'\tambigous matches - names that match multiple compounds\n')
-#		}
-		if(grep){
-			partial=synu[grepl(paste(query,collapse='|'),synu$lower),,drop=F]
-			cat('\t\t',round(length(unique(partial$lower))/length(query),digits=2),'\tgrep matches in "unique" names\n')
-		}
-	}
-
-	if(!loose&!grep){
-		return(list(mapped=mapped))
-	}
-	if(loose&!grep){
-		return(list(mapped=mapped,ambigous=ambigous))
-	}
-	if(loose&grep){
-		return(list(mapped=mapped,ambigous=ambigous,partial=partial))
-	}
-	cat('\n')
-}
-
-
-
-
-
-
-
 annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='median'){
-##  OPTIONS : supported "combine_method" = c('mean','median','sum') ## sum for RNA-seq : transcript per million (TPM) if mapped such that reads are not shared across transcripts (eg cufflinks), else median is more appropriate
+##  OPTIONS : supported "combine_method"=c('mean','median','sum') ## sum for RNA-seq : transcript per million (TPM) if mapped such that reads are not shared across transcripts (eg cufflinks), else median is more appropriate
 ##  process expression matrix with corresponding annotation matrix
 ##  - re-mapping id types and taking median of non-uniquly mapping ids
 ##  - annot_from & annot_to - expect the name of colname containing current and new ids respectively
@@ -6916,5 +6862,72 @@ annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='m
 	return(invisible(expr_out))
 
 }
+
+
+
+
+
+
+pubchem.idmatch<-function(query,pubchem_db){
+# INPUTS: pubchem_db -  colnames("pubchem_CID" "synonym"     "lower") lower=tolower(pubchem_db$synonym
+# INPUTS: query - character string of synonyms to search the "lower"
+	query=unique(tolower(query))
+	cat('\n\tconvert',length(query),'synonyms to pubchem IDs\n')
+	holder=pubchem_db[pubchem_db$lower%in%query,]
+	cat('\t\t',length(unique(holder$query)),'of',length(unique(query)),'ids mapped',round(length(unique(holder$query))/length(unique(query)),digits=3)*100,'%\n')
+
+	return(unique(holder[order(holder$lower),]))
+}
+
+
+
+##~~<>pubchem.idmatch<-function(query,tolower=T,loose=F,grep=F){
+#	cat('\tNOTE:\t- function requires synu & synd objects from: /Data/pubchem/dtb/extras/compound.CID_Synonym_filtered.sep2016.duplicates.Rdata\n')
+#	query - expect vector of drug names
+##~~<>	if(!tolower){
+##~~<>		query=unique(query)
+##~~<>			cat('\tmapping',length(query),'compounds - same case matches\n')
+
+##~~<>		mapped=synu[synu$synonym%in%query,,drop=F]
+##~~<>		cat('\t\t',round(length(unique(mapped$synonym))/length(query),digits=2),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
+
+#		if(loose){
+#			ambigous=synd[synd$synonym%in%query,,drop=F]
+#			cat('\t\t',round(length(unique(ambigous$synonym))/length(query),digits=2),'\tambigous matches - names that match multiple compounds\n')
+#		}
+##~~<>		if(grep){
+##~~<>			partial=synu[grepl(paste(query,collapse='|'),synu$synonym),,drop=F]
+##~~<>			cat('\t\t',round(length(unique(partial$synonym))/length(query),digits=2),'\tgrep matches in "unique" names\n')
+##~~<>		}
+##~~<>	}
+
+##~~<>	if(tolower){
+##~~<>		query=unique(tolower(query))
+##~~<>			cat('\tmapping',length(query),'compounds - all lower case\n')
+
+##~~<>		mapped=synu[synu$lower%in%query,,drop=F]
+##~~<>		cat('\t\t',round(length(unique(mapped$lower))/length(query),digits=2),'\t"unique" matches - may contain duplicated pubchem compound ids\n')
+
+#		if(loose){
+#			ambigous=synd[synd$lower%in%query,,drop=F]
+#			cat('\t\t',round(length(unique(ambigous$lower))/length(query),digits=2),'\tambigous matches - names that match multiple compounds\n')
+#		}
+##~~<>		if(grep){
+##~~<>			partial=synu[grepl(paste(query,collapse='|'),synu$lower),,drop=F]
+##~~<>			cat('\t\t',round(length(unique(partial$lower))/length(query),digits=2),'\tgrep matches in "unique" names\n')
+##~~<>		}
+##~~<>	}
+
+##~~<>	if(!loose&!grep){
+##~~<>		return(list(mapped=mapped))
+##~~<>	}
+##~~<>	if(loose&!grep){
+##~~<>		return(list(mapped=mapped,ambigous=ambigous))
+##~~<>	}
+##~~<>	if(loose&grep){
+##~~<>		return(list(mapped=mapped,ambigous=ambigous,partial=partial))
+##~~<>	}
+##~~<>	cat('\n')
+##~~<>}
 
 
