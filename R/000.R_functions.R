@@ -1009,14 +1009,14 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
     if(!mingrey & min==0 & max>=0){heat_colors=c(colorRampPalette(c("white","#F0E442","darkred"))(ncols+1));symmkey=F}
     if(!mingrey & min==0 & max<=0){heat_colors=c(colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols+1));symmkey=F}
 
-
-  cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
-
-  if(values){
-  	celdat=round(query,digits=2)
-  	celdat[celdat==min(celdat)]=""
-  cor_heat=heatmap.2((cor.measures),cellnote=celdat,notecex=values.cex,,notecol="black",breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
-  }
+	if(!values){
+		cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+	}
+	if(values){
+		celdat=round(query,digits=2)
+		celdat[celdat==min(celdat)]=""
+		cor_heat=heatmap.2((cor.measures),cellnote=celdat,notecex=values.cex,,notecol="black",breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
+	}
 
   return(invisible(cor_heat))
 }
@@ -3992,11 +3992,19 @@ if(verbose){
 	par(new=T)
 	lines(density(lower, na.rm=T), lty=1, lwd=2,col='darkred')
 #    legend(x="topright",pch=15,box.lwd=0,box.col="white",col=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('n=',nrow(exp_mat)),paste0('n=',nrow(lower)),paste0('n=',nrow(upper))),cex=1)
-    legend(x="topright",pch=15,box.lwd=0,box.col="white",col=c('darkgrey','dodgerblue','darkred'),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('density n=',nrow(exp_mat)),paste0('lower n=',nrow(lower)),paste0('upper n=',nrow(upper))),cex=1)
+    legend(x="topright",pch=15,box.lwd=0,box.col="white",col=c('darkgrey','darkred','dodgerblue'),pt.bg=c('darkgrey',rgb(1,0,0,0.5),rgb(0,0,1,0.5)),legend=c(paste0('density n=',nrow(exp_mat)),paste0('lower n=',nrow(lower)),paste0('upper n=',nrow(upper))),cex=1)
     cat('\tdataset n=',nrow(exp_mat),'lower n=',nrow(lower),'upper n=',nrow(upper),'\n')
   }
     
   return(invisible(list(upper=upper,lower=lower)))
+
+
+####  a mediocre toy dataset to show bimodal distribution
+##x=matrix(rnorm(9000, mean = 0, sd = 0.5),ncol=3)
+##y=matrix(rnorm(27000, mean = 5, sd = 4),ncol=3)
+##z=rbind(x,y)
+##deconv(z,T)
+
 }
 
 
