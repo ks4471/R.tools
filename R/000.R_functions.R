@@ -994,6 +994,7 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
   if(Rowv & Colv){dendrogram="both"}
   if(Rowv & !Colv){dendrogram="row"}
   if(!Rowv & Colv){dendrogram="column"}
+  if(!Rowv & !Colv){dendrogram="none"}
 	
 }
 # can feasibly include a parameter for dendrogram as well, for more plottting flexibility
@@ -1013,7 +1014,7 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
 		cor_heat=heatmap.2((cor.measures),breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
 	}
 	if(values){
-		celdat=round(query,digits=2)
+		celdat=round(cor.measures,digits=2)
 		celdat[celdat==min(celdat)]=""
 		cor_heat=heatmap.2((cor.measures),cellnote=celdat,notecex=values.cex,,notecol="black",breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
 	}
@@ -2543,16 +2544,16 @@ frac<-function(subset,full,num=T,sig_fig=2){
 
 
 
-list.as.df<-function(in_list){
-  dflist=as.data.frame(matrix(NA,nrow=length(in_list),ncol=ncol(in_list[[1]])))
-    colnames(dflist)=colnames(in_list[[1]])
-    rownames(dflist)=names(in_list)
+#list.as.df<-function(in_list){
+#  dflist=as.data.frame(matrix(NA,nrow=length(in_list),ncol=ncol(in_list[[1]])))
+#    colnames(dflist)=colnames(in_list[[1]])
+#    rownames(dflist)=names(in_list)
 
-  for(idat in 1:length(in_list)){
-    dflist[idat,]=in_list[[idat]]
-  }
-  return(unique(dflist))
-}
+#  for(idat in 1:length(in_list)){
+#    dflist[idat,]=in_list[[idat]]
+#  }
+#  return(unique(dflist))
+#}
 
 
 
@@ -3613,7 +3614,7 @@ net.me<-function(expr_list,nme=1){
 
 
 list.as.df<-function(in_list){
-  cat("\tUSE: convert 'uneven' list to data frame (missing introduced at the end)\n")
+#  cat("\tUSE: convert 'uneven' list to data frame (missing introduced at the end)\n")
   #'adapted' from :  http://stackoverflow.com/questions/27153979/converting-nested-list-unequal-length-to-data-frame          # N.B. 'adapted' is defined as 'shamelessly ripped off', which includes direct copy/paste of explanation below
   #  get the length of list element ('indx') by looping with sapply
   #  recent version of R - can use lengths to replace the sapply(.., length) step
@@ -4103,14 +4104,15 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
   }
     if(do_plots){
     	cat('\t- plotting results\n')
+		par_cur=par()$mar
+		par(mar=par_mar)
+
     	if(dat_is_list|horiz){
 			clusden=as.dendrogram(clustat)
 			if(dat_is_list){labels_colors(clusden)=colvec[order.dendrogram(clusden)]}
 			clusden=color_branches(clusden, k=k)
 
-			par_cur=par()$mar
-			par(mar=par_mar)
-			plot(clusden, horiz=TRUE)
+			plot(clusden, horiz=TRUE,...)
 
 			if(dat_is_list){colored_bars(colvec, clusden, horiz=TRUE)}
 
@@ -4135,9 +4137,10 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
 			,cex.rowText=plot_cex
 			,...)
 		}
+		par(mar=par_cur)
 	}
 
-		par(mar=par_cur)
+
 #  cat(readme)
     if(dat_is_list){
     	    readme='\n\toutput contains :
@@ -6563,7 +6566,7 @@ if(datDescr!=''){mstat$module=paste(mstat$module,dat_descr,sep="_")}   ##  add i
 cmap.meta<-function(lmod,bkg='NA',de_thresh=0.01,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
 
 cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/5nyydp1y5htikba/004.DTB.full_info.single_DEG.meta_randM.batch_corrected.scored.Rdata?dl=0\n\n')
-cat('\n\tNOTE: currently list of drugs to test is taked from "degen" only, adding a drug name/data to only "metsum" will not perform enrichments\n\n')
+cat('\n\tNOTE: currently list of drugs to test is taken from "degen" only, adding a drug name/data to only "metsum" will not perform enrichments\n\n')
 
 # INPUT: lmod - list of module names (for each expect chracter vector $up $down of ENSG, if unavailable, arbitrarily assign all genes to $up or $down)
 ####   input format :
@@ -6636,7 +6639,10 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 				mstat[[paste0('mixedM_',idru)]][[paste(imod,'up_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
 				mstat[[paste0('mixedM_',idru)]][[paste(imod,'up_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			
+				sigen[[paste0('mixedM_',idru)]][[paste(imod,'up',sep='.')]]=holder[[imod]]
 			}
+			
 
 			if('down' %in% names(lmod[[imod]])){
 
@@ -6646,8 +6652,10 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 				mstat[[paste0('mixedM_',idru)]][[paste(imod,'down_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
 				mstat[[paste0('mixedM_',idru)]][[paste(imod,'down_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			
+				sigen[[paste0('mixedM_',idru)]][[paste(imod,'down',sep='.')]]=holder[[imod]]
 			}
-			sigen[[paste0('mixedM_',idru)]][[paste(imod,'down_upreg',sep='.')]]=(holder[[imod]])
+			
 		}
 		rm(dumpty)
 		}
@@ -6674,7 +6682,7 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 		holder=list()
 	#		holder$n.bg=nrow(dummy)
-			holder$n.bg.all=nrow(dummy)
+			holder$n.bg.all=rownames(dummy)
 			holder$n.bg.sig=rownames(dummy[dummy$adj.p<de_thresh,])
 			holder$n.bg.sig_up=rownames(dummy[dummy$adj.p<de_thresh & dummy$log.fc>0,])
 			holder$n.bg.sig_down=rownames(dummy[dummy$adj.p<de_thresh  & dummy$log.fc<0,])
@@ -6696,8 +6704,10 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 				mstat[[paste0('single_',idru)]][[paste(imod,'up_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
 				mstat[[paste0('single_',idru)]][[paste(imod,'up_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+			
+				sigen[[paste0('single_',idru)]][[paste(imod,'up',sep='.')]]=holder[[imod]]
 			}
-
+			
 #sampl=rownames(dumpty)
 #bkgrnd=rownames(dummy)
 #success=holder$n.bg.sig_down
@@ -6717,8 +6727,10 @@ cat('\n\tperform enrichment test for module genes in cmap\n')
 
 				mstat[[paste0('single_',idru)]][[paste(imod,'down_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_down,counts=F))
 				mstat[[paste0('single_',idru)]][[paste(imod,'down_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(dumpty),bkgrnd=rownames(dummy),success=holder$n.bg.sig_up,counts=F))
+
+				sigen[[paste0('single_',idru)]][[paste(imod,'down',sep='.')]]=holder[[imod]]
 			}
-			sigen[[paste0('single_',idru)]][[paste(imod,'down_upreg',sep='.')]]=(holder[[imod]])
+
 		}
 #		rm(dumpty)
 		}
@@ -6855,8 +6867,9 @@ annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='m
 		 cat('\n\t',frac(nrow(expu),nrow(expr_mat))*100,'%  ids uniquely mapped\n')
 	}
 
-	udup=unique(dupl[,annot_to])
+	udup=unique(dupl[,annot_to,drop=F])
 
+	if(nrow(unic)!=nrow(expr)){
 	if(length(udup)>1){
 		cat('\n\tmerge',length(udup),'genes, using ',combine_method,' on all mapped probes :\n')
 #		idup=udup[5]
@@ -6877,6 +6890,7 @@ annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='m
 			k=lcount(k,length(udup))
 		}
 		dupmed=t(as.data.frame(dupmed))
+	}
 	}
 
 	expr_out=rbind(expu,dupmed)
@@ -6951,5 +6965,87 @@ pubchem.idmatch<-function(query,pubchem_db){
 ##~~<>	}
 ##~~<>	cat('\n')
 ##~~<>}
+
+
+distpc <- function(x,perc) ecdf(x)(perc)
+##  estimate quantile of a value in a distribution
+#    SOURCE:	http://stats.stackexchange.com/questions/50080/estimate-quantile-of-value-in-a-vector 
+#    USE:		ecdf_fun(1:10,8)
+#    NOTES:		this function looks really 'creepy', no brackets i get, but where is return?? how does (perc) work?? spooky..
+
+
+
+
+
+geo.matrix<-function(datid,path){
+##  USE: download GEO matrix data and process into smth usable
+	dir.create(file.path(path,'dtb',datid))
+
+	setwd(file.path(path,'dtb',datid))
+#	getwd()
+
+	system(paste0('wget -r -nH --cut-dirs=7 ftp://ftp.ncbi.nlm.nih.gov/geo/series/',substr(datid,1,5),'nnn/',datid,'/matrix/'))
+	# -r 								##  recursively Dounload
+	# -nH (--no-host-directories)		##  cuts out hostname 
+	# --cut-dirs=X 						##  (cuts out X directories)
+
+	system(paste0('gunzip ',datid,'_series_matrix.txt.gz'))
+#	list.files()
+
+	gse=readLines(file.path(path,'dtb',datid,paste0(datid,'_series_matrix.txt')))
+
+	cord=c(
+		grep('!Sample_title',gse)
+		,grep('!series_matrix_table_begin',gse)
+		,grep('!series_matrix_table_end',gse)
+	)
+
+	meta=as.data.frame(strsplit(gse[1:(cord[1]-2)],'\t'))
+		colnames(meta)=meta[1,]
+		meta=t(meta[-1,])
+	samp=as.data.frame(strsplit(gse[cord[1]:(cord[2]-1)],'\t'))
+	for(icol in colnames(samp)){
+		samp[,icol]=(gsub('"','',samp[,icol],fixed=T))
+	}
+		colnames(samp)=samp[1,]
+		samp=samp[-1,]
+		colnames(samp)=(gsub('"','',colnames(samp),fixed=T))
+		colnames(samp)=(gsub('!Sample_','',colnames(samp),fixed=T))
+
+		rownames(samp)=samp$geo_accession
+#		Head(samp)
+	cat('\t',datid,'contains phenotype data for',nrow(samp),'samples\n')
+
+		if(nrow(expr)==0){
+			cat('\t\tno expression data available\n')
+			return(invisible(list(samp=samp,meta=meta)))
+		}
+
+	    if(nrow(expr)>0){
+
+	expr=as.data.frame(strsplit(gse[(cord[2]+1):(cord[3]-1)],'\t'))
+		colnames(expr)=as.character(expr[1,])
+		rownames(expr)=as.character(expr[,1])
+		expr=t(expr[-1,-1])
+
+	expr=make.numeric(expr)
+		rownames(expr)=(gsub('"','',rownames(expr),fixed=T))
+		colnames(expr)=(gsub('"','',colnames(expr),fixed=T))
+		Head(expr)
+
+
+	overlap(rownames(samp),colnames(expr))
+
+	samp=samp[colnames(expr),]
+		colnames(expr)=gsub(' ','.',samp$title)
+
+
+			cat('\t\texpression data available,',nrow(expr),' genes\n')
+			return(invisible(list(expr=expr,samp=samp,meta=meta)))
+		}
+
+}
+
+
 
 
