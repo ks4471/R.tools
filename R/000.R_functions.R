@@ -1,8 +1,7 @@
+#sample(c('║','╚','╣','═','╔','╩','╦'),70,replace=T)
 "
 ╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗
 ╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝
-https://www.dropbox.com/s/4nhe1ukd7ee9b3h/000.R_functions.R?dl=0 
-
 ╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╦╦╦╗╔═╗╔═╦╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╗╔═╦╗╔═╦╗╔╔═╦╗╔═╦╗╔╗
 ╠╗║╚╝║║╠╗║╚╣║║║║║╚╣                   ╠╣║║║║║═╣║║╠╗║║╚╣╚╣╔╣╔╣╔╣╔╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣║╗║╚╚╣
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
@@ -6201,10 +6200,12 @@ install.dependencies<-function(){
 	install.packages('gplots')
 	install.packages('ggplot2')
 	install.packages('pvclust')
+	install.packages('dendextend')
 
 	install.bioc('minet')
 	install.bioc('limma')
 	install.bioc('biomaRt')
+
 }
 
 
@@ -7045,6 +7046,87 @@ geo.matrix<-function(datid,path){
 		}
 
 }
+
+
+
+
+
+geo.query<-function(file_loc){
+	cat('\treading file\n')
+##  INPUTS:  - location of the file downloaded from geo as 'query' for datasets / series / both
+	arri=readLines(file_loc)
+
+	pos=as.data.frame(grep('^[0-9]*[.] ',arri))	##  all entries start as: '1. ' '2. ' '3. '   etc..
+		colnames(pos)='start'
+	pos$end=c((pos$start[2:nrow(pos)]-1),length(arri))
+
+	cat('\t',nrow(pos),'datasets detected\n')
+	#nstat=list()
+	cat('\t\tparsing entries\n')
+	gdat=list()
+	for(idat in 1:nrow(pos)){
+		dummy=arri[pos[idat,'start']:pos[idat,'end']]
+		dummy=dummy[dummy!='']
+
+	#	grepl('Organism:',dummy)
+	#	grepl('Type:',dummy)
+	#	grepl('Platform:',dummy)
+	#	grepl('download:',dummy)
+	#	grepl('DataSet',dummy)
+
+		if(length(dummy)==7){
+			gdat[[paste0('n',idat)]]=as.data.frame(dummy)
+		}
+		lcount(idat,nrow(pos))
+	##	nstat[[as.character(idat)]]=length(dummy) ## used to determine what the datasets look like, as below
+	}
+
+	cat('\t\tcleaning up\n')
+	#nstat=t(as.data.frame(nstat))
+	#matst(nstat)
+
+	#names(nstat[nstat[,1]==6,])[1]
+	#names(nstat[nstat[,1]==7,])[1]
+	#names(nstat[nstat[,1]==8,])[1]
+	gdat=t(as.data.frame(gdat))
+#		Head(gdat)
+
+
+	geod=as.data.frame(tolower(gdat[,1]))
+		colnames(geod)='title'
+	geod$full=tolower(gdat[,2])
+	geod$organism=gsub('Organism:\t','',gdat[,3])
+	geod$type=gsub('Type:\t\t','',gdat[,4])
+#	geod$type=gsub('Type:\t\t','',gdat[,4])
+
+	holder=strsplit(gdat[,5],' ')
+	dummy=list()
+	k=1
+	for(idat in names(holder)){
+		dummy[[idat]]=holder[[idat]][(length(holder[[idat]])-1)]
+		k=lcount(k,length(holder))
+	}
+
+	geod$n=as.numeric(unlist(dummy))
+	geod$platforms=gdat[,5]
+	geod$ftp=gdat[,6]
+	geod$ids=gdat[,7]
+
+	rownames(geod)=1:nrow(geod)
+	dummy=geod$ids
+	geod$id=gsub('.*\t\tAccession: (G.*)\tID: (.*)','\\1',dummy)
+	geod$otr=gsub('.*\t\tAccession: (G.*)\tID: (.*)','\\2',dummy)
+	geod$ftp=gsub('.* (ftp:.*)','\\1',geod$ftp)
+	dummy=geod$platforms
+	geod$platform=gsub('Platform: (.*) (.*) Samples','\\1',dummy)
+	geod$n.samp=gsub('Platform: (.*) (.*) Samples','\\2',dummy)
+
+	return(invisible(geod))
+}
+
+
+
+
 
 
 
