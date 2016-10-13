@@ -6230,13 +6230,13 @@ overlap<-function(A,B,n=5){
 
     print(table(inA, inB))
 
-    cat('\n\n\tlength(A) :  ',length(A),'\t% unique(A)  :  ',round(length(unique(A))/length(A),digits=3))
-    cat('\n\tlength(B) :  ',length(B),'\t% unique(B)  :  ',round(length(unique(B))/length(B),digits=3),'\n')
+    cat('\n\n\tlength(A) :  ',length(A),'\t unique(A)  :  ',round(length(unique(A))/length(A),digits=3)*100,'%')
+    cat('\n\tlength(B) :  ',length(B),'\t unique(B)  :  ',round(length(unique(B))/length(B),digits=3)*100,'%','\n')
     
     cat('\n\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
     cat('\tinA  notB :\t',	paste(sort(A[!(A%in%intr)][1:n]),collapse=',  '),'\n')
     cat('\tinB  notA :\t',	paste(sort(B[!(B%in%intr)][1:n]),collapse=',  '),'\n')
-    return(invisible(table(inA, inB)))
+    return(invisible(list(inter=intr,union=both,ina=inA,inb=inB)))
 }
 
 
@@ -7126,6 +7126,39 @@ geo.query<-function(file_loc){
 
 
 
+ll<-function(dir_path=getwd()){
+	system(paste0('ls -lht ',dir_path))
+}
+
+cd<-function(target_path,show=T){
+	if(target_path=='..'){target_path= gsub('(.*[/]).*','\\1',target_path);setwd(target_path)}
+
+	if(target_path!='..'){setwd(paste0(getwd(),'/',target_path))}
+	
+	if(show){ll()}
+}
+
+pwd<-function(){
+	getwd()
+}
+
+mkdir<-function(dir_name,dir_path=getwd(),show=T,warn=T){
+#	if(show){ll()}
+	dir.create(file.path(dir_path,dir_name),showWarnings=warn)
+	if(show){ll(dir_path)}
+}
+
+rmdir<-function(dir_name,dir_path=getwd(),show=T){
+#	if(show){ll()}
+	system(paste0('rmdir ',dir_name))
+	if(show){ll(dir_path)}
+}
+
+cp<-function(file_names,target_path,show=T){
+	if(show){ll(target_path)}
+	system(paste('cp',paste(file_names,collapse=' '),target_path))
+	if(show){ll(target_path)}
+}
 
 
 
