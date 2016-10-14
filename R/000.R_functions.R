@@ -7,10 +7,11 @@
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
 
+
 #╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
 #options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#  ╚║ ╚╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║║║║╚╣║╣
-#library(R.helper)# ╦═╔╩═╔╚║═╚╣╩║║╦╦═╔╦║╚╣ ╔╣═╦║╣═╔═╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
-#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩╩╩╩═══╩═╩╝╩═╩╝╚═╩═╩╩═╝
+#library(R.helper)#╔╦══╩╦╔╚║═╚╣╩║║╦╦═╔╦║╚╣ ╔╣═╦║╣═╔═╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
+#╚═╝╩═╩╝╚═╩══╩═╩══╩╩═══╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩╩╩╩═══╩═╩╝╩═╩╝╚═╩═╩╩═╝
 
 
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
@@ -6237,9 +6238,9 @@ overlap<-function(A,B,n=5){
     cat('\n\n\tlength(A) :  ',length(A),'\t unique(A)  :  ',round(length(unique(A))/length(A),digits=3)*100,'%')
     cat('\n\tlength(B) :  ',length(B),'\t unique(B)  :  ',round(length(unique(B))/length(B),digits=3)*100,'%','\n')
     
-    cat('\n\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
-    cat('\tinA  notB :\t',	paste(sort(A[!(A%in%intr)][1:n]),collapse=',  '),'\n')
-    cat('\tinB  notA :\t',	paste(sort(B[!(B%in%intr)][1:n]),collapse=',  '),'\n')
+    cat('\n\t',length(intr),'\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
+    cat('\t',sum(!A%in%intr),'\tinA  notB :\t',	paste(sort(A[!(A%in%intr)][1:n]),collapse=',  '),'\n')
+    cat('\t',sum(!B%in%intr),'\tinB  notA :\t',	paste(sort(B[!(B%in%intr)][1:n]),collapse=',  '),'\n')
     return(invisible(list(inter=intr,union=both,ina=inA,inb=inB)))
 }
 
