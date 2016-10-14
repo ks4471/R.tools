@@ -7,6 +7,10 @@
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
 
+#╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
+#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#  ╚║ ╚╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║║║║╚╣║╣
+#library(R.helper)# ╦═╔╩═╔╚║═╚╣╩║║╦╦═╔╦║╚╣ ╔╣═╦║╣═╔═╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
+#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩╩╩╩═══╩═╩╝╩═╩╝╚═╩═╩╩═╝
 
 
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
@@ -6866,9 +6870,10 @@ annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='m
 			rownames(expu)=unic[,annot_to]
 
 		 cat('\n\t',frac(nrow(expu),nrow(expr_mat))*100,'%  ids uniquely mapped\n')
+		 expr_out=expu
 	}
 
-	udup=unique(dupl[,annot_to,drop=F])
+	udup=unlist(unique(dupl[,annot_to,drop=F]))
 
 	if(nrow(unic)!=nrow(expr)){
 	if(length(udup)>1){
@@ -6890,11 +6895,15 @@ annot.combine<-function(expr_mat,annot_mat,annot_from,annot_to,combine_method='m
 #			cat('\t\t\t',paste(round(dumpty,digits=2),collapse=",\t"),'\n')
 			k=lcount(k,length(udup))
 		}
-		dupmed=t(as.data.frame(dupmed))
+		dupfin=t(as.data.frame(dupmed))
+
+			rownames(dupfin)=names(dupmed)
+		expr_out=rbind(expu,dupfin)
+
 	}
 	}
 
-	expr_out=rbind(expu,dupmed)
+
 		cat('\n\tfinal output contains',nrow(expr_out),' genes, ',round(nrow(expr_out)/nrow(expr_mat),digits=2)*100,'% of original input\n')
 	return(invisible(expr_out))
 
