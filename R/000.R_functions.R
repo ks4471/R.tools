@@ -18,8 +18,8 @@
 ##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#- MOTHBALLS -#•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 #•#
-#•#		#git clone https://github.com/jalvesaq/colorout.git
-#•#		#sudo R CMD INSTALL colorout
+#•#		git clone https://github.com/jalvesaq/colorout.git
+#•#		sudo R CMD INSTALL colorout
 #•#
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
@@ -992,7 +992,7 @@ if(mode=="pval"){
 
 
 
-Heat<-function(cor.measures,Rowv=T,Colv=T,values=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",...){
+Heat<-function(cor.measures,values=F,Rowv=T,Colv=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",...){
 
 if(class(Rowv)=='logical'&class(Colv)=='logical'){
   if(Rowv & Colv){dendrogram="both"}
@@ -2675,6 +2675,7 @@ if(help){
  cat("\tNOTE\t: transfrom=T also returns the list_dat processed for common bg\n")
  cat("\tNOTE\t: dat_mat required only if union=T & transform=T \n")
 }
+	if(verbose){cat('\tcalculate common background across',length(list_dat),'datasets\n')}
 
    bgcommon=rownames(list_dat[[1]])
   for(ilis in 2:length(list_dat)){
@@ -2682,14 +2683,15 @@ if(help){
      if(union){bgcommon=union(bgcommon,rownames(list_dat[[ilis]]))}
   }
 
-  if(!union&verbose){cat("\n\t\tintersect:",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
-  if(union&verbose){cat("\n\t\tunion",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
+  if(!union&verbose){cat("\n\tintersect:",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
+  if(union&verbose){cat("\n\tunion",length(bgcommon),"genes common to all",length(list_dat),"datasets\n")}
 
   
-    
+
   if(!transform){return(invisible(bgcommon))}
 
   if(transform & !union){
+  	if(verbose){cat('\ttransform all datasets to "intersect" bakcground\n')}
    listt=list()
     for(ilis in 1:length(list_dat)){
      listt[[names(list_dat)[ilis]]]=list_dat[[names(list_dat)[ilis]]][bgcommon,,drop=F]
@@ -2699,6 +2701,7 @@ if(help){
   }
 
   if(transform & union){
+  	if(verbose){cat('\ttransform all datasets to "union" bakcground\n')}
    listt=list()
     for(ilis in 1:length(list_dat)){
      listt[[names(list_dat)[ilis]]]=dat_mat[bgcommon,colnames(list_dat[[names(list_dat)[ilis]]]),drop=F]
@@ -2956,7 +2959,7 @@ dat.type<-function(dat_mat){
 
 
 
-cov.impact.check<- function(expr_mat,cov_mat,plot_cov_distributions=F,single_gene_analysis=F,sanity=F,n_pcs=5,sd_check=T,dat_descr="",help=F){
+cov.impact.check<-function(expr_mat,cov_mat,plot_cov_distributions=F,single_gene_analysis=F,sanity=F,n_pcs=5,sd_check=T,dat_descr="",help=F){
 if(help==T){ 
   cat("\tINPUTS:\texpr_mat : rows - genes, columns - samples   |   cov_mat rows - samples , columns - covariates\n")
 # cat("\tNOTE\t:  cov_mat - non-numeric covariates will be used 'as.factor'\n")
@@ -2997,7 +3000,7 @@ if(sanity){
 #print(dim(cov_mat))
 ###------------------------------------------------------------------------------------------------------------
 ##  PC level analysis
-#  cat("\t\tpca analyis of expression profiles\n")
+  cat("\t==========  calculate PCs of expr_mat  ==========\n")
   pcs=pcstat(expr_mat,plot_pcs=c(T,T,F),n_pcs=5,verbose=F)
 
   univpcP=matrix(NA,nrow=ncol(pcs),ncol=ncol(cov_mat))
@@ -3009,7 +3012,7 @@ if(sanity){
     rownames(univpcR)=colnames(pcs)
 
 
-
+cat("\t==========  correlate of PCs with covariates  ==========\n")
   for(icov in 1:ncol(cov_mat)){
     for(ipcs in 1:ncol(pcs)){
 #     cat(icov,ipcs,"\n")
@@ -3018,9 +3021,6 @@ if(sanity){
       univpcR[colnames(pcs)[ipcs],paste(colnames(cov_mat)[icov],"Rsq",sep=".")]=summary(lm(pcs[,ipcs]~cov_mat[,icov]))$r.sq
     }
   }
-
-
-
 
 # temp measure to avoid breaking due to 'missing' P-values
   univpcP[is.na(univpcP)]=1
@@ -3061,7 +3061,7 @@ if(!single_gene_analysis){
    return(invisible(list("pcs"=pcs,"univpcP"=univpcP,"univpcR"=univpcR)))
 }
 if(single_gene_analysis){
-cat("\t\tPerforming single gene analysis on",nrow(expr_mat),"genes\n")
+cat("\t==========  perform single gene analysis on",nrow(expr_mat),"genes  ==========\n")
 
   par(mfrow=c(5,2))
     univgenP=list()
@@ -3277,7 +3277,7 @@ is.missing<-function(data_mat,make_plot=F,use_grid=F,dat_descr="",define_na=c(NA
   n_overlap=nrow(data_mat[complete.cases(data_mat),])
 
 #    cat("\t----------------  Total Missing : ",sum(is.na(data_mat))," (",round(sum(is.na(data_mat))/length(is.na(data_mat)),digits=3)*100,"%)  ----------------\n",sep="")
-    cat("\t--------------------  Total Missing : ",sum((data_mat%in%define_na))," (",round(sum((data_mat%in%define_na))/length((data_mat%in%define_na)),digits=3)*100,"%)  --------------------\n",sep="")
+    cat("\t--------------------  Total Missing : ",sum((unlist(data_mat)%in%define_na))," (",round(sum((unlist(data_mat)%in%define_na))/length(unlist(data_mat)),digits=3)*100,"%)  --------------------\n",sep="")
     cat("\t   ------ ",n_overlap,"samples remaining if 'complete.cases()'  ------\n\n")
 #    missn=as.data.frame(mats(apply(data_mat,2,function(x)sum(is.na(x))),T))
 
@@ -4052,7 +4052,7 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
 ##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
  if(help){
   cat('\n\tINPUT :\tdat_mat - auto-detect data frame or list of data frames - 1 per condition (samples=columns)\n')
-  cat('\tNOTE  :\tcor_method - correlation method to calculate distance see "cor" for options, option: "dist" - distance on raw data, no correlation calculated\n\n')
+  cat('\tNOTE  :\tcor_method - correlation method to calculate distance see "cor" for options, option: "dist" - distance on raw data, no correlation calculated, "as.dist" treat input as distances\n\n')
   cat('\tNOTE  :\tk- specify number of clusters for cutree, can use range i.e. 2:5, if k="dynamic", WGCNA function "cutreeHybrid" is used to cut the tree\n\n')
  }
  	dat_is_list=F
@@ -4067,6 +4067,8 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
  	dat_mat=as.data.frame(dat_mat)
  	}
 
+print(horiz)
+print(dat_is_list)
  if(scale_dat){
  	cat('\t- scale and center data (by columns)\n')
  	dat_mat=scale(dat_mat,scale=T,center=T)
@@ -4076,12 +4078,18 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
       library(WGCNA)      ##  required for k='dynamic' only i.e. cutreeHybrid
    }
 
+  if(cor_method=='as.dist'){
+   cat('\t- as.dist(dat_mat)\n')
+        distmat=as.dist(dat_mat)
+  }
+
+
   if(cor_method=='dist'){
    cat('\t- calculating eucledian distance\n')
         distmat=dist(t(dat_mat))
   }
 
-  if(cor_method!='dist'){
+  if(cor_method!='dist'&cor_method!='as.dist'){
    cat('\t- calculating distance based on',cor_method,'correlation\n')
         distmat=as.dist(1-abs(t(cor(dat_mat,method=cor_method))))
     }
@@ -4111,12 +4119,12 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
 		par_cur=par()$mar
 		par(mar=par_mar)
 
-    	if(dat_is_list|horiz){
+    	if(horiz){
 			clusden=as.dendrogram(clustat)
 			if(dat_is_list){labels_colors(clusden)=colvec[order.dendrogram(clusden)]}
 			clusden=color_branches(clusden, k=k)
 
-			plot(clusden, horiz=TRUE,...)
+			if(!dat_is_list){plot(clusden, horiz=TRUE,...)}
 
 			if(dat_is_list){colored_bars(colvec, clusden, horiz=TRUE)}
 
@@ -4127,7 +4135,7 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
 
 		}
 
-		if(!dat_is_list){
+		if(!horiz){
 			plotDendroAndColors(
 			clustat
 			,trestat
