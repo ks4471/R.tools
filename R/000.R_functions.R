@@ -3344,34 +3344,54 @@ if(make_plot & use_grid){
 
 
 
-cplot<-function(x,y,dat_descr="",legend.pos="topright",...){
-#  cat(min(x),max(x),min(y),max(y),"\n")
 
+
+
+Plot<-function(x,line45deg=F,pch=16,cex=0.5,frame.plot=F,dat_descr="",...){
+	plot(x,pch=pch,cex=cex,frame.plot=frame.plot,main=dat_descr,...)
+
+	if(line45deg){abline(coef=c(0,1),lty=2,col='grey60')}
+}
+
+Legend<-function(legend,x='topright',...){
+	cat('\n\t',par()$fig,par()$oma,par()$mar,'\n')
+	par_mar_cur=par()$mar
+	par_fig_cur=par()$fig
+	par_oma_cur=par()$oma
+
+	par(fig=c(0,1,0,1), oma=c(0,4,0,0), mar=c(0,4,0,0), new=TRUE)
+	plot.new()
+	legend(legend=legend,x=x,box.lwd=0,box.col="white",...)
+
+	par(mar=par_mar_cur,no.readonly=T)
+	par(fig=par_fig_cur,no.readonly=T)
+	par(oma=par_oma_cur,no.readonly=T)
+		
+	cat('\n\t',par()$fig,par()$oma,par()$mar,'\n')
+}
+
+cplot<-function(x,y,line45deg=T,legend_space=10,dat_descr='',legend_pos='topright',...){
+#  cat(min(x),max(x),min(y),max(y),"\n")
 #  dummy=cbind(seq(floor(min(x)),(ceiling(max(x))+log10(ceiling(max(x)))),length.out=10),seq(floor(min(y)),(ceiling(max(y))+log10(ceiling(max(y)))),length.out=10))
 #  print(dummy)
-  plot(x=x,y=y,pch=16,frame.plot=FALSE,...
-    ,main=paste(dat_descr
-                ,"spearman  P =",signif(cor.test(x,y,method="spearman")$p.val,digits=2)
+	par(mar=c(5,4,legend_space, 3))
+  Plot(x=x,y=y
+    ,line45deg=line45deg
+    ,dat_descr=dat_descr
+    ,...)
+#  points(x,y,pch=16)
+  abline(lm(x~y),col="dodgerblue") 
+
+  Legend(legend=paste("spearman  P =",signif(cor.test(x,y,method="spearman")$p.val,digits=2)
                 ,"  R-sq =",round(cor(x,y,method="spearman"),digits=3)
                 ,"\nkendall      P =",signif(cor.test(x,y,method="kendall")$p.val,digits=2)
                 ,"  R-sq =",round(cor(x,y,method="kendall"),digits=3)
                 ,"\nlm           P =",signif(lmp(lm(x~y)),digits=2)
-                ,"     R-sq =",signif(summary(lm(x~y))$r.sq,digits=3))
-    )
-#  points(x,y,pch=16)
-  abline(lm(x~y),col="dodgerblue")
-  
-#  legend(legend.pos,legend=paste(
- #               "spearman P =",signif(cor.test(x,y,method="spearman")$p.val,digits=2)
-  #              ,"  R-sq =",round(cor(x,y,method="spearman"),digits=3)
-   #             ,"\nkendall      P =",signif(cor.test(x,y,method="kendall")$p.val,digits=2)
-    #            ,"  R-sq =",round(cor(x,y,method="kendall"),digits=3)
-     #           ,"\nlm             P =",signif(lmp(lm(x~y)),digits=2)
-      #          ,"  R-sq =",signif(summary(lm(x~y))$r.sq,digits=3)
-#
-#                )
- #               ,box.lwd=0,box.col="white")
+                ,"     R-sq =",signif(summary(lm(x~y))$r.sq,digits=3)))
 }
+
+
+
 
 eplot<-function(x,xlab="",ylab="",main="",legend.pos="topright"){
 #  cat(min(x),max(x),"\n")
@@ -3678,9 +3698,7 @@ Boxplot<-function(dat_mat,pch=16,cex=0.5,las=2,frame=F,varwidth=T,...){
 
 
 
-Plot<-function(x,pch=16,cex=0.5,frame.plot=F,...){
-  plot(x,pch=pch,cex=cex,frame.plot=frame.plot,...)
-}
+
 
 
 
