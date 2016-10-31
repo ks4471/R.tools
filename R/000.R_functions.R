@@ -7223,5 +7223,40 @@ cp<-function(file_names,target_path,show=T){
 
 
 
+read.zip <- function(file,verbose=T,...){
+## SOURCE :   http://stackoverflow.com/questions/8986818/automate-zip-file-reading-in-r
+  zipFileInfo <- unzip(file, list=TRUE)
+  if(nrow(zipFileInfo) > 1){
+  	stop(paste0("more than one data file inside ",file))
+  }
+  else{
+  	if(verbose){cat(' ',file,'\tcontains 1 file : ',as.character(zipFileInfo$Name),'\n')}
+    read.csv(unz(file, as.character(zipFileInfo$Name)), ...)
+    }
+}
+
+
+
+# http://www.programiz.com/r-programming/examples/odd-even
+# http://www.programiz.com/r-programming/examples/prime-number <<<<<<   related : prime number
+# check if the input number is odd or even.
+# A number is even if division by 2 give a remainder of 0. If remainder is 1, it is odd.
+
+#num = as.integer(readline(prompt="Enter a number: "))
+#if((num %% 2) == 0) {
+#    print(paste(num,"is Even"))
+#} else {
+#    print(paste(num,"is Odd"))
+#}
+
+
+
+
+
+
+
+
+
+
 
 
