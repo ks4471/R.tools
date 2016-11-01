@@ -6,6 +6,29 @@
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
 
+####======================================================================================================
+##  Alternate way to calculate PC1    ----------------------------------------------------
+####======================================================================================================
+#╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
+#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║¯\_(•_•)_/¯║╚╣╔╣╔╣║║║║╚╣
+#options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
+#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
+
+
+#install.packages('devtools')
+
+#library(devtools)
+
+#t1=Sys.time()
+#library(colorout)
+#devtools::install_github("ks471/R.helper")
+#devtools::install_github("ks471/clickyOSX")
+#devtools::install_github("ks471/clickyLinux")
+
+#Sys.time()-t1
+
+
+
 #sing=c('┌','┐','┬','─','├','┼','│','┤','└','┴','┘')
 #dubl=c('╔','╗','╦','═','╠','╬','╣','║','╝','╚','╩')
 
@@ -47,18 +70,6 @@
 #•#
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
-
-#install.packages('devtools')
-
-#library(devtools)
-
-#t1=Sys.time()
-#library(colorout)
-#devtools::install_github("ks471/R.helper")
-#devtools::install_github("ks471/clickyOSX")
-#devtools::install_github("ks471/clickyLinux")
-
-#Sys.time()-t1
 
 #library(R.helper)
 #library(clickyOSX)
@@ -118,8 +129,10 @@
 #attach("~/Downloads/expr.maps.rda")  # works in a way similar to load but checks workspaces for variables with the same names as the object and 'hides' them
 
 #╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
-#source('~/Dropbox//000.R.functions.R')#╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣╔╗║╚╚╣║╚╣
+#source('~/Dropbox//000.R.functions.R')#╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣╔╗║╚╚╣║╚╣¯\_(ツ)_/¯
 #╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
+
+# ¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯
 
 ## useful concept : add a readme.object.in.saved.R.object when saving file create a "method" / "description" of the file for easier handover / re-analysis
 ##  readme.lires=
@@ -6276,25 +6289,30 @@ lcount<-function(x,length){
 
 
 
-
 overlap<-function(A,B,n=5){
-    both=union(A, B)
-    inA=both %in% A
-    inB=both %in% B
-    
-    intr=intersect(A,B)
+##  modified to run only for unique A & B, otherwise numbers can be misleading
+    unA=unique(A)
+    unB=unique(B)
+	    cat('\n\tlength(A) :  ',length(A),'\t unique(A)  :  ',length(unA),' \t',round(length(unA)/length(A),digits=3)*100,'%\n')
+	    cat('\tlength(B) :  ',length(B),'\t unique(B)  :  ',length(unB),' \t',round(length(unB)/length(B),digits=3)*100,'%','\n')
 
+
+    both=union(unA, unB)
+    intr=intersect(unA,unB)
+    inA=both %in% unA
+    inB=both %in% unB
+    cat('\n')
     print(table(inA, inB))
 
-    cat('\n\n\tlength(A) :  ',length(A),'\t unique(A)  :  ',round(length(unique(A))/length(A),digits=3)*100,'%')
-    cat('\n\tlength(B) :  ',length(B),'\t unique(B)  :  ',round(length(unique(B))/length(B),digits=3)*100,'%','\n')
-    
-    cat('\n\t',length(intr),'\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
-    cat('\t',sum(!A%in%intr),'\tinA  notB :\t',	paste(sort(A[!(A%in%intr)][1:n]),collapse=',  '),'\n')
-    cat('\t',sum(!B%in%intr),'\tinB  notA :\t',	paste(sort(B[!(B%in%intr)][1:n]),collapse=',  '),'\n')
-    return(invisible(list(inter=intr,union=both,ina=inA,inb=inB)))
-}
+    exA=unA[!(unA%in%intr)]
+    exB=unB[!(unB%in%intr)]
 
+    cat('\n\t',length(intr),'\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
+    cat('\t',length(exA),'\tinA  notB :\t',	paste(sort(exA[1:n]),collapse=',  '),'\n')
+    cat('\t',length(exB),'\tinB  notA :\t',	paste(sort(exB[1:n]),collapse=',  '),'\n')
+    return(invisible(list(inter=intr,union=both,ina=inA,inb=inB)))
+
+}
 
 
 Intersect <- function(a,b,...){
