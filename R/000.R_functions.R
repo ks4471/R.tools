@@ -1,19 +1,20 @@
 "
 ╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗
 ╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝
+     What's the difference between ignorance and apathy? I don't know and I don't care
 ╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╦╦╦╗╔═╗╔═╦╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╗╔═╦╗╔═╦╗╔╔═╦╗╔═╦╗╔╗
 ╠╗║╚╝║║╠╗║╚╣║║║║║╚╣                   ╠╣║║║║║═╣║║╠╗║║╚╣╚╣╔╣╔╣╔╣╔╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣║╗║╚╚╣
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
 
+
 ####======================================================================================================
-##  Alternate way to calculate PC1    ----------------------------------------------------
+##  Description of what the script is for..    ----------------------------------------------------
 ####======================================================================================================
 #╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
 #options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║¯\_(•_•)_/¯║╚╣╔╣╔╣║║║║╚╣
 #options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
 #╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
-
 
 #install.packages('devtools')
 
@@ -27,6 +28,39 @@
 
 #Sys.time()-t1
 
+
+
+####======================================================================================================
+####-----------------------------------------------------------------------------------------------
+##  my commonly used code annotation breakers   ------------------------------------------------
+
+
+###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##   i.e. "02.WGCNA.MODULES.hipp.plier-gcbgPEER.bb.sex.age.pmi.cod.merge.height=0.25.genes14646.samples102powr5.bicor.R"
+###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+#҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+##  WARNING : The code below provides sub-par overlaps compared to pubchem server mapping,
+##   alternative would be to process pubchem dtb and use that instead (results were equally sub-par 
+##   (but that was without adding MeSH mapping which is often critical in mapping cmap ids 
+##   (as well as other non-included external info)))
+#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 
 #sing=c('┌','┐','┬','─','├','┼','│','┤','└','┴','┘')
@@ -104,17 +138,6 @@
 
 
 
-####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-##  WARNING : MANUALLY select the file below based on covariates corrected (contains both rma and plier)
-#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-###+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ es in the folder OTHER than the ones matching the format below
-##   i.e. "02.WGCNA.MODULES.hipp.plier-gcbgPEER.bb.sex.age.pmi.cod.merge.height=0.25.genes14646.samples102powr5.bicor.R"
-###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
@@ -617,14 +640,6 @@ colbw=c("#ffffff","#f0f0f0","#d9d9d9","#bdbdbd","#969696","#737373","#525252","#
 #
 
 
-#҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉
-
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
@@ -6310,7 +6325,7 @@ overlap<-function(A,B,n=5){
     cat('\n\t',length(intr),'\tinA & inB :\t',paste(sort(intr[1:n])			  ,collapse=',  '),'\n')
     cat('\t',length(exA),'\tinA  notB :\t',	paste(sort(exA[1:n]),collapse=',  '),'\n')
     cat('\t',length(exB),'\tinB  notA :\t',	paste(sort(exB[1:n]),collapse=',  '),'\n')
-    return(invisible(list(inter=intr,union=both,ina=inA,inb=inB)))
+    return(invisible(list(inter=intr,union=both,ina=exA,inb=exB)))
 
 }
 
@@ -7096,17 +7111,25 @@ geo.matrix<-function(datid,path){
 #		Head(samp)
 	cat('\t',datid,'contains phenotype data for',nrow(samp),'samples\n')
 
+
+
+	expr=as.data.frame(strsplit(gse[(cord[2]+1):(cord[3]-1)],'\t'))
+		colnames(expr)=as.character(expr[1,])
+		rownames(expr)=as.character(expr[,1])
+		expr=t(expr[-1,-1])
+
+
 		if(nrow(expr)==0){
 			cat('\t\tno expression data available\n')
 			return(invisible(list(samp=samp,meta=meta)))
 		}
 
 	    if(nrow(expr)>0){
-
-	expr=as.data.frame(strsplit(gse[(cord[2]+1):(cord[3]-1)],'\t'))
-		colnames(expr)=as.character(expr[1,])
-		rownames(expr)=as.character(expr[,1])
-		expr=t(expr[-1,-1])
+	cat('\t',datid,'contains expression data for',ncol(expr),'samples\n')
+#	expr=as.data.frame(strsplit(gse[(cord[2]+1):(cord[3]-1)],'\t'))
+#		colnames(expr)=as.character(expr[1,])
+#		rownames(expr)=as.character(expr[,1])
+#		expr=t(expr[-1,-1])
 
 	expr=make.numeric(expr)
 		rownames(expr)=(gsub('"','',rownames(expr),fixed=T))
@@ -7160,7 +7183,7 @@ geo.query<-function(file_loc){
 	##	nstat[[as.character(idat)]]=length(dummy) ## used to determine what the datasets look like, as below
 	}
 
-	cat('\t\tcleaning up\n')
+	cat('\n\t\tcleaning up\n')
 	#nstat=t(as.data.frame(nstat))
 	#matst(nstat)
 
@@ -7269,6 +7292,41 @@ read.zip <- function(file,verbose=T,...){
 
 
 
+read.file<-function(file,...){
+	read.delim(file=file,quote = "",colClasses = "character",check.names=F,comment.char="")	
+}
+
+list.overlap<-function(alis,do.pcs=T,do.fet=T,verbose=T){	## integration required for T/F flags to change inpu
+	matpc=as.data.frame(matrix(NA,nrow=(length(alis)),ncol=(length(alis))))
+		colnames(matpc)=names(alis)
+		rownames(matpc)=names(alis)
+	matpv=matpc
+	k=1
+	for(ilis in names(alis)){
+		if(verbose){k=lcount(k,length(alis))}
+		for(jlis in names(alis)){
+			humpty=alis[[ilis]]
+			dumpty=alis[[jlis]]
+			inters=intersect(humpty,dumpty)
+			unions=union(humpty,dumpty)
+
+			if(do.pcs){
+				matpc[jlis,ilis]=(length(inters)/length(humpty))
+				matpc[ilis,jlis]=(length(inters)/length(dumpty))
+			}
+
+			if(do.fet){
+				matpv[jlis,ilis]=fet(sampl=humpty,bkgrnd=unions,success=inters,counts=F,alternative = "greater")$FETp
+				matpv[ilis,jlis]=fet(sampl=dumpty,bkgrnd=unions,success=inters,counts=F,alternative = "greater")$FETp
+			}
+
+		}
+	}
+	if(do.pcs&do.fet){return(invisible(list(perc=matpc,pval=matpv)))}
+	if(do.pcs){return(invisible(matpc))}
+	if(do.fet){return(invisible(matpv))}
+	
+}
 
 
 
