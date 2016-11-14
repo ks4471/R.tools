@@ -20,13 +20,41 @@
 
 #library(devtools)
 
-#t1=Sys.time()
+
 #library(colorout)
 #devtools::install_github("ks471/R.helper")
 #devtools::install_github("ks471/clickyOSX")
 #devtools::install_github("ks471/clickyLinux")
 
-#Sys.time()-t1
+
+#library(R.helper)
+#library(clickyOSX)
+#library(clickyLinux)
+
+#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
+##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
+#devtools::use_data(x)	# saves to working directory by default
+
+
+# ¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯
+##  timer eg
+#t1=Sys.time()
+#Sys.time()-t1 		##  prints elapsed time
+
+
+## useful concept : add a readme.object.in.saved.R.object when saving file create a "method" / "description" of the file for easier handover / re-analysis
+##  readme.lires=
+#            "\tlires - differentially expressed genes in the hippocampus compared to 3 other brain regions FC, OC, TC Hardy UKBEC dataset n=102\n
+#            \tdesm=design matrix file for limma\n
+#            limma used for this code.file : 003.DifferentiallyExpressedGenes.limma.R     |\n|     adj.P - calculated based using FDR, CX excluded because it is very differentially expressed compared to the other 3 - all genes were differential with CX"
+##  save(lires,desm,readme,file="~/Dropbox/CapricaPrime/RU/dtb/secondary/HC.differentially.expressed.v.FC.OC.TC.R")
+
+###  saves 'cat' output to file, file separator can be controlled using the "\t" in relevant places
+#sink("~/Dropbox/bin/gsea/modules_bonn.gtf")
+#  for(imod in 1:length(bgen)){
+#   cat(as.vector(paste(c(names(bgen)[imod],bgen[[names(bgen)[imod]]]),collapse="\t")),"\n",sep="")
+#  }
+#sink()
 
 
 
@@ -105,13 +133,6 @@
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 
-#library(R.helper)
-#library(clickyOSX)
-#library(clickyLinux)
-
-#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
-##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
-#devtools::use_data(x)	# saves to working directory by default
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -3708,11 +3729,11 @@ duplicates<-function(dat_vec,...){
   return(dat_vec[duplicated(dat_vec)])
 }
 
-rm.duplicates<-function(matrix,colName){
-  clean=matrix[!duplicated(matrix[,which(colnames(matrix)==colName)]),]
+rm.duplicates<-function(matrix,colName,verbose=T){
+	clean=matrix[!duplicated(matrix[,which(colnames(matrix)==colName)]),]
+		if(verbose){cat("     ",sum(duplicated(matrix[,which(colnames(matrix)==colName)]))," duplicates removed  || ",round(nrow(clean)/nrow(matrix),digits=3)*100,"% of data remaining || ",sum(duplicated(clean[,which(colnames(clean)==colName)])),"dupilicates remaining \n")}
 
-      cat("     ",sum(duplicated(matrix[,which(colnames(matrix)==colName)]))," duplicates removed  || ",round(nrow(clean)/nrow(matrix),digits=3)*100,"% of data remaining || ",sum(duplicated(clean[,which(colnames(clean)==colName)])),"dupilicates remaining \n")
-return(invisible(clean))
+	return(invisible(clean))
 }
 
 
@@ -7333,6 +7354,26 @@ list.overlap<-function(alis,do.pcs=T,do.fet=T,verbose=T){	## integration require
 
 
 
+
+
+
+demands<-function(expr,anno,netw,case_cont_ind){
+# INPUTs:   case_cont_ind=list(case=colnames(expr)[case],cont=colnames(expr)[cont]) ## if numeric, used directly as index
+     library(DeMAND)
+    dobj=demandClass(exp=expr, anno=anno, network=netw)
+
+    if(is.numeric(case_cont_ind$case)){
+        caseInd=case_cont_ind$case
+        controlInd=case_cont_ind$cont
+    }
+    if(!is.numeric(case_cont_ind$case)){
+        caseInd=(which(colnames(exp)%in%case_cont_ind$case))
+        controlInd=(which(colnames(exp)%in%case_cont_ind$cont))
+    }
+
+    dobj=runDeMAND(dobj, fgIndex=caseInd, bgIndex=controlInd)
+    return(dobj)
+}
 
 
 
