@@ -31,8 +31,9 @@
 #library(clickyOSX)
 #library(clickyLinux)
 
-#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
+
 ##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
+#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
 #devtools::use_data(x)	# saves to working directory by default
 
 
@@ -3317,7 +3318,7 @@ mats<-function(dat_mat,decreasing=T){
 
 
 
-matst<-function(dat_mat,sort=T,decreasing=T){
+matst<-function(dat_mat,thresh=NA,sort=T,decreasing=T){
   if(sort){
     dummy=as.data.frame(sort(table(dat_mat),decreasing=decreasing))
   }
@@ -3332,6 +3333,7 @@ matst<-function(dat_mat,sort=T,decreasing=T){
   }
   colnames(dummy)=c('entry','count')
   dummy$percent=round(dummy$count/sum(as.numeric(dummy$count)),digits=3)
+  if(!is.na(thresh)){dummy=dummy[dummy$count>=thresh,]}
   return(dummy)
 
 }
@@ -3443,12 +3445,12 @@ Legend<-function(legend,x='topright',...){
 	cat('\n\t',par()$fig,par()$oma,par()$mar,'\n')
 }
 
-cplot<-function(x,y,line45deg=T,legend_space=10,dat_descr='',legend_pos='topright',...){
+cplot<-function(xdat,ydat,line45deg=T,legend_space=10,dat_descr='',legend_pos='topright',...){
 #  cat(min(x),max(x),min(y),max(y),"\n")
 #  dummy=cbind(seq(floor(min(x)),(ceiling(max(x))+log10(ceiling(max(x)))),length.out=10),seq(floor(min(y)),(ceiling(max(y))+log10(ceiling(max(y)))),length.out=10))
 #  print(dummy)
 	par(mar=c(5,4,legend_space, 3))
-  Plot(x=x,y=y
+  Plot(x=xdat,y=ydat
     ,line45deg=line45deg
     ,dat_descr=dat_descr
     ,...)
@@ -3586,12 +3588,12 @@ if(verbose==T){
 #}
 
 
-rmerge<-function(data_mat1,data_mat2,all=T){
+rmerge<-function(data_mat1,data_mat2,all=T,verbose=T){
   dat_out=merge(data_mat1,data_mat2,by="row.names",all=all)
     rownames(dat_out)=dat_out$Row.names
   dat_out=dat_out[,-which(colnames(dat_out)=="Row.names")]
 
-  cat('\n\t\tnrow x=',nrow(data_mat1),',  y=',nrow(data_mat2),',  merged=',nrow(dat_out),'\n\n',sep='')
+  if(verbose){(cat('\n\t\tnrow x=',nrow(data_mat1),',  y=',nrow(data_mat2),',  merged=',nrow(dat_out),'\n\n',sep=''))}
   return(dat_out)
 }
 
@@ -4158,8 +4160,8 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
  	dat_mat=as.data.frame(dat_mat)
  	}
 
-print(horiz)
-print(dat_is_list)
+#print(horiz)
+#print(dat_is_list)
  if(scale_dat){
  	cat('\t- scale and center data (by columns)\n')
  	dat_mat=scale(dat_mat,scale=T,center=T)
@@ -7365,10 +7367,12 @@ demands<-function(expr,anno,netw,case_cont_ind){
     if(is.numeric(case_cont_ind$case)){
         caseInd=case_cont_ind$case
         controlInd=case_cont_ind$cont
+        print('num')
     }
     if(!is.numeric(case_cont_ind$case)){
         caseInd=(which(colnames(exp)%in%case_cont_ind$case))
         controlInd=(which(colnames(exp)%in%case_cont_ind$cont))
+        print('name')
     }
 
     dobj=runDeMAND(dobj, fgIndex=caseInd, bgIndex=controlInd)
