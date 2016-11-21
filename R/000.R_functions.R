@@ -7,6 +7,15 @@
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
 
+#Manuscript stages:
+#1. Love
+#2. Anger
+#3. Denial
+#4. Revision
+#5. Ibid.			##  meaning something that has been mentioned previously; the same
+#6. Suppression
+#7. Acceptance
+#8. Indifference
 
 ####======================================================================================================
 ##  Description of what the script is for..    ----------------------------------------------------
@@ -694,8 +703,6 @@ col_numeric=col_numeric[!(col_numeric%in%col_factor)]
 #print(col_numeric)
 #print(col_factor)
 
-
-
     for(inum in col_numeric){
       if(verbose==T){
         cat("\t\t - column",inum,"coverted as.numeric\n")
@@ -723,7 +730,6 @@ col_numeric=col_numeric[!(col_numeric%in%col_factor)]
 #      print(head(num.mat))
     }
   }
-
 # cat("new",class(num.mat),"dimensions :", dim(num.mat))
   if(!fac_legend){
     return(num.mat)
@@ -731,12 +737,9 @@ col_numeric=col_numeric[!(col_numeric%in%col_factor)]
   if(fac_legend){
     return(list("numeric"=num.mat,"legend"=legend))
   }
-
-
       if(verbose==T){
         cat("\t---------------------   make.numeric - finished   ---------------------\n\n")
       }
-
 }
 
 
@@ -1102,6 +1105,9 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
 
 
 
+read.file<-function(file,...){
+	read.delim(file=file,quote = "",colClasses = "character",check.names=F,comment.char="")	
+}
 
 write.delim<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",sep="\t",...){
   if(col.names==T & row.names==T){
@@ -7315,9 +7321,6 @@ read.zip <- function(file,verbose=T,...){
 
 
 
-read.file<-function(file,...){
-	read.delim(file=file,quote = "",colClasses = "character",check.names=F,comment.char="")	
-}
 
 list.overlap<-function(alis,do.pcs=T,do.fet=T,verbose=T){	## integration required for T/F flags to change inpu
 	matpc=as.data.frame(matrix(NA,nrow=(length(alis)),ncol=(length(alis))))
@@ -7378,6 +7381,35 @@ demands<-function(expr,anno,netw,case_cont_ind){
     dobj=runDeMAND(dobj, fgIndex=caseInd, bgIndex=controlInd)
     return(dobj)
 }
+
+
+
+cid.parent<-function(dat_mat,cid_col_name,parent_dtb=""){
+## INPUT : parent_dtb - colnames("cid","parent") - "cid" used to search, "parent" column added to dat_mat, "cid" with no parent are same as input
+	if(parent_dtb==""){
+		cat('\tloading "parent_dtb" from default location\n')
+		Load('/Data/drug_db/pubchem/dtb/extras/compound/compound.cid_to_parent.sep2016.Rdata')
+		parent_dtb=pare
+	}
+	parent_dtb=parent_dtb[parent_dtb$cid%in%dat_mat[,cid_col_name],]
+	
+		cat('\tmapping CID to parent CID\n')
+	holder=merge(dat_mat,parent_dtb,by.x=cid_col_name,by.y='cid',all=T)
+	holder$parent[is.na(holder$parent)]=holder[,cid_col_name][is.na(holder$parent)]
+	return(invisible(holder))
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
