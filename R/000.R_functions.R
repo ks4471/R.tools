@@ -7384,14 +7384,16 @@ demands<-function(expr,anno,netw,case_cont_ind){
 
 
 
-cid.parent<-function(dat_mat,dnam_col_name,cid_col_name,parent_dtb=""){
+cid.parent<-function(dat_mat,dnam_col_name,cid_col_name,no_orphans=T,parent_dtb=""){
 ## INPUT : parent_dtb, if using load() obj='pare' - colnames("cid","parent") - "cid" used to search, "parent" column added to dat_mat, "cid" with no parent are same as input
 ## alternatively specify a table colnames("cid","parent") to be used as is..
-	if(parent_dtb==""){
-		parent_dtb='/Data/drug_db/pubchem/dtb/extras/compound/compound.cid_to_parent.sep2016.Rdata'
-		cat('\tloading "parent_dtb" from default location:\t',parent_dtb,'\n')
-		 Load(parent_dtb)
-		parent_dtb=pare
+	if(class(parent_dtb)=='character'){ 		##  avoid potential problem of trying to match a huge dtb to ""
+		if(parent_dtb==""){
+			parent_dtb='/Data/drug_db/pubchem/dtb/extras/compound/compound.cid_to_parent.sep2016.Rdata'
+			cat('\tloading "parent_dtb" from default location:\t',parent_dtb,'\n')
+			 Load(parent_dtb)
+			parent_dtb=pare
+		}
 	}
 
 ##  contingencies required - dtb is provided 
@@ -7406,8 +7408,13 @@ cid.parent<-function(dat_mat,dnam_col_name,cid_col_name,parent_dtb=""){
 	
 		cat('\tmapping CID to parent CID\n')
 	holder=merge(dat_mat,parent_dtb,by.x=cid_col_name,by.y='cid',all=T)
+
+
+	if(no_orphans==F){cat('\t',length(unique(holder[,dnam_col_name][(is.na(holder$parent))])),'\tcompounds to not have a "parent"\n')}
+	if(no_orphans==T){
 		cat('\t',length(unique(holder[,dnam_col_name][(is.na(holder$parent))])),'\tcompounds to not have a "parent" -> use provided CID\n')
-	holder$parent[is.na(holder$parent)]=holder[,cid_col_name][is.na(holder$parent)]
+		holder$parent[is.na(holder$parent)]=holder[,cid_col_name][is.na(holder$parent)]
+	}
 
 	udru_ot=unique(holder[,dnam_col_name])
 	
@@ -7417,6 +7424,7 @@ cid.parent<-function(dat_mat,dnam_col_name,cid_col_name,parent_dtb=""){
 
 	return(invisible(holder))
 }
+
 
 
 
