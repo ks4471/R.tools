@@ -7384,12 +7384,13 @@ demands<-function(expr,anno,netw,case_cont_ind){
 
 
 
+
 cid.parent<-function(dat_mat,dnam_col_name,cid_col_name,no_orphans=T,parent_dtb=""){
 ## INPUT : parent_dtb, if using load() obj='pare' - colnames("cid","parent") - "cid" used to search, "parent" column added to dat_mat, "cid" with no parent are same as input
 ## alternatively specify a table colnames("cid","parent") to be used as is..
 	if(class(parent_dtb)=='character'){ 		##  avoid potential problem of trying to match a huge dtb to ""
 		if(parent_dtb==""){
-			parent_dtb='/Data/drug_db/pubchem/dtb/extras/compound/compound.cid_to_parent.sep2016.Rdata'
+			parent_dtb='/Data/drud/pubchem/dtb/cidmap/pubchem.cid_to_parent.Rdata'
 			cat('\tloading "parent_dtb" from default location:\t',parent_dtb,'\n')
 			 Load(parent_dtb)
 			parent_dtb=pare
@@ -7436,5 +7437,88 @@ cid.parent<-function(dat_mat,dnam_col_name,cid_col_name,no_orphans=T,parent_dtb=
 
 
 
+cid.match<-function(query,pubchem_db="",parent_db=""){
+# INPUTS: query=vector of "synonyms" / drug names to map to PubChem cid
+# INPUTS: pubchem_db -  colnames("pubchem_CID" "synonym"     "lower") lower=tolower(pubchem_db$synonym
+# INPUTS: query - character string of synonyms to search the "lower"
 
+	if(class(pubchem_db)=='character'){ 		##  avoid potential problem of trying to match a huge dtb to ""
+		if(pubchem_db==""){
+			pubchem_db='/Data/drud/pubchem/dtb/cidmap/pubchem.cid.mesh.lower.Rdata'
+			cat('\tloading "pubchem_db" from default location:\t',pubchem_db,'\n')
+			 Load(pubchem_db)
+			 pubchem_db=cidmap
+		}
+	}
+
+	if(class(parent_db)=='character'){ 		##  avoid potential problem of trying to match a huge dtb to ""
+		if(parent_db==""){
+			parent_db='/Data/drud/pubchem/dtb/cidmap/pubchem.cid_to_parent.Rdata'
+			cat('\tloading "parent_db" from default location:\t',parent_db,'\n')
+			 Load(parent_db)
+			 parent_db=pare
+		}
+	}
+
+
+	query=unique(tolower(query[query!='']))
+		cat('\n\tquery contains',length(query),'ids after unique(tolower(query)) & query!=""\n')
+
+	holder=unique(pubchem_db[pubchem_db$synon%in%(as.character(query)),])
+
+
+	dummy=parent_db[parent_db$cid%in%holder$cid,]
+
+	holder=merge(holder,dummy,by='cid',all=T)
+
+	holder$parent[is.na(holder$parent)]=holder$cid[is.na(holder$parent)]
+
+	
+#	get.duplicates(holder,'cid')
+#	get.duplicates(holder,'synon')
+#	get.duplicates(holder,'parent')
+	
+		dim(holder)
+	holder=unique(holder[,c('parent','synon')])		##  should not loose any synonyms by definition of using unique()
+		dim(holder)
+#	overlap(holder$synon,dummy$synon)
+
+##  remove duplicates in both cid and synon, should get rid of non-overlapping matches to 
+#	dupcid=unique(holder$cid[duplicated(holder$cid)])
+#	dupsyn=unique(holder$synon[duplicated(holder$synon)])
+	
+#	dupdat=holder[(holder$cid%in%dupcid & holder$synon%in%dupsyn),]
+#	sindat=holder[!(holder$cid%in%dupcid & holder$synon%in%dupsyn),]
+
+
+##  remove duplicates in both cid and synon, should get rid of cid that overlap with 2 different synon while keeping one random cid // synon 
+#	dupdat=holder[(duplicated(holder$cid) & duplicated(holder$synon)),]
+#	sindat=holder[!(duplicated(holder$cid) & duplicated(holder$synon)),]
+#	overlap(dupdat$synon,sindat$synon)
+		dim(holder)
+	holder=holder[!(duplicated(holder$parent) & duplicated(holder$synon)),]
+		dim(holder)
+
+	usyn=unique(holder$synon)
+
+##  possible way to remove duplicates across multiple entries (handled above instead) ie !duplicated(parent and synon)
+#isyn='naproxen'
+#	for(isyn in usyn){
+#		humpty=holder[holder$synon==isyn,]
+#		dumpty=holder[holder$cid%in%humpty$cid & holder$synon!=isyn,]
+#		for(imat in unique(dumpty$synon)){
+#
+#		}
+
+#		overlap(humpty$cid,dumpty$cid)
+##	cid overlap completely - perfect synonyms
+
+##  cid partial overlap - keep non overlapping
+
+##  
+#	}
+	colnames(holder)=c('cid','synon')
+		cat('\t',round(length(unique(holder$synon))/length(query),digits=3)*100,'% query ids matched\n')
+	return(unique(holder[order(holder$synon),]))
+}
 
