@@ -69,8 +69,10 @@
 
 
 ####======================================================================================================
-####-----------------------------------------------------------------------------------------------
+###-----------------------------------------------------------------------------------------------------
 ##  my commonly used code annotation breakers   ------------------------------------------------
+#
+
 
 
 ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3461,14 +3463,14 @@ cplot<-function(xdat,ydat,line45deg=T,legend_space=10,dat_descr='',legend_pos='t
     ,dat_descr=dat_descr
     ,...)
 #  points(x,y,pch=16)
-  abline(lm(x~y),col="dodgerblue") 
+  abline(lm(xdat~ydat),col="dodgerblue") 
 
-  Legend(legend=paste("spearman  P =",signif(cor.test(x,y,method="spearman")$p.val,digits=2)
-                ,"  R-sq =",round(cor(x,y,method="spearman"),digits=3)
-                ,"\nkendall      P =",signif(cor.test(x,y,method="kendall")$p.val,digits=2)
-                ,"  R-sq =",round(cor(x,y,method="kendall"),digits=3)
-                ,"\nlm           P =",signif(lmp(lm(x~y)),digits=2)
-                ,"     R-sq =",signif(summary(lm(x~y))$r.sq,digits=3)))
+  Legend(legend=paste("spearman  P =",signif(cor.test(xdat,ydat,method="spearman")$p.val,digits=2)
+                ,"  R-sq =",round(cor(xdat,ydat,method="spearman"),digits=3)
+                ,"\nkendall      P =",signif(cor.test(xdat,ydat,method="kendall")$p.val,digits=2)
+                ,"  R-sq =",round(cor(xdat,ydat,method="kendall"),digits=3)
+                ,"\nlm           P =",signif(lmp(lm(xdat~ydat)),digits=2)
+                ,"     R-sq =",signif(summary(lm(xdat~ydat))$r.sq,digits=3)))
 }
 
 
@@ -3679,7 +3681,7 @@ if(verbose==T){
 
 
 
-meplot<-function(expr_mat,do_plots=T){
+meplot<-function(expr_mat,do_plots=T,net_col=rgb(1, 0, 0, 0.5),me_col='midnightblue'){
   
 # expr_mat=bexpr$M
   pca=prcomp(t(expr_mat),scale=T,center=T)
@@ -3690,11 +3692,11 @@ meplot<-function(expr_mat,do_plots=T){
 
   eplot(expr_mat,xlab="samples",ylab="gene experssion",main=paste("PC1 explains",round(summary(pca)$importance["Proportion of Variance",1],digits=2)*100,"% variation"))
   for(igen in 2:ncol(expr_mat)){
-    lines((expr_mat[,igen]),col=rgb(1, 0, 0, 0.5),)
+    lines((expr_mat[,igen]),col=net_col)#rgb(1, 0, 0, 0.5)
   }
   
-  lines(expr_mat$x,col="midnightblue",lwd=3)
-  legend("topright", legend=c("gene expression", "ME 'expression'"), bty="n",lwd=c(2,4), cex=1, col=c("darkred", "midnightblue"), lty=c(1, 1), pch=c(NA, NA))
+  lines(expr_mat$x,col=me_col,lwd=3)
+  legend("topright", legend=c("gene expression", "ME 'expression'"), bty="n",lwd=c(2,4), cex=1, col=c(net_col,me_col), lty=c(1, 1), pch=c(NA, NA))
 
 }
 
@@ -6939,6 +6941,219 @@ cat(readme)
 
 
 
+
+
+
+
+
+cmap.enrich<-function(modg,bkg=NA,de_thresh=0.1,n_genes=5){  ## combine the stuffs below to use with function rather than combined stuff as is atm
+
+cat('\n\tNOTE: this function REQUIRES properly formatted database named "degdb", cmap version available from :
+		\t\thttps://www.dropbox.com/s/18l1w2jbqld2mej/cmap.enrich.data.Rdata?dl=0\n\n')
+#cat('\n\tNOTE: this function requires two objects:	"metsum" & "degen", available from:\nhttps://www.dropbox.com/s/5nyydp1y5htikba/004.DTB.full_info.single_DEG.meta_randM.batch_corrected.scored.Rdata?dl=0\n\n')
+#cat('\n\tNOTE: currently list of drugs to test is taken from "degen" only, adding a drug name/data to only "metsum" will not perform enrichments\n\n')
+
+# INPUT: lmod - list of module names (for each expect chracter vector $up $down of ENSG, if unavailable, arbitrarily assign all genes to $up or $down)
+####   input format :
+##> str(bkg)
+# chr [1:13210] "ENSG00000121410" "ENSG00000175899" "ENSG00000166535" ...
+#> str(lmod)
+#List of 4
+# $ dif.hubs :List of 1
+#  ..$ up: chr [1:130] "ENSG00000198826" "ENSG00000105011" "ENSG00000066279" "ENSG00000087586" ...
+# $ E2F1.hubs:List of 1
+#  ..$ up: chr [1:66] "ENSG00000198826" "ENSG00000066279" "ENSG00000087586" "ENSG00000178999" ...
+# $ E2F1.M5  :List of 2
+#  ..$ down: chr [1:12] "ENSG00000127837" "ENSG00000159842" "ENSG00000149925" "ENSG00000100307" ...
+#  ..$ up  : chr [1:101] "ENSG00000198826" "ENSG00000066279" "ENSG00000156802" "ENSG00000176208" ...
+# $ M5       :List of 2
+#  ..$ down: chr [1:216] "ENSG00000127837" "ENSG00000165029" "ENSG00000127220" "ENSG00000159842" ...
+#  ..$ up  : chr [1:262] "ENSG00000159251" "ENSG00000198826" "ENSG00000105011" "ENSG00000066279" ...
+
+##  - lmod - list of modules - for each module 2 lists of gene ids "ENSG" - "up" & "down" - genes up/down-regulated between treatment and control
+#de_thresh=0.01
+#n_genes=5
+mstat=list()
+sigen=list()
+
+#options(warn=-1)
+if(is.na(bkg)[1]){	##  first element check
+	cat('\tusing default background - all cmap genes\n')
+	bkg=bgcommon(degdb)
+}
+if(!(length(degdb)>0)){
+	stop('\t\tlength(degdb) < = 0\t\tie no database found..')
+}
+#options(warn=0)
+#dkey=gsub('(.*)__(.*)__(.*)__(.*)__(.*)__(.*)__(.*)__(.*)','\\1;\\2',names(degdb))
+#	matst(names(metsum)%in%dkey)
+#ukey=unique(dkey)
+
+#idru='wortmannin'
+k=1
+cat('\n\tperform enrichment test for module genes in cmap\n')
+	for(idru in names(degdb)){
+		dummy=degdb[idru][[1]]		##  guaranteed to be a single list since using the full names
+		dummy=dummy[rownames(dummy)%in%bkg,]
+
+		if(nrow(dummy)==0){stop('no overlap between provided bkg & degb')}
+		holder=list()
+	#		holder$n.bg=nrow(dummy)
+			holder$n.bg.all=(dummy)
+			holder$n.bg.sig=(dummy[dummy$FDR<de_thresh,])
+			holder$n.bg.sig_up=(dummy[dummy$FDR<de_thresh & dummy$logFC>0,])
+			holder$n.bg.sig_down=(dummy[dummy$FDR<de_thresh  & dummy$logFC<0,])
+
+			sigen[[idru]]$bkg=(holder)
+
+		if(nrow(holder$n.bg.sig)>=n_genes){
+#			print(idru)
+
+	#	if(idru%in%names(metsum)){mstat$meta[[idru]]$bg=as.data.frame(humpty)}
+	#	if(!idru%in%names(metsum)){mstat$single[[idru]]$bg=as.data.frame(humpty)}
+
+		for(imod in names(modg)){
+			if('up' %in% names(modg[[imod]])){
+#				print(imod)
+
+				dumpty=dummy[rownames(dummy)%in%modg[[imod]]$up,]
+					holder[[imod]]$up_module=(dumpty)
+					holder[[imod]]$up_downreg=(dumpty[dumpty$FDR<de_thresh & dumpty$logFC<0,])
+					holder[[imod]]$up_upreg=(dumpty[dumpty$FDR<de_thresh & dumpty$logFC>0,])
+
+				if(nrow(holder[[imod]]$up_downreg)>=n_genes){
+#				 print('up')
+					mstat[[idru]][[paste(imod,'up_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(holder[[imod]]$up_module),bkgrnd=rownames(holder$n.bg.all),success=rownames(holder$n.bg.sig_down),counts=F))
+					mstat[[idru]][[paste(imod,'up_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(holder[[imod]]$up_module),bkgrnd=rownames(holder$n.bg.all),success=rownames(holder$n.bg.sig_up),counts=F))
+
+					sigen[[idru]][[paste(imod,'up',sep='.')]]=holder[[imod]]
+				}
+#				if(length(holder[[imod]]$up_downreg)<n_genes){
+#					mstat[[idru]][[paste(imod,'up_downreg',sep='.')]]	=NA
+#					mstat[[idru]][[paste(imod,'up_upreg',sep='.')]]		=NA
+#					sigen[[idru]][[paste(imod,'up',sep='.')]]			=NA
+#				}
+			}
+
+			if('down' %in% names(modg[[imod]])){
+#				print(imod)
+
+				dumpty=dummy[rownames(dummy)%in%modg[[imod]]$down,]
+					holder[[imod]]$down_module=(dumpty)
+					holder[[imod]]$down_downreg=(dumpty[dumpty$FDR<de_thresh & dumpty$logFC<0,])
+					holder[[imod]]$down_upreg=(dumpty[dumpty$FDR<de_thresh & dumpty$logFC>0,])
+
+				if(nrow(holder[[imod]]$down_upreg)>=n_genes){
+#					print('down')
+					mstat[[idru]][[paste(imod,'down_downreg',sep='.')]]=as.data.frame(fet(sampl=rownames(holder[[imod]]$down_module),bkgrnd=rownames(holder$n.bg.all),success=rownames(holder$n.bg.sig_down),counts=F))
+					mstat[[idru]][[paste(imod,'down_upreg',sep='.')]]  =as.data.frame(fet(sampl=rownames(holder[[imod]]$down_module),bkgrnd=rownames(holder$n.bg.all),success=rownames(holder$n.bg.sig_up),counts=F))
+
+					sigen[[idru]][[paste(imod,'down',sep='.')]]=holder[[imod]]
+
+				}
+#				if(length(holder[[imod]]$up_downreg)<n_genes){
+#					mstat[[idru]][[paste(imod,'down_downreg',sep='.')]]	=NA
+#					mstat[[idru]][[paste(imod,'down_upreg',sep='.')]]	=NA
+#					sigen[[idru]][[paste(imod,'down',sep='.')]]			=NA
+#				}
+			
+				sigen[[paste0('mixedM_',idru)]][[paste(imod,'down',sep='.')]]=holder[[imod]]
+			}
+			rm(dumpty)
+		}}
+
+		k=lcount(k,length(degdb))
+		rm(dummy)
+		rm(holder)
+
+		}
+
+
+	sigdru=list()
+	sigsum=list()
+	sigpc1=list()
+	sigpc2=list()
+cat('\n\tcompiling results..\n\n')
+	for(idru in names(mstat)){
+		humpty=mstat[[idru]]
+		dumpty=as.data.frame(matrix(unlist(humpty),nrow=length(humpty),byrow=T))
+			rownames(dumpty)=names(humpty)
+			colnames(dumpty)=colnames(humpty[[1]])
+
+		dumpty$n_hits_pc=dumpty$samp.success/(dumpty$samp.success+dumpty$bkgrnd.success)
+		dumpty$n_mod_pc=dumpty$samp.success/(dumpty$n.genes)
+
+	#	if(sum(dumpty$FETp<0.05)>=1){
+			sigdru[[idru]]=dumpty
+			sigsum[[idru]]=(dumpty[,c('FETp'),drop=F])
+			sigpc1[[idru]]=(dumpty[,c('n_hits_pc'),drop=F])
+				colnames(sigsum[[idru]])=paste(as.character(idru))#,colnames(sigsum[[idru]]))
+				colnames(sigpc1[[idru]])=paste(as.character(idru))#,colnames(sigpcs[[idru]]))
+
+			sigpc2[[idru]]=(dumpty[,c('n_mod_pc'),drop=F])
+				colnames(sigpc2[[idru]])=paste(as.character(idru))#,colnames(sigpcs[[idru]]))
+
+##				colnames(sigsum[[idru]])=paste(as.character(idru),colnames(sigsum[[idru]]),sep='.')	#paste0('Drug_',as.character(idru))
+	#	}
+
+	}
+
+cat('\t\t1 of 3\n')
+	mergy=''
+	l=1
+	for(idru in names(sigsum)){
+		mergy=rmerge(mergy,sigsum[[idru]],verbose=F,all=T)
+		l=lcount(l,length(sigsum))
+	}
+	mergy=mergy[-1,-1]
+	sigsum=as.data.frame(t(mergy))
+cat('\t\t2 of 3\n')
+	mergy=''
+	l=1
+	for(idru in names(sigpc1)){
+		mergy=rmerge(mergy,sigpc1[[idru]],verbose=F,all=T)
+		l=lcount(l,length(sigpc1))
+	}
+	mergy=mergy[-1,-1]
+	sigpc1=round(as.data.frame(t(mergy)),digits=3)
+
+cat('\t\t3 of 3\n')
+	mergy=''
+	l=1
+	for(idru in names(sigpc2)){
+		mergy=rmerge(mergy,sigpc2[[idru]],verbose=F,all=T)
+		l=lcount(l,length(sigpc2))
+	}
+	mergy=mergy[-1,-1]
+	sigpc2=round(as.data.frame(t(mergy)),digits=3)
+
+#sigsum['single_etoposide',]
+#sigsum['single_monobenzone',]
+#sigsum['single_trifluridine',]
+
+#sigpcs['single_etoposide',]
+#sigpcs['single_monobenzone',]
+#sigpcs['single_trifluridine',]
+
+
+#mstat['single_dequalinium chloride']
+
+####  M2.up_downreg
+## inf## 'single_dequalinium.chloride'
+## NaN## 'single_dicycloverine'
+#		Head(sigsum)
+
+	readme='\n\tcmap differentially expressed genes from drug treatment, raw and meta-analysis
+		\t\tNOTE :  currently individual experiments used to create the meta-analysis results are ignored
+		\t\t$sigsum   - summary results - p-values of enrichment only
+		\t\t$sigpc1   - summary results - % of differentially expressed genes in module / background (n.success.module/n.success.bkg)
+		\t\t$sigpc2   - summary results - % of differentially expressed genes in module / all module genes (n.success.module/n.genes.module)
+		\t\t$sigdru   - summary results - summary fisher exact test statistics
+		\t\t$sigen    - lists of genes used to calculate fisher exact test statistics above
+'
+cat(readme)
+	return(invisible(list(sigsum=(sigsum),sigpc1=(sigpc1),sigpc2=(sigpc2),sigdru=sigdru,sigen=sigen,readme=readme)))#,dumpty=dumpty)))
+}
 
 
 
