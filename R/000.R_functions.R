@@ -5291,20 +5291,30 @@ plot_dat=matrix(NA,nrow=length(dat_lis),ncol=length(dev_stage))
 
 
 
+listov<-function(dat_lis,union=T,intersect=F){
+##  USE : get union or intersect of all elements (vector) in list
+
+if(union & intersect){stop('both union & intersect == T, expect 1 only')}
+if(!union & !intersect){stop('both union & intersect == F, expect 1 only')}
+
+	udat=dat_lis[[1]]
+	for(ilis in 2:length(dat_lis)){
+		if(union){udat=union(udat,dat_lis[[ilis]])}
+		if(intersect){udat=intersect(udat,dat_lis[[ilis]])}
+	}
+	return(udat)
+}
+
 
 Venn<-function(dat_lis,main='',...){
  library(gplots)
   venn(dat_lis)
   mtext(main,side=3,...)
+  lisun=length(listov(dat_lis,T,F))
+  lisin=length(listov(dat_lis,F,T))
+
+  mtext(paste0('\n\nintersect/union=',round(lisin/lisun,digits=3)*100,'%'),side=1)
 }
-
-
-
-
-
-
-
-
 
 
 
