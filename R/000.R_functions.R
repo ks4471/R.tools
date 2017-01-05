@@ -17,6 +17,11 @@
 #7. Acceptance
 #8. Indifference
 
+
+##  unicode arrow symbols http://xahlee.info/comp/unicode_arrows.html
+##  ← → ↑ ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↚ ↛ ↮ ⟵ ⟶ ⟷ ⇐ ⇒ ⇑ ⇓ ⇔ ⇕ ⇖ ⇗ ⇘ ⇙ ⇍ ⇏ ⇎ ⟸ ⟹ ⟺ ⇦ ⇨ ⇧ ⇩ ⬄ ⇳ ⬀ ⬁ ⬂ ⬃ ⬅ ( ⮕ ➡ ) ⬆ ⬇ ⬈ ⬉ ⬊ ⬋ ⬌ ⬍
+
+
 ####======================================================================================================
 ##  Description of what the script is for..    ----------------------------------------------------
 ####======================================================================================================
@@ -39,6 +44,19 @@
 #library(R.helper)
 #library(clickyOSX)
 #library(clickyLinux)
+
+
+
+
+##  entertaining if not quite whimsical tmp variable names..
+# dummy
+# tester
+# decider
+# .proc 	# crit
+# holder	# molder
+# patches	# matches
+# humpty	# dumpty
+# stuffs	# things
 
 
 ##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
@@ -74,6 +92,15 @@
 #
 
 
+## http://serverfault.com/questions/25199/using-wget-to-recursively-download-whole-ftp-directories
+##  Check below wget command to download data from FTP recursively
+##  wget --user="" --password="" -r -np -nH --cut-dirs=1 --reject "index.html*" ""
+##  -r : is for recursively download.
+##  -np : is for no parent ascending.
+##  -nH : is for disabling creation of directory having name same as URL i.e. abc.xyz.com
+##  --cut-dirs : is for ignoring no. of parent directories. Value of this option will differ for your command.
+
+
 
 ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##   i.e. "02.WGCNA.MODULES.hipp.plier-gcbgPEER.bb.sex.age.pmi.cod.merge.height=0.25.genes14646.samples102powr5.bicor.R"
@@ -89,6 +116,23 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁
+
+
+####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+####======================================================================================================
+#҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉
+####======================================================================================================
+####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -2621,10 +2665,10 @@ pcVarExpl<-function(cexpr){
 
 
 
-frac<-function(subset,full,num=T,sig_fig=2){
+frac<-function(subset,full,num=T,perc=F,sig_fig=2){
   if(!num){return(round(length(subset)/length(full),digits=sig_fig))}
-  if(num){return(round(subset/full,digits=sig_fig))}
-
+  if(num&perc){return(round(subset/full,digits=sig_fig)*100)}
+  if(num&!perc){return(round(subset/full,digits=sig_fig))}
 }
 
 
@@ -3749,8 +3793,11 @@ rm.duplicates<-function(matrix,colName,verbose=T){
 
 
 
+
+
 get.duplicates<-function(dat_mat,col_dup,...){
   ndup=sort(table(dat_mat[,col_dup]),decreasing=T)
+#	ndup=sum(duplicated(dat_mat[,col_dup]))
 #   Head(ndup)
   ndup=ndup[ndup>1]
 
@@ -3759,7 +3806,7 @@ get.duplicates<-function(dat_mat,col_dup,...){
     return(invisible(list(n.duplicated="",duplicates="",unique=dat_mat)))
   }
 
-  if(length(ndup)>1){
+  if(length(ndup)>=1){
   #   Head(ndup)
     cat("\t",length(ndup),"duplicates found, top duplicates:\n")
     print(as.matrix(ndup[1:min(15,length(ndup))]))
@@ -5292,7 +5339,7 @@ plot_dat=matrix(NA,nrow=length(dat_lis),ncol=length(dev_stage))
 
 
 listov<-function(dat_lis,union=T,intersect=F){
-##  USE : get union or intersect of all elements (vector) in list
+##  USE : get union or intersect of all elements (vector) in list  ~~  bgcommon for list of char vectors
 
 if(union & intersect){stop('both union & intersect == T, expect 1 only')}
 if(!union & !intersect){stop('both union & intersect == F, expect 1 only')}
