@@ -57,6 +57,7 @@
 # patches	# matches
 # humpty	# dumpty
 # stuffs	# things
+# scrappy
 
 
 ##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
@@ -4223,7 +4224,6 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
  }
    if(do_plots){
    		library(dendextend)	##  moved it here to avoid waiting for clustering only to find that the library does not exist..
-      library(WGCNA)      ##  required for k='dynamic' only i.e. cutreeHybrid
    }
 
   if(cor_method=='as.dist'){
@@ -4251,6 +4251,7 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
     main_text=paste(dat_descr,'\ndistance=',cor_method,'cluster.method=',clust_method,'k =',paste(k,collapse=', '))
   }
   if(k=='dynamic'){
+  	library(WGCNA)      ##  required for k='dynamic' only i.e. cutreeHybrid
   	cat('\t- dynamic tree cut - WGCNA function, works best with clust_method="average"\n')
     trestat=cutreeHybrid(clustat,as.matrix(distmat),minClusterSize=2,deepSplit=0)$labels
     main_text=paste(dat_descr,'\ndistance=',cor_method,'cluster.method=',clust_method,'clusters determined by WGCNA: "cutreeHybrid"')
