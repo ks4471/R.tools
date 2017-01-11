@@ -58,6 +58,7 @@
 # humpty	# dumpty
 # stuffs	# things
 # scrappy
+# hunky		# dorey
 
 
 ##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
@@ -66,6 +67,7 @@
 
 
 # ¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯
+##cid(sdfset)=sdfid(sdfset)
 ##  timer eg
 #t1=Sys.time()
 #Sys.time()-t1 		##  prints elapsed time
@@ -7793,5 +7795,39 @@ cid.match<-function(query,pubchem_db="",parent_db=""){
 	colnames(holder)=c('cid','synon')
 		cat('\t',round(length(unique(holder$synon))/length(query),digits=3)*100,'% query ids matched\n')
 	return(unique(holder[order(holder$synon),]))
+}
+
+
+
+
+tanimat<-function(sdf_set){
+	library('ChemmineR')
+##  runing the default sets for now
+##   example code to get from apset to relevant inputs using "ChemmineR", straight from https://www.bioconductor.org/packages/release/bioc/vignettes/ChemmineR/inst/doc/ChemmineR.html
+
+	cidlis=sdfid(sdf_set)									##  make sure the CID are same as internal ones in sdfset
+	cid(sdf_set)=cidlis
+	apset=sdf2ap(sdf_set)
+	fpchar=desc2fp(apset, descnames=1024, type="character")
+	fpset=as(fpchar, "FPset")
+	params=genParameters(fpset)
+
+	k=1
+	for(icid in cidlis){
+		holder=fpSim(fpset[icid], fpset, sorted=TRUE, method="Tanimoto", addone=1, cutoff=0, top="all", alpha=1, beta=1, parameters=params,scoreType="similarity")
+		dummy=holder[,'similarity',drop=F]
+			colnames(dummy)=icid
+
+		if(k==1){
+			distmat=dummy
+		}
+		if(k!=1){
+			distmat=rmerge(distmat,dummy,verbose=F)
+		}
+#		print(k)
+		k=lcount(k,length(cidlis))
+	}
+
+	return(distmat[cidlis,cidlis])
 }
 
