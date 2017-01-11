@@ -7800,10 +7800,12 @@ cid.match<-function(query,pubchem_db="",parent_db=""){
 
 
 
-tanimat<-function(sdf_set){
+tanidist<-function(sdf_set){
+##  USE :	generate a matrix of tanimoto distances based on sdfset object generated via ChemmineR
+##  DEPENDENCIES : rmerge() - custom function in R.helper
 	library('ChemmineR')
-##  runing the default sets for now
-##   example code to get from apset to relevant inputs using "ChemmineR", straight from https://www.bioconductor.org/packages/release/bioc/vignettes/ChemmineR/inst/doc/ChemmineR.html
+##   runing the default sets for now
+##   make apset etc using "ChemmineR", straight from https://www.bioconductor.org/packages/release/bioc/vignettes/ChemmineR/inst/doc/ChemmineR.html
 
 	cidlis=sdfid(sdf_set)									##  make sure the CID are same as internal ones in sdfset
 	cid(sdf_set)=cidlis
@@ -7830,4 +7832,26 @@ tanimat<-function(sdf_set){
 
 	return(distmat[cidlis,cidlis])
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
