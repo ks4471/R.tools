@@ -21,6 +21,12 @@
 ##  unicode arrow symbols http://xahlee.info/comp/unicode_arrows.html
 ##  ← → ↑ ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↚ ↛ ↮ ⟵ ⟶ ⟷ ⇐ ⇒ ⇑ ⇓ ⇔ ⇕ ⇖ ⇗ ⇘ ⇙ ⇍ ⇏ ⇎ ⟸ ⟹ ⟺ ⇦ ⇨ ⇧ ⇩ ⬄ ⇳ ⬀ ⬁ ⬂ ⬃ ⬅ ( ⮕ ➡ ) ⬆ ⬇ ⬈ ⬉ ⬊ ⬋ ⬌ ⬍
 
+#		:
+#	  : 
+#		:
+#	/\(••)/\
+#	\	   /
+
 
 ####======================================================================================================
 ##  Description of what the script is for..    ----------------------------------------------------
@@ -1145,7 +1151,7 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
 	}
 	if(values){
 		celdat=round(cor.measures,digits=2)
-		celdat[celdat==min(celdat)]=""
+		#celdat[celdat==min(celdat)]=""
 		cor_heat=heatmap.2((cor.measures),cellnote=celdat,notecex=values.cex,,notecol="black",breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
 	}
 
@@ -3004,6 +3010,13 @@ if(plot_pcs[3]==T){
   return(invisible(pcs))
 }
 
+
+#plot.counts<-function(dat_vec){
+##	USE : pretty plot counts in a vector
+##  DEPENDENCIES :	matst()
+#	pdat=matst(dat_vec)
+#	p
+#}
 
 
 pcplot<-function(dat_list,scale_dat=F,colmix="",pch=16,dat_descr="",main="",legend_space=8,...){
