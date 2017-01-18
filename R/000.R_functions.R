@@ -1124,7 +1124,7 @@ if(mode=="pval"){
 
 
 
-Heat<-function(cor.measures,values=F,Rowv=T,Colv=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",...){
+Heat<-function(cor.measures,values=F,Rowv=T,Colv=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",verbose=F,...){
 
 if(class(Rowv)=='logical'&class(Colv)=='logical'){
   if(Rowv & Colv){dendrogram="both"}
@@ -1138,7 +1138,7 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
     library(gplots)
     min=floor(min(cor.measures))
     max=ceiling(max(cor.measures))
-    cat('\tmin=',min,', max=',max,'\n') 
+    if(verbose){cat('\tmin=',min,', max=',max,'\n') }
     if(min<0 & max>=0){heat_colors =c(colorRampPalette(c("#0072B2","#56B4E9","white","#F0E442","darkred"))(ncols)); symmkey=T;ncols=ncols-1}
     if(mingrey & min>=0 & max>=0){heat_colors=c('grey60',colorRampPalette(c("white","#F0E442","darkred"))(ncols));symmkey=F}
     if(mingrey & min<=0 & max<=0){heat_colors=c('grey60',colorRampPalette(c("white","#56B4E9","#0072B2"))(ncols));symmkey=F}
@@ -3017,6 +3017,19 @@ if(plot_pcs[3]==T){
 #	pdat=matst(dat_vec)
 #	p
 #}
+
+hplot<-function(dat_vec,nlab='max',text_col='dodgerblue',...){
+	dat_stat=matst(dat_vec)
+	ymax=max(dat_stat$count)
+	ymin=floor(min(dat_stat$count))
+	ybuffer=max(ymax*0.05,5)
+	ymax=ymax+max(ymax*0.1,10)
+	if(nlab=='max'){nlab=nrow(dat_stat)}
+
+	plot(dat_stat$count,type='h',frame.plot=F,ylim=c(ymin,ymax),...)
+	dat_txt=dat_stat[1:nlab,]
+	text((dat_txt$count)+ybuffer,labels=dat_txt$percent*100,col=text_col)
+}
 
 
 pcplot<-function(dat_list,scale_dat=F,colmix="",pch=16,dat_descr="",main="",legend_space=8,...){
@@ -6463,6 +6476,7 @@ idconvert<-function(ids,verbose=T){
 }
 
 
+
 idconvert.ensg<-function(dat_lis){
 ##  conveting list of vectors containing only official HUGO gene names (rownames) to ENSG
 	dat_out=list()
@@ -7814,7 +7828,7 @@ cid.match<-function(query,pubchem_db="",parent_db=""){
 
 
 tanidist<-function(sdf_set){
-##  USE :	generate a matrix of tanimoto distances based on sdfset object generated via ChemmineR
+##  USE :	generate a matrix of tanimoto (similarity by default) distances based on sdfset object generated via ChemmineR
 ##  DEPENDENCIES : rmerge() - custom function in R.helper
 	library('ChemmineR')
 ##   runing the default sets for now
@@ -7842,7 +7856,7 @@ tanidist<-function(sdf_set){
 #		print(k)
 		k=lcount(k,length(cidlis))
 	}
-
+	distmat=1-distmat
 	return(distmat[cidlis,cidlis])
 }
 
