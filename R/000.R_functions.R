@@ -7917,7 +7917,7 @@ sink()
 ##  all hail Aida for working out the full cmd code to run GSEA, i still remember her frustration when she was doing this..
 ##   -rpt_label adds a label to the out_folder which can make it too long -> mid part of the name becomes ".." - the part required for grep to work ==> hardcoded as blank
   system(
-  	paste0("java -cp ",gsea_path,"gsea2-2.2.3.jar -Xmx10g xtools.gsea.GseaPreranked -gmx "
+  	paste0("java -cp ",gsea_path,"gsea2-2.2.3.jar -Xmx50g xtools.gsea.GseaPreranked -gmx "
 #  		,gsea_path,'/working/',dat_descr,'gsea_enrich.gmt'
   		,gsea_path,'/working/gsea_enrich.gmt'
   			," -collapse false -mode Max_probe -norm meandiv -nperm ",nperm
