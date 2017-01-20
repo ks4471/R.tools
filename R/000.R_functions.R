@@ -7868,24 +7868,30 @@ tanidist<-function(sdf_set){
 
 
 
-
-gsea.enrich<-function(genlis,rnkdat,dat_descr='',out_path=getwd(),gsea_path="/Data/ks/lib/",nperm=10000,min_clust_size=10,max_clust_size=5000,do_plots=F,...){
-##  WARNING: if running multiple instances of the enrichment, select a different out_path to avoid conflicts / breaking the functions
-		warning('function will break if folders with "my_analysis" in the name already exist in out_path')
+gsea.enrich<-function(genlis,rnkdat,dat_descr='',gsea_path="/Data/ks/lib/",nperm=10000,min_clust_size=10,max_clust_size=5000,do_plots=F,...){
+##  WARNING: if running multiple instances of the enrichment, select a different gsea_path to avoid conflicts / breaking the functions..  likely need to additional copies of the script to run as well
+#		warning('function will break if folders with "my_analysis" in the name already exist in gsea_path')
 #	gsea_path="/Users/ks/Dropbox/bin/gsea/"
-system(paste0('mkdir ',out_path,'/working'))
+system(paste0('mkdir ',gsea_path,'/working'))
 
-	if(dat_descr!=''){dat_descr=paste0(dat_descr,'.')}
+#	if(dat_descr!=''){dat_descr=paste0(dat_descr,'.')}
 ####  .gmt file - module 1 per row, name followed by \t genes in module		------------------------------------------
-#	write.delim(t(c(names(genlis),t(as.data.frame(genlis)))),file=paste0(out_path,'/working/',dat_descr,'gsea_enrich.gmt'),row.names=F,col.names=F)
-	write.delim(t(c(names(genlis),t(as.data.frame(genlis)))),file=paste0(out_path,'/working/gsea_enrich.gmt'),row.names=F,col.names=F)
+#	write.delim(t(c(names(genlis),t(as.data.frame(genlis)))),file=paste0(gsea_path,'/working/',dat_descr,'gsea_enrich.gmt'),row.names=F,col.names=F)
+#	write.delim(t(c(names(genlis),t(as.data.frame(genlis)))),file=paste0(gsea_path,'/working/gsea_enrich.gmt'),row.names=F,col.names=F)
+cat('\twrite genlis.gmt\n')
+sink(paste0(gsea_path,'/working/gsea_enrich.gmt'))
+  for(ilis in names(genlis)){
+
+   cat(as.vector(paste(c(ilis,ilis,genlis[ilis][[1]]),collapse="\t")),"\n",sep="")
+  }
+sink()
 ####  .rnk file - 2 columns "IDs", "P"		------------------------------------------
 	if(!ncol(rnkdat)%in%c(1,2)){stop('rnkdat does not have 2 coluns')}
 	if(ncol(rnkdat)==2){
 		bkg=rnkdat[,1]
 		cat('\tncol(rnkdat)==2, assuming rnkdat already in correct format colnames = c("IDs","P"), where P==rank measure\n')
-#		write.delim(rnkdat,file=paste0(out_path,'/working/',dat_descr,'gsea_enrich.rnk'),row.names=F,col.names=T)
-		write.delim(rnkdat,file=paste0(out_path,'/working/gsea_enrich.rnk'),row.names=F,col.names=T)
+#		write.delim(rnkdat,file=paste0(gsea_path,'/working/',dat_descr,'gsea_enrich.rnk'),row.names=F,col.names=T)
+		write.delim(rnkdat,file=paste0(gsea_path,'/working/gsea_enrich.rnk'),row.names=F,col.names=T)
 	}
 	if(ncol(rnkdat)==1){
 		cat('\tncol(rnkdat)==1, assuming rnkdat has appropriate rownames and ranks in the column\n')
@@ -7894,64 +7900,77 @@ system(paste0('mkdir ',out_path,'/working'))
 		rnkdat$IDs=rownames(rnkdat)
 		rnkdat=rnkdat[,c('IDs','P')]
 		bkg=rownames(rnkdat)
-#		write.delim(rnkdat,file=paste0(out_path,'/working/',dat_descr,'gsea_enrich.rnk'),row.names=F,col.names=T)
-		write.delim(rnkdat,file=paste0(out_path,'/working/gsea_enrich.rnk'),row.names=F,col.names=T)
+#		write.delim(rnkdat,file=paste0(gsea_path,'/working/',dat_descr,'gsea_enrich.rnk'),row.names=F,col.names=T)
+		write.delim(rnkdat,file=paste0(gsea_path,'/working/gsea_enrich.rnk'),row.names=F,col.names=T)
 	}
 ####  .chip file - colunms: "Probe Set ID",	"Gene Symbol",	"Gene Title" - same is easiest (background)		------------------------------------------
 # build using the bkg list - derived based on the rnk list above
 	chipdat=list("Probe Set ID"=bkg,"Gene Symbol"=bkg,"Gene Title"=bkg)
 	chipdat=as.data.frame(chipdat)
 		colnames(chipdat)=c("Probe Set ID","Gene Symbol","Gene Title")		##  assuming GSEA is actually picky about colnames
-#	write.delim(chipdat,file=paste0(out_path,'/working/',dat_descr,'gsea_enrich.chip'),row.names=F,col.names=T)
-	write.delim(chipdat,file=paste0(out_path,'/working/gsea_enrich.chip'),row.names=F,col.names=T)
+#	write.delim(chipdat,file=paste0(gsea_path,'/working/',dat_descr,'gsea_enrich.chip'),row.names=F,col.names=T)
+	write.delim(chipdat,file=paste0(gsea_path,'/working/gsea_enrich.chip'),row.names=F,col.names=T)
 
 
-  options(scipen=999)
-  ##-Xmx5000mm flags the amount of memory available to java. The default is -Xmx512m
+  options(scipen=999)	##  prevent R using scientific notation to numbers
+##-Xmx5000mm flags the amount of memory available to java. The default is -Xmx512m
+##  all hail Aida for working out the full cmd code to run GSEA, i still remember her frustration when she was doing this..
+##   -rpt_label adds a label to the out_folder which can make it too long -> mid part of the name becomes ".." - the part required for grep to work ==> hardcoded as blank
   system(
   	paste0("java -cp ",gsea_path,"gsea2-2.2.3.jar -Xmx11000m xtools.gsea.GseaPreranked -gmx "
-#  		,out_path,'/working/',dat_descr,'gsea_enrich.gmt'
-  		,out_path,'/working/gsea_enrich.gmt'
+#  		,gsea_path,'/working/',dat_descr,'gsea_enrich.gmt'
+  		,gsea_path,'/working/gsea_enrich.gmt'
   			," -collapse false -mode Max_probe -norm meandiv -nperm ",nperm
-#  			," -rnk ",out_path,'/working/',dat_descr,'gsea_enrich.rnk'
-  			," -rnk ",out_path,'/working/gsea_enrich.rnk'	
-  			, " -scoring_scheme classic -rpt_label  -chip ",out_path,'/working/gsea_enrich.chip'
+#  			," -rnk ",gsea_path,'/working/',dat_descr,'gsea_enrich.rnk'
+  			," -rnk ",gsea_path,'/working/gsea_enrich.rnk'	
+  			, " -scoring_scheme classic -rpt_label  -chip ",gsea_path,'/working/gsea_enrich.chip'
   			," -include_only_symbols true -make_sets true -plot_top_x 20 -rnd_seed timestamp -set_max "
-  			,max_clust_size, " -set_min ",min_clust_size," -zip_report false -out ",out_path, " -gui false"
+  			,max_clust_size, " -set_min ",min_clust_size," -zip_report false -out ",gsea_path, " -gui false"
   			)
   	)
 
 
-  out_dir_nam=list.files(out_path,pattern='my_analysis')
+  out_dir_nam=list.files(gsea_path,pattern='my_analysis')
 #  out_dir_nam=out_dir_nam[out_dir_nam!='working']	
- resfnam=list.files(paste0(out_path,'/',out_dir_nam),pattern='.xls')
+ resfnam=list.files(paste0(gsea_path,'/',out_dir_nam),pattern='.xls')
 
-  holder=read.delim(paste0(out_path,'/',out_dir_nam,'/',names(genlis),'.xls'))
-  	matst(holder$CORE.ENRICHMENT)
-  humpty=read.delim(paste0(out_path,'/',out_dir_nam,'/',resfnam[grepl('for_na_pos',resfnam)]))
-  dumpty=read.delim(paste0(out_path,'/',out_dir_nam,'/',resfnam[grepl('for_na_neg',resfnam)]))
-  bumpty=read.delim(paste0(out_path,'/',out_dir_nam,'/',resfnam[grepl('na_pos_versus_na_neg',resfnam)]))
+  humpty=read.delim(paste0(gsea_path,'/',out_dir_nam,'/',resfnam[grepl('gsea_report_for_na_pos',resfnam)]))
+  dumpty=read.delim(paste0(gsea_path,'/',out_dir_nam,'/',resfnam[grepl('gsea_report_for_na_neg',resfnam)]))
+  bumpty=read.delim(paste0(gsea_path,'/',out_dir_nam,'/',resfnam[grepl('na_pos_versus_na_neg',resfnam)]))
+  fumpty=read.delim(paste0(gsea_path,'/',out_dir_nam,'/',resfnam[grepl('gene_set_sizes',resfnam)]))
 
+resfnam=resfnam[!grepl('gsea_report_for_na_pos|gsea_report_for_na_neg|na_pos_versus_na_neg|gene_set_sizes',resfnam)]
+
+resfnam=gsub('[.]xls','',resfnam)
+sidat=list()
+	for(isig in resfnam){
+	  sidat[[isig]]=read.delim(paste0(gsea_path,'/',out_dir_nam,'/',isig,'.xls'))
+	}
+
+#pdf(paste0(gsea_path,'img/dummy.pdf'),height=5,width=10)		##  for testing purposes, to save plots, more efficient to create a pdf() before running the function & dev.off() after
   if(do_plots){
-#  		ylimdat=c((min(holder$RUNNING.ES))+0.1*sign(min(holder$RUNNING.ES)),(max(holder$RUNNING.ES)))
+  	for(isig in names(sidat)){
+  		holder=sidat[isig][[1]]
+
   		ylimdat=c(min(holder$RUNNING.ES)-0.1,(max(holder$RUNNING.ES)))
-		plot(x=holder$RANK.IN.GENE.LIST,y=holder$RUNNING.ES,type='l',lwd=4,col='darkgreen',frame.plot=F,ylim=ylimdat,main=paste0(names(genlis),'\n',dat_descr),...) #ylim=ylimdat
+		plot(x=holder$RANK.IN.GENE.LIST,y=holder$RUNNING.ES,type='l',lwd=4,col='darkgreen',frame.plot=F,ylim=ylimdat,main=paste0(isig,'\n',dat_descr),las=1,xlab='rank in gene list',ylab='GSEA enrichment score',...) #ylim=ylimdat
 		rug(x=holder$RANK.IN.GENE.LIST, ticksize = 0.1, side = 1, lwd = 0.5, col = par("fg"),quiet = getOption("warn") < 0)
 
-		mtext(paste0('FDR pos  ',humpty$FDR.q.val,'\nFDR neg   ',dumpty$FDR.q.val),adj=1,side=3,line=2)
+		mtext(paste0('FDR pos  ',humpty[humpty$NAME==isig,]$FDR.q.val,'   FDR neg   ',dumpty[dumpty$NAME==isig,]$FDR.q.val),adj=1,side=1,line=4)
+	}
   }
+#dev.off()
 
-	cat('\tclean-up - removing ',paste0('rm ',out_path,'/',out_dir_nam),'directory generated by GSEA\n')
-	system(paste0('rm ',out_path,'/',out_dir_nam,'/*'))
-	system(paste0('rm ',out_path,'/',out_dir_nam,'/edb/*'))
-	system(paste0('rmdir ',out_path,'/',out_dir_nam,'/edb'))
-	system(paste0('rmdir ',out_path,'/',out_dir_nam))
-	cat('\tclean-up - removing ',paste0('rm ',out_path,'/working *'),'input files for GSEA\n')
-	system(paste0('rm ',out_path,'/working/*'))
-	return(invisible(list(genlis=holder,pos=humpty,neg=dumpty,bkg=bumpty)))
+	cat('\tclean-up - removing ',paste0('rm ',gsea_path,'/',out_dir_nam),'directory generated by GSEA\n')
+	system(paste0('rm ',gsea_path,'/',out_dir_nam,'/*'))
+	system(paste0('rm ',gsea_path,'/',out_dir_nam,'/edb/*'))
+	system(paste0('rmdir ',gsea_path,'/',out_dir_nam,'/edb'))
+	system(paste0('rmdir ',gsea_path,'/',out_dir_nam))
+	cat('\tclean-up - removing ',paste0('rm ',gsea_path,'/working *'),'input files for GSEA\n')
+	system(paste0('rm ',gsea_path,'/working/*'))
+	return(invisible(list(genlis=holder,pos=humpty,neg=dumpty,bkg=bumpty,set_size=fumpty,sigdat=sidat)))
 
 }
-
 
 
 
