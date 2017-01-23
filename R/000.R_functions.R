@@ -3503,11 +3503,7 @@ if(make_plot & use_grid){
 
 
 
-Plot<-function(x,line45deg=F,pch=16,cex=0.5,frame.plot=F,dat_descr="",lwd=lwd,...){
-	plot(x,pch=pch,cex=cex,frame.plot=frame.plot,main=dat_descr,lwd=lwd,...)
 
-	if(line45deg){abline(coef=c(0,1),lty=2,col='grey60',lwd=lwd)}
-}
 
 Legend<-function(legend,x='topright',...){
 	cat('\n\t',par()$fig,par()$oma,par()$mar,'\n')
@@ -3526,26 +3522,45 @@ Legend<-function(legend,x='topright',...){
 	cat('\n\t',par()$fig,par()$oma,par()$mar,'\n')
 }
 
-cplot<-function(xdat,ydat,line45deg=T,legend_space=10,dat_descr='',legend_pos='topright',...){
+Plot<-function(xdat,ydat,line45deg=F,...){
+	ylim.dat=c(floor(min(ydat)),ceiling(max(ydat)))
+	xlim.dat=c(floor(min(xdat)),ceiling(max(xdat)))
+	plot(xdat,ydat,pch=16,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
+
+	if(line45deg){abline(coef=c(0,1),lty=2,col='grey60')}
+
+}
+
+
+#
+cplot<-function(xdat,ydat,line45deg=T,legend_space=10,main='',legend_pos='topright',plot.pch=16,lm_lwd=1,...){
 #  cat(min(x),max(x),min(y),max(y),"\n")
 #  dummy=cbind(seq(floor(min(x)),(ceiling(max(x))+log10(ceiling(max(x)))),length.out=10),seq(floor(min(y)),(ceiling(max(y))+log10(ceiling(max(y)))),length.out=10))
 #  print(dummy)
+#
+
 	par(mar=c(5,4,legend_space, 3))
-  Plot(x=xdat,y=ydat
-    ,line45deg=line45deg
-    ,dat_descr=dat_descr
-    ,...)
+  plot(x=xdat,y=ydat
+	  	,pch=plot.pch
+	  	,frame.plot=F
+	    ,col=rgb(0, 0, 0,alpha=0.3)
+	#    ,line45deg=line45deg
+	#    ,dat_descr=dat_descr
+	    ,...)
+
 #  points(x,y,pch=16)
-  abline(lm(xdat~ydat),col="dodgerblue") 
+#  abline(lm(xdat~ydat),col="dodgerblue") 
+  lmdat=lm(ydat~xdat)
+  abline(lmdat,col="dodgerblue")
+	if(line45deg){abline(coef=c(0,1),lty=2,col='grey60',lwd=lm_lwd)}
 
-  Legend(legend=paste("spearman  P =",signif(cor.test(xdat,ydat,method="spearman")$p.val,digits=2)
-                ,"  R-sq =",round(cor(xdat,ydat,method="spearman"),digits=3)
-                ,"\nkendall      P =",signif(cor.test(xdat,ydat,method="kendall")$p.val,digits=2)
-                ,"  R-sq =",round(cor(xdat,ydat,method="kendall"),digits=3)
-                ,"\nlm           P =",signif(lmp(lm(xdat~ydat)),digits=2)
-                ,"     R-sq =",signif(summary(lm(xdat~ydat))$r.sq,digits=3)))
+  Legend(legend=paste("spearman  P =",signif(cor.test(ydat,xdat,method="spearman")$p.val,digits=2)
+                ,"  R-sq =",round(cor(ydat,xdat,method="spearman"),digits=3)
+                ,"\nkendall      P =",signif(cor.test(ydat,xdat,method="kendall")$p.val,digits=2)
+                ,"  R-sq =",round(cor(ydat,xdat,method="kendall"),digits=3)
+                ,"\nlm           P =",signif(lmp(lmdat),digits=2)
+                ,"     R-sq =",signif(summary(lmdat)$r.sq,digits=3)))
 }
-
 
 
 
