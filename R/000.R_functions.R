@@ -3832,7 +3832,7 @@ dist.as.vector<-function(dist_mat){
 	dist_mat[upper.tri(dist_mat,diag=T)]=NA
 	dist_mat=unlist(dist_mat)
 	dist_mat=dist_mat[!is.na(dist_mat)]
-	return(distmat)
+	return(dist_mat)
 }
 
 
