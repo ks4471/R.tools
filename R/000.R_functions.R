@@ -1,7 +1,13 @@
 "
 ╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗
 ╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝
+	A good friend gets one free chance to say you are being an asshole in your life, and if they are right, they get one more
+     What you believe, what you behold, how you behave, each leads inexorably to the next
+     There is no cheating in life, only success and a thousand flavours of falure
      What's the difference between ignorance and apathy? I don't know and I don't care
+     An open mind is like a fortress with its gates unbarred and unguarded
+     Knowlege is power, guard it well
+
 ╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╦╦╦╗╔═╗╔═╦╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╗╔═╦╗╔═╦╗╔╔═╦╗╔═╦╗╔╗
 ╠╗║╚╝║║╠╗║╚╣║║║║║╚╣                   ╠╣║║║║║═╣║║╠╗║║╚╣╚╣╔╣╔╣╔╣╔╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣║╗║╚╚╣
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
@@ -3820,6 +3826,13 @@ list.as.df<-function(in_list){
   res=as.data.frame(do.call(rbind,lapply(in_list, `length<-`,max(indx))))
 
   return(res)
+}
+
+dist.as.vector<-function(dist_mat){
+	dist_mat[upper.tri(dist_mat,diag=T)]=NA
+	dist_mat=unlist(dist_mat)
+	dist_mat=dist_mat[!is.na(dist_mat)]
+	return(distmat)
 }
 
 
