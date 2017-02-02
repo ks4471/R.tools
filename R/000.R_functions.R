@@ -1,8 +1,34 @@
 "
 ╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗
 ╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝
+   'Men first felt necessity then look for utility, next attend to comfort, still later amuse themselves with pleasure, thence grow dissolute in luxury, and finally go mad and waste their substance'
+	 Common sense is judgment without reflection, shared by an entire class, an entire nation, or the entire human race
+	 Uniform ideas originating among entire peoples unknown to each other must have a common ground of truth
+	 Wherever a people has grown savage in arms so that human laws have no longer any place among it, the only powerful means of reducing it is religion
+
+		Giambattista Vico
+
+	It is not a lack of love, but a lack of friendship that makes unhappy marriages. Friedrich Nietzsche
+	 There are various eyes. Even the Sphinx has eyes: and as a result there are various truths, and as a result there is no truth
+	 A casual stroll through the lunatic asylum shows that faith does not prove anything
+	 Morality is the herd-instinct in the individual
+	 Madness is rare in individuals - but in groups, parties, nations, and ages it is the rule
+	 Those who cannot understand how to put their thoughts on ice should not enter into the heat of debate
+	 Nothing has been purchased more dearly than the little bit of reason and sense of freedom which now constitutes our pride
+	 The demand to be loved is the greatest of all arrogant presumptions
+	It is impossible to suffer without making someone pay for it, every complaint already contains revenge
+		Friedrich Nietzsche
+
+
+	If I no longer give you the benefit of my judgment and simply follow your orders, I am not serving you, I am betraying you.
+	Ken Clarke pharaphrasing Burke's address to electors of bristol 
+
 	A good friend gets one free chance to say you are being an asshole in your life, and if they are right, they get one more
      What you believe, what you behold, how you behave, each leads inexorably to the next
+     
+     The only thing necessary for the triumph of evil is for good men to do nothing
+ 	
+
      There is no cheating in life, only success and a thousand flavours of falure
      What's the difference between ignorance and apathy? I don't know and I don't care
      An open mind is like a fortress with its gates unbarred and unguarded
@@ -12,7 +38,6 @@
 ╠╗║╚╝║║╠╗║╚╣║║║║║╚╣                   ╠╣║║║║║═╣║║╠╗║║╚╣╚╣╔╣╔╣╔╣╔╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣║╗║╚╚╣
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
-
 #Manuscript stages:
 #1. Love
 #2. Anger
@@ -4581,7 +4606,10 @@ clicky.run<-function(module_genes_list,module_bkrnd,clicky_dir,dat_descr='',id_t
 
 
 
-Heatp<-function(pval_mat,sig=T){
+
+
+Heatp<-function(pval_mat,sig=T,dat_descr=''){
+# height=22,width=11	##  settings used for WebGestalt pdf() plots
   library(gplots)
 #  if(breaks=="default"){breaks=seq(0,max(-log10(pval_mat)),length=(102))}
 #  if(col=="default"){col=colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(length(breaks)-1)}
@@ -4608,7 +4636,10 @@ lheight=c(0.06,0.94)
  if(!sig){
     heatmap.2(-log10(pval_mat),margins=margin,lhei=lheight,col=colorRampPalette(c("white","#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026","darkred"))(101),breaks=seq(0,max(-log10(pval_mat)),length=(102)),tracecol=F,dendrogram="none",Rowv=F,Colv=F,density.info="none",keysize=1,cexCol=0.7,cexRow=0.7,symkey=F,lwid=c(0.7,0.3),lmat=rbind(c(4,3),c(1,2)))
   }
-
+  ## text in top right corner
+	par(xpd = NA)
+	mtext(dat_descr, adj = 1, side = 3)
+	par(xpd = F)
 }
 
 
@@ -7434,9 +7465,11 @@ distpc <- function(x,perc) ecdf(x)(perc)
 
 geo.matrix<-function(datid,path){
 ##  USE: download GEO matrix data and process into smth usable
-	dir.create(file.path(path,'dtb',datid))
+	dir.create(paste0(path,'/dtb/',datid))
+#	dir.create(file.path(path,'dtb',datid))
 
-	setwd(file.path(path,'dtb',datid))
+	paste0(path,'/dtb/',datid)
+#	setwd(file.path(path,'dtb',datid))
 #	getwd()
 
 	system(paste0('wget -r -nH --cut-dirs=7 ftp://ftp.ncbi.nlm.nih.gov/geo/series/',substr(datid,1,5),'nnn/',datid,'/matrix/'))
