@@ -241,10 +241,27 @@
 
 
 ## extracting files using cmd / mac os
-# tar xvf file.tar
-# gunzip file.gz
-# gzip -d file.gz
+## https://www.cyberciti.biz/faq/tar-extract-linux/
+##  tar -xvf file.tar
+##  tar -xzvf file.tar.gz
+##  tar -xjvf file.tar.bz2
+##   -x : Extract a tar ball.
+##   -v : Verbose output or show progress while extracting files.
+##   -f : Specify an archive or a tarball filename.
+##   -j : Decompress and extract the contents of the compressed archive created by bzip2 program (tar.bz2 extension).
+##   -z : Decompress and extract the contents of the compressed archive created by gzip program (tar.gz extension).
 
+##  http://askubuntu.com/questions/25347/what-command-do-i-need-to-unzip-extract-a-tar-gz-file
+##  tar -xvzf community_images.tar.gz
+##   To explain a little further, tar collected all the files into one package, community_images.tar. The gzip program applied compression, hence the gz extension. So the command does a couple things:
+##   f: this must be the last flag of the command, and the tar file must be immediately after. It tells tar the name and path of the compressed file.
+##   z: tells tar to decompress the archive using gzip
+##   x: tar can collect files or extract them. x does the latter.
+##   v: makes tar talk a lot. Verbose output shows you all the files being extracted.
+
+
+##  gunzip file.gz
+##  gzip -d file.gz
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ##  running long jobs using 'screen'   ##  http://aperiodic.net/screen/quick_reference
@@ -3556,7 +3573,8 @@ Legend<-function(legend,x='topright',...){
 Plot<-function(xdat,ydat,line45deg=F,...){
 	ylim.dat=c(floor(min(ydat)),ceiling(max(ydat)))
 	xlim.dat=c(floor(min(xdat)),ceiling(max(xdat)))
-	plot(xdat,ydat,pch=16,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
+#	plot(xdat,ydat,pch=16,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
+	plot(xdat,ydat,pch=18,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
 
 	if(line45deg){abline(coef=c(0,1),lty=2,col='grey60')}
 
@@ -4171,28 +4189,28 @@ ppi.net<-function(dtb,query,genex,geney,degree=1){
 
 
 ppi.dbfilt<-function(dtb){
-t1=Sys.time()
-  dumpty=list() 
-  n.entries=nrow(dtb)
-  dtb$x=paste(dtb$a,dtb$b)
-  dtb$y=paste(dtb$b,dtb$a)
-while(nrow(dtb)>0){
-  humpty=dtb[which(dtb$x==dtb$x[1] | dtb$x==dtb$y[1] | dtb$y==dtb$y[1] | dtb$y==dtb$y[1]), ]
-  dtb=dtb[-which(dtb$x==dtb$x[1] | dtb$x==dtb$y[1] | dtb$y==dtb$y[1] | dtb$y==dtb$y[1]), ]
+	t1=Sys.time()
+	  dumpty=list() 
+	  n.entries=nrow(dtb)
+	  dtb$x=paste(dtb$a,dtb$b)
+	  dtb$y=paste(dtb$b,dtb$a)
+	while(nrow(dtb)>0){
+	  humpty=dtb[which(dtb$x==dtb$x[1] | dtb$x==dtb$y[1] | dtb$y==dtb$y[1] | dtb$y==dtb$y[1]), ]
+	  dtb=dtb[-which(dtb$x==dtb$x[1] | dtb$x==dtb$y[1] | dtb$y==dtb$y[1] | dtb$y==dtb$y[1]), ]
 
-  dumpty[[paste(sort(unique(c(humpty$a,humpty$b))),collapse='_')]]=t(as.data.frame(list(
-      a=sort(unique(c(humpty$a,humpty$b)))[1]
-      ,b=sort(unique(c(humpty$a,humpty$b)))[2]
-      ,weight=paste(sort(unique(unlist(strsplit(as.character(humpty$weight),'\\|')))),collapse=";")
-      ,method=paste(sort(unique(unlist(strsplit(as.character(humpty$method),'\\|')))),collapse=";")
-      ,type=paste(sort(unique(unlist(strsplit(as.character(humpty$type),'\\|')))),collapse=";")
-      ,dtb=paste(sort(unique(unlist(strsplit(as.character(humpty$dtb),'\\|')))),collapse=";")
-      ,ref=paste(sort(unique(unlist(strsplit(as.character(humpty$ref),'\\|')))),collapse=";")
-      ,pmid=paste(sort(unique(unlist(strsplit(as.character(humpty$pmid),'\\|')))),collapse=";")
-      ,mark=paste(sort(unique(unlist(strsplit(as.character(humpty$mark),'\\|')))),collapse=";")
-  )))
-  cat(1-round(nrow(dtb)/n.entries,digits=2),'\r');flush.console()
-}
+	  dumpty[[paste(sort(unique(c(humpty$a,humpty$b))),collapse='_')]]=t(as.data.frame(list(
+	      a=sort(unique(c(humpty$a,humpty$b)))[1]
+	      ,b=sort(unique(c(humpty$a,humpty$b)))[2]
+	      ,weight=paste(sort(unique(unlist(strsplit(as.character(humpty$weight),'\\|')))),collapse=";")
+	      ,method=paste(sort(unique(unlist(strsplit(as.character(humpty$method),'\\|')))),collapse=";")
+	      ,type=paste(sort(unique(unlist(strsplit(as.character(humpty$type),'\\|')))),collapse=";")
+	      ,dtb=paste(sort(unique(unlist(strsplit(as.character(humpty$dtb),'\\|')))),collapse=";")
+	      ,ref=paste(sort(unique(unlist(strsplit(as.character(humpty$ref),'\\|')))),collapse=";")
+	      ,pmid=paste(sort(unique(unlist(strsplit(as.character(humpty$pmid),'\\|')))),collapse=";")
+	      ,mark=paste(sort(unique(unlist(strsplit(as.character(humpty$mark),'\\|')))),collapse=";")
+	  )))
+	  cat(1-round(nrow(dtb)/n.entries,digits=2),'\r');flush.console()
+	}
 
   print(Sys.time()-t1)
   return(invisible(as.data.frame(t(as.data.frame(dumpty)))))
@@ -4202,10 +4220,10 @@ while(nrow(dtb)>0){
 
 deconv<-function(exp_mat,do_plots=F,verbose=F,...){
 	set.seed(0)	##  required for reproducibility -> in a single + limited test the gene numbers in upper and lower dont change, but not fully tested
-if(verbose){
-  cat('\tUSE : applies deconvolution method to separate bimodal distirbution into two, returns the greater normal\n')
-  cat('\tNOTE: expr_mat should be the log transformed matrix of gene expression\n')
-}
+	if(verbose){
+	  cat('\tUSE : applies deconvolution method to separate bimodal distirbution into two, returns the greater normal\n')
+	  cat('\tNOTE: expr_mat should be the log transformed matrix of gene expression\n')
+	}
 
   library(mixtools)
 
@@ -4279,7 +4297,7 @@ rowstat<-function(data_mat,add=F,round_digits=2,diag_na=T){
 
 
 
-clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,1,20),help=F,...){
+clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_method='dist',do_plots=T,plot_cex=0.8,dat_descr='',par_mar=c(4,1,3,20),help=F,...){
 ##  ,... refers to plotDendroAndColors   ::   library(WGCNA)
  if(help){
   cat('\n\tINPUT :\tdat_mat - auto-detect data frame or list of data frames - 1 per condition (samples=columns)\n')
@@ -4364,6 +4382,7 @@ clust<-function(dat_mat,horiz=T,scale_dat=F,clust_method='ward.D2',k=1,cor_metho
 #		k234=cutree(dend, k=2:4)
 #		colored_bars(cbind(k234[,3:1], col_car_type), dend, rowLabels=c(paste0("k=", 4:2), "Car Type"))
 
+			mtext(text=main_text,side=3,cex=1.5)
 
 		}
 
@@ -7465,14 +7484,18 @@ distpc <- function(x,perc) ecdf(x)(perc)
 
 geo.matrix<-function(datid,path){
 ##  USE: download GEO matrix data and process into smth usable
+cur_dir=getwd()
+	dir.create(paste0(path,'/dtb/'))
 	dir.create(paste0(path,'/dtb/',datid))
 #	dir.create(file.path(path,'dtb',datid))
 
-	paste0(path,'/dtb/',datid)
-#	setwd(file.path(path,'dtb',datid))
-#	getwd()
+#	paste0(path,'/dtb/',datid)
+	setwd(file.path(path,'dtb',datid))
+	getwd()
 
 	system(paste0('wget -r -nH --cut-dirs=7 ftp://ftp.ncbi.nlm.nih.gov/geo/series/',substr(datid,1,5),'nnn/',datid,'/matrix/'))
+
+#	system(paste0('wget -r -nH --cut-dirs=7 https://www.ncbi.nlm.nih.gov/geo/download/?acc=',datid,'&format=file'))
 	# -r 								##  recursively Dounload
 	# -nH (--no-host-directories)		##  cuts out hostname 
 	# --cut-dirs=X 						##  (cuts out X directories)
@@ -7537,10 +7560,13 @@ geo.matrix<-function(datid,path){
 
 
 			cat('\t\texpression data available,',nrow(expr),' genes\n')
+setwd(cur_dir)
 			return(invisible(list(expr=expr,samp=samp,meta=meta)))
 		}
 
+
 }
+
 
 
 
