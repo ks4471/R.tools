@@ -1172,7 +1172,7 @@ if(mode=="pval"){
 
 
 
-Heat<-function(cor.measures,values=F,Rowv=T,Colv=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",verbose=F,...){
+Heat<-function(cor.measures,values=F,values.rm='',Rowv=T,Colv=T,mingrey=F,values.cex=1,ncols=101,cexrow=0.7,cexcol=0.7,margin=c(12,12),dendrogram="both",verbose=F,...){
 
 if(class(Rowv)=='logical'&class(Colv)=='logical'){
   if(Rowv & Colv){dendrogram="both"}
@@ -1200,6 +1200,10 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
 	if(values){
 		celdat=round(cor.measures,digits=2)
 		#celdat[celdat==min(celdat)]=""
+		if(values.rm!=''){
+			celdat[celdat%in%values.rm]=''
+
+			}
 		cor_heat=heatmap.2((cor.measures),cellnote=celdat,notecex=values.cex,,notecol="black",breaks=seq(min,max,length=(ncols+2)),col=heat_colors,trace="none",dendrogram=dendrogram,Rowv=Rowv,Colv=Colv,margins=margin,density.info="none",keysize=1,cexCol=cexcol,cexRow=cexrow,symkey=symmkey,hclustfun=function(x) hclust(x, method="ward.D2"),...)#,hclustfun=function(x) hclust(x, method="ward.D2"))
 	}
 
@@ -7711,38 +7715,50 @@ read.zip <- function(file,verbose=T,...){
 
 
 
-
-list.overlap<-function(alis,do.pcs=T,do.fet=T,verbose=T){	## integration required for T/F flags to change inpu
-	matpc=as.data.frame(matrix(NA,nrow=(length(alis)),ncol=(length(alis))))
-		colnames(matpc)=names(alis)
+list.overlap<-function(alis,blis='',do.pcs=T,do.fet=T,verbose=T,do_plots=F,...){	## integration required for T/F flags to change inpu
+#	if(do_plots){library(corrplot)}						##  dont want to run the loop if breaks after nearly done 
+	if(length(blis)==1){ if(blis==''){blis=alis}}		##  convoluted to avoid the length>1 warning msg
+	print(length(blis))
+	matpc=as.data.frame(matrix(NA,nrow=(length(alis)),ncol=(length(blis))))
+	print(dim(matpc))
+		colnames(matpc)=names(blis)
 		rownames(matpc)=names(alis)
 	matpv=matpc
 	k=1
+
+
 	for(ilis in names(alis)){
 		if(verbose){k=lcount(k,length(alis))}
-		for(jlis in names(alis)){
+		for(jlis in names(blis)){
 			humpty=alis[[ilis]]
-			dumpty=alis[[jlis]]
+			dumpty=blis[[jlis]]
 			inters=intersect(humpty,dumpty)
 			unions=union(humpty,dumpty)
 
 			if(do.pcs){
-				matpc[jlis,ilis]=(length(inters)/length(humpty))
-				matpc[ilis,jlis]=(length(inters)/length(dumpty))
+				matpc[ilis,jlis]=(length(inters)/length(unions))
+#				matpc[ilis,jlis]=(length(inters)/length(dumpty))
 			}
 
 			if(do.fet){
-				matpv[jlis,ilis]=fet(sampl=humpty,bkgrnd=unions,success=inters,counts=F,alternative = "greater")$FETp
-				matpv[ilis,jlis]=fet(sampl=dumpty,bkgrnd=unions,success=inters,counts=F,alternative = "greater")$FETp
+				matpv[ilis,jlis]=fet(sampl=humpty,bkgrnd=unions,success=inters,counts=F,alternative = "greater")$FETp
+#				matpv[ilis,jlis]=fet(sampl=dumpty,bkgrnd=unions,success=inters,counts=F,alternative = "greater")$FETp
 			}
 
 		}
 	}
+
+	if(do_plots){
+		if(do.pcs){Heat(as.matrix(round(matpc,digits=2)*100),values=T,values.rm='0',Colv=F,Rowv=F,main='(intersect / union) *100   2sf',...)}
+		if(do.fet){Heat(as.matrix(-log10(matpv)),values=T,Colv=F,Rowv=F,main='-log10(fet P-val)',...)}
+	}
+
 	if(do.pcs&do.fet){return(invisible(list(perc=matpc,pval=matpv)))}
 	if(do.pcs){return(invisible(matpc))}
 	if(do.fet){return(invisible(matpv))}
-	
+
 }
+
 
 
 
