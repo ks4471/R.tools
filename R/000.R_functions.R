@@ -1213,10 +1213,17 @@ if(class(Rowv)=='logical'&class(Colv)=='logical'){
 
 
 read.file<-function(file,...){
-	read.delim(file=file,quote = "",colClasses = "character",check.names=F,comment.char="")	
+	read.delim(file=file,quote = "",colClasses = "character",check.names=F,comment.char="",...)
 }
 
 write.delim<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",sep="\t",...){
+  if(col.names==T & row.names==T){
+    col.names=NA
+  }
+  write.table(mat,file,row.names=row.names,col.names=col.names,sep=sep,quote=F,na=missing.value.char,...)
+}
+
+write.file<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",sep="\t",...){
   if(col.names==T & row.names==T){
     col.names=NA
   }
@@ -3071,6 +3078,7 @@ if(plot_pcs[3]==T){
 #}
 
 hplot<-function(dat_vec,nlab='max',text_col='dodgerblue',...){
+	print('WARNING : x axis is currently just an index 1:n_unique_values')
 	dat_stat=matst(dat_vec)
 	ymax=max(dat_stat$count)
 	ymin=floor(min(dat_stat$count))
