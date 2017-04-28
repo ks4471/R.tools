@@ -1,53 +1,16 @@
 "
 ╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗
 ╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝
-   'Men first felt necessity then look for utility, next attend to comfort, still later amuse themselves with pleasure, thence grow dissolute in luxury, and finally go mad and waste their substance'
-	 Common sense is judgment without reflection, shared by an entire class, an entire nation, or the entire human race
-	 Uniform ideas originating among entire peoples unknown to each other must have a common ground of truth
-	 Wherever a people has grown savage in arms so that human laws have no longer any place among it, the only powerful means of reducing it is religion
-
-		Giambattista Vico
-
-	It is not a lack of love, but a lack of friendship that makes unhappy marriages. Friedrich Nietzsche
-	 There are various eyes. Even the Sphinx has eyes: and as a result there are various truths, and as a result there is no truth
-	 A casual stroll through the lunatic asylum shows that faith does not prove anything
-	 Morality is the herd-instinct in the individual
-	 Madness is rare in individuals - but in groups, parties, nations, and ages it is the rule
-	 Those who cannot understand how to put their thoughts on ice should not enter into the heat of debate
-	 Nothing has been purchased more dearly than the little bit of reason and sense of freedom which now constitutes our pride
-	 The demand to be loved is the greatest of all arrogant presumptions
-	It is impossible to suffer without making someone pay for it, every complaint already contains revenge
-		Friedrich Nietzsche
-
-
-	If I no longer give you the benefit of my judgment and simply follow your orders, I am not serving you, I am betraying you.
-	Ken Clarke pharaphrasing Burke's address to electors of bristol 
-
-	A good friend gets one free chance to say you are being an asshole in your life, and if they are right, they get one more
-     What you believe, what you behold, how you behave, each leads inexorably to the next
-     
-     The only thing necessary for the triumph of evil is for good men to do nothing
- 	
-
-     There is no cheating in life, only success and a thousand flavours of falure
-     What's the difference between ignorance and apathy? I don't know and I don't care
-     An open mind is like a fortress with its gates unbarred and unguarded
-     Knowlege is power, guard it well
-
+		R helper functions, preceeded by various paraphanelia
 ╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╦╦╦╦╗╔═╗╔═╦╗╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗╔═╗╔═╦╗╔═╦╗╔╔═╦╗╔═╦╗╔╗
 ╠╗║╚╝║║╠╗║╚╣║║║║║╚╣                   ╠╣║║║║║═╣║║╠╗║║╚╣╚╣╔╣╔╣╔╣╔╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣║╗║╚╚╣
 ╚═╩══╩═╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝╚═╩══╩═╩═╩═╩╝╚╩═╩═╩╝╚╩═╩═╝═╩╝╚╩═╩═╩╝╩═╩═╩═╩╝╚╩═╩
 "
-#Manuscript stages:
-#1. Love
-#2. Anger
-#3. Denial
-#4. Revision
-#5. Ibid.			##  meaning something that has been mentioned previously; the same
-#6. Suppression
-#7. Acceptance
-#8. Indifference
 
+
+##
+#gsub("[^A-Za-z0-9 _.,!]", "", humpty$title) ## gsub all but alphanumeric AND punctuation  ## http://stackoverflow.com/questions/7233447/a-regex-to-match-strings-with-alphanumeric-spaces-and-punctuation
+#gsub("[^[:alnum:] ]", "", str)	#http://stackoverflow.com/questions/8959243/r-remove-non-alphanumeric-symbols-from-a-string
 
 ##  unicode arrow symbols http://xahlee.info/comp/unicode_arrows.html
 ##  ← → ↑ ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↚ ↛ ↮ ⟵ ⟶ ⟷ ⇐ ⇒ ⇑ ⇓ ⇔ ⇕ ⇖ ⇗ ⇘ ⇙ ⇍ ⇏ ⇎ ⟸ ⟹ ⟺ ⇦ ⇨ ⇧ ⇩ ⬄ ⇳ ⬀ ⬁ ⬂ ⬃ ⬅ ( ⮕ ➡ ) ⬆ ⬇ ⬈ ⬉ ⬊ ⬋ ⬌ ⬍
@@ -57,15 +20,6 @@
 #		:
 #	/\(••)/\
 #	\	   /
-
-
-####======================================================================================================
-##  Description of what the script is for..    ----------------------------------------------------
-####======================================================================================================
-#╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
-#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║¯\_(•_•)_/¯║╚╣╔╣╔╣║║║║╚╣
-#options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
-#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
 
 #install.packages('devtools')
 
@@ -83,19 +37,18 @@
 #library(clickyLinux)
 
 
-
-
 ##  entertaining if not quite whimsical tmp variable names..
 # dummy
 # tester
 # decider
-# .proc 	# crit
 # holder	# molder
 # patches	# matches
 # humpty	# dumpty
 # stuffs	# things
 # scrappy
 # hunky		# dorey
+# proc 		# crit
+
 
 
 ##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
@@ -126,10 +79,6 @@
 
 
 
-####======================================================================================================
-###-----------------------------------------------------------------------------------------------------
-##  my commonly used code annotation breakers   ------------------------------------------------
-#
 
 
 ## http://serverfault.com/questions/25199/using-wget-to-recursively-download-whole-ftp-directories
@@ -142,24 +91,30 @@
 
 
 
+####======================================================================================================
+###-----------------------------------------------------------------------------------------------------
+##  my commonly used code annotation breakers   ------------------------------------------------
+#
+
+####======================================================================================================
+##  Description of what the script is for..    ----------------------------------------------------
+####======================================================================================================
+#╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
+#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║¯\_(•_•)_/¯║╚╣╔╣╔╣║║║║╚╣
+#options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
+#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
+
 ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##   i.e. "02.WGCNA.MODULES.hipp.plier-gcbgPEER.bb.sex.age.pmi.cod.merge.height=0.25.genes14646.samples102powr5.bicor.R"
 ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
 #҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉҉
-
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁
-
 
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1233,31 +1188,31 @@ write.file<-function(mat,file,row.names=T,col.names=T,missing.value.char="NA",se
 
 DAVID_enrich_list<-function(backg,clusters_list,idType= "ENSEMBL_GENE_ID", query_type="Gene"){
   library(RDAVIDWebService)
-  david<-DAVIDWebService$new(email="aida.moreno-moral11@imperial.ac.uk")
+  david=DAVIDWebService$new(email="aida.moreno-moral11@imperial.ac.uk")
  cat("\t",length(backg),"background genes -------------------\n")
-  background <- addList(david, backg, idType= "ENSEMBL_GENE_ID", listName="backg", listType="Background")
+  background = addList(david, backg, idType= "ENSEMBL_GENE_ID", listName="backg", listType="Background")
   setCurrentBackgroundPosition(david, 1)
 
   DAVID_clusters=list()
   for (i in 1:length(clusters_list)){
 
     cat("\t",length(clusters_list[[i]]),"cluster genes\t\t",i," of ",length(clusters_list),"\n")
-    result<-addList(david, inputIds=clusters_list[[i]], idType=idType, listName=names(clusters_list)[i],listType=query_type)
+    result=addList(david, inputIds=clusters_list[[i]], idType=idType, listName=names(clusters_list)[i],listType=query_type)
   
     setAnnotationCategories(david, "GOTERM_BP_ALL")
-    GOBPchart <- getFunctionalAnnotationChart(david, threshold=0.1)
+    GOBPchart = getFunctionalAnnotationChart(david, threshold=0.1)
     GOBPchart=GOBPchart[GOBPchart$FDR < 5,]
     setAnnotationCategories(david, "GOTERM_MF_ALL")
-    GOMFchart <- getFunctionalAnnotationChart(david, threshold=0.1)
+    GOMFchart = getFunctionalAnnotationChart(david, threshold=0.1)
     GOMFchart=GOMFchart[GOMFchart$FDR < 5,]
     setAnnotationCategories(david, "GOTERM_CC_ALL")
-    GOCCchart <- getFunctionalAnnotationChart(david, threshold=0.1)
+    GOCCchart = getFunctionalAnnotationChart(david, threshold=0.1)
     GOCCchart=GOCCchart[GOCCchart$FDR < 5,]
     setAnnotationCategories(david, "KEGG_PATHWAY")
-    KEGGchart <- getFunctionalAnnotationChart(david, threshold=0.1)
+    KEGGchart = getFunctionalAnnotationChart(david, threshold=0.1)
     KEGGchart=KEGGchart[KEGGchart$FDR < 5,]
     setAnnotationCategories(david, "OMIM_DISEASE")
-    OMIMchart <- getFunctionalAnnotationChart(david, threshold=0.1)
+    OMIMchart = getFunctionalAnnotationChart(david, threshold=0.1)
     OMIMchart=OMIMchart[OMIMchart$FDR < 5,]
 #   DAVID_clusters[[i]]=list("GOBPchart"=GOBPchart,"GOMFchart"=GOMFchart,"GOCCchart"=GOCCchart,"KEGGchart"=KEGGchart,"OMIMchart"=OMIMchart)
     DAVID_clusters[[i]]=list(GOBPchart,GOMFchart,GOCCchart,KEGGchart,OMIMchart)
@@ -1335,7 +1290,7 @@ if(module_info!=""){
       #add here if dim > 0, save pdf, add KEGG and OMIM
       if(nrow(GO_table) > 10){number_plot=10}else{number_plot=nrow(GO_table)}
         pdf(file=paste(out_path,"/david_GO/",module_info,"GO_functional_enrich_plot_",name_module,module_info,".pdf",sep=""),height=4,width=6)
-          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
+          GOBPplot = ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
           geom_bar(colour="black",stat= "identity", width=.4, fill="darkred") + ggtitle(paste("GO ",name_module,module_info,sep="")) +
           theme_bw(base_size=12, base_family="") + coord_flip()
           print(GOBPplot)
@@ -1353,7 +1308,7 @@ if(module_info!=""){
       GO_table$Term=unlist(lapply(strsplit(GO_table$Term,":"),function(x){x=x[2]}))
       if(nrow(GO_table) > 10){number_plot=10}else{number_plot=nrow(GO_table)}
         pdf(file=paste(out_path,"/david_KEGG/",module_info,"KEGG_functional_enrich_plot_",name_module,".pdf",sep=""),height=4,width=6)
-          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
+          GOBPplot = ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
           geom_bar(colour="black",stat= "identity", width=.4, fill="darkgrey") + ggtitle(paste("KEGG ",name_module,module_info,sep="")) +
           theme_bw(base_size=12, base_family="") + coord_flip()
           print(GOBPplot)
@@ -1369,7 +1324,7 @@ if(module_info!=""){
       #add here if dim > 0, save pdf, add KEGG and OMIM
       if(nrow(GO_table) > 10){number_plot=10}else{number_plot=nrow(GO_table)}
         pdf(file=paste(out_path,"/david_OMIM/",module_info,"OMIM_functional_enrich_plot_",name_module,module_info,".pdf",sep=""),height=4,width=6)
-          GOBPplot <- ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
+          GOBPplot = ggplot(GO_table[1:number_plot,c("Term","minusLog10BH")], aes(x=reorder(Term, -minusLog10BH), y=minusLog10BH)) + ylab("-Log10 (FDR)") +xlab("") +
           geom_bar(colour="black",stat= "identity", width=.4, fill="darkgrey") + ggtitle(paste("OMIM ",name_module,module_info,sep="")) +
           theme_bw(base_size=12, base_family="") + coord_flip()
           print(GOBPplot)
@@ -1550,68 +1505,68 @@ EE_FET <- function(clusters_list){
   library(biomaRt)
   ensembl=useMart("ensembl")
   HUMensembl=useMart('ensembl',dataset='hsapiens_gene_ensembl')
-  eeGene <- EE$Gene
-  nseeGene <- nsEE$Gene
-  nafeGene <-NAFE[,'CCDS_r14']
-  nsnafeGene <-nsNAFE[,'CCDS_r14']
+  eeGene = EE$Gene
+  nseeGene = nsEE$Gene
+  nafeGene =NAFE[,'CCDS_r14']
+  nsnafeGene =nsNAFE[,'CCDS_r14']
   
-  eeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=eeGene, mart=HUMensembl)
-  nseeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nseeGene, mart=HUMensembl)
-  nafeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nafeGene, mart=HUMensembl)
-  nsnafeENS <-getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nsnafeGene, mart=HUMensembl)
+  eeENS =getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=eeGene, mart=HUMensembl)
+  nseeENS =getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nseeGene, mart=HUMensembl)
+  nafeENS =getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nafeGene, mart=HUMensembl)
+  nsnafeENS =getBM(attributes=c('ensembl_gene_id','external_gene_name'), filters='external_gene_name', values=nsnafeGene, mart=HUMensembl)
   
   ## keep in mind that there are sometimes several ENS gene id for only 1 external_gene_name
   #length(which(duplicated(eeENS$external_gene_name) == TRUE))
   #[1] 29
   
   ### create a matrix for results
-  EE_FET_clusters <- matrix(nrow=length(clusters_list), ncol=6)
-  row.names(EE_FET_clusters) <- names (clusters_list)
-  colnames(EE_FET_clusters) <- c("FET p.value all DNMs","OR all DNMs","[95% CI] all DNMs","FET Pvalue nsDNMs","OR nsDNMs","[95% CI] nsDNMs")  
+  EE_FET_clusters = matrix(nrow=length(clusters_list), ncol=6)
+  row.names(EE_FET_clusters) = names (clusters_list)
+  colnames(EE_FET_clusters) = c("FET p.value all DNMs","OR all DNMs","[95% CI] all DNMs","FET Pvalue nsDNMs","OR nsDNMs","[95% CI] nsDNMs")  
   
   ### function to fill the matrix of results
   for (i in 1:length(clusters_list)){
     ## function to calculate the number Mc of DNMs in CTRL involving a gene of the cluster i
-    y <- lapply(clusters_list[[i]],FUN=function(x) {nafeENS[which(nafeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mc <- sum(sapply(as.matrix(unique(y)),FUN=function(ym) {length(which(NAFE[,'CCDS_r14'] == ym ))}))
+    y = lapply(clusters_list[[i]],FUN=function(x) {nafeENS[which(nafeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mc = sum(sapply(as.matrix(unique(y)),FUN=function(ym) {length(which(NAFE[,'CCDS_r14'] == ym ))}))
     
     ## number NMc of remaining DNMs in CTRL involving a gene not in the cluster i
-    NMc <- nrow(NAFE)-Mc
+    NMc = nrow(NAFE)-Mc
     
     ##function to calculate the number Mee of DNMs in EE involving a gene of the cluster i
-    z <- lapply(clusters_list[[i]],FUN=function(x) {eeENS[which(eeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mee <- sum(sapply(as.matrix(unique(z)),FUN=function(zm) {length(which(EE$Gene == zm ))}))
+    z = lapply(clusters_list[[i]],FUN=function(x) {eeENS[which(eeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mee = sum(sapply(as.matrix(unique(z)),FUN=function(zm) {length(which(EE$Gene == zm ))}))
     
     ## number NMee of remaining DNMs in EE involving a gene not in the cluster i  
-    NMee <- nrow(EE)-Mee
+    NMee = nrow(EE)-Mee
     
     ## function to calculate the number Mnsc of nsDNMs in CTRL NAFE involving a gene of the cluster i
-    nsy <- lapply(clusters_list[[i]],FUN=function(x) {nsnafeENS[which(nsnafeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mnsc <- sum(sapply(as.matrix(unique(nsy)),FUN=function(ym) {length(which(nsNAFE[,'CCDS_r14'] == ym ))}))
+    nsy = lapply(clusters_list[[i]],FUN=function(x) {nsnafeENS[which(nsnafeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mnsc = sum(sapply(as.matrix(unique(nsy)),FUN=function(ym) {length(which(nsNAFE[,'CCDS_r14'] == ym ))}))
     
     ## number NMnsc of remaining nsDNMs in CTRL involving a gene not in the cluster i
-    NMnsc <- nrow(nsNAFE)-Mnsc
+    NMnsc = nrow(nsNAFE)-Mnsc
     
     ##function to calculate the number Mnsee of nsDNMs in EE involving a gene of the cluster i
-    nsz <- lapply(clusters_list[[i]],FUN=function(x) {nseeENS[which(nseeENS$ensembl_gene_id == x),'external_gene_name']})
-    Mnsee <- sum(sapply(as.matrix(unique(nsz)),FUN=function(zm) {length(which(nsEE$Gene == zm ))}))
+    nsz = lapply(clusters_list[[i]],FUN=function(x) {nseeENS[which(nseeENS$ensembl_gene_id == x),'external_gene_name']})
+    Mnsee = sum(sapply(as.matrix(unique(nsz)),FUN=function(zm) {length(which(nsEE$Gene == zm ))}))
     
     ## number NMnsee of remaining nsDNMs in EE involving a gene not in the cluster i  
-    NMnsee <- nrow(nsEE)-Mnsee
+    NMnsee = nrow(nsEE)-Mnsee
 
     # contingency matrice for Fisher Exact Test FET all DNMs and ns DNMs
-    matrALL <- matrix(c(Mee,Mc,NMee,NMc), nrow=2)
-    matrNS <- matrix(c(Mnsee,Mnsc,NMnsee,NMnsc), nrow=2)
+    matrALL = matrix(c(Mee,Mc,NMee,NMc), nrow=2)
+    matrNS = matrix(c(Mnsee,Mnsc,NMnsee,NMnsc), nrow=2)
     
     # FET
-    FisherMEE <- fisher.test(matrALL)
-    FisherMEEp <- FisherMEE$p.value
-    FisherMEEor <- FisherMEE$estimate
-    FisherMEEci <- paste(FisherMEE$conf.int[1],FisherMEE$conf.int[2], sep="-")
-    FisherMnsEE <- fisher.test(matrNS)
-    FisherMnsEEp <- FisherMnsEE$p.value
-    FisherMnsEEor <- FisherMnsEE$estimate
-    FisherMnsEEci <- paste(FisherMnsEE$conf.int[1],FisherMnsEE$conf.int[2], sep="-")
+    FisherMEE = fisher.test(matrALL)
+    FisherMEEp = FisherMEE$p.value
+    FisherMEEor = FisherMEE$estimate
+    FisherMEEci = paste(FisherMEE$conf.int[1],FisherMEE$conf.int[2], sep="-")
+    FisherMnsEE = fisher.test(matrNS)
+    FisherMnsEEp = FisherMnsEE$p.value
+    FisherMnsEEor = FisherMnsEE$estimate
+    FisherMnsEEci = paste(FisherMnsEE$conf.int[1],FisherMnsEE$conf.int[2], sep="-")
     
     EE_FET_clusters[i,]=c(FisherMEEp,FisherMEEor,FisherMEEci,FisherMnsEEp,FisherMnsEEor,FisherMnsEEci)
   }
@@ -1626,9 +1581,9 @@ cat("\n\tFUNCTION : gwas.enrich function inputs : in_gwas, module, bkgrnd, nperm
 cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of modules  |  bkgrnd - matrix first column contains the ENSG list\n\n")
   set.seed(seed)
   options(stringsAsFactors=FALSE)
-  gwas<-read.csv(file=in_gwas,sep="\t",header=FALSE)
-#  module<-read.table(file=in_module,sep=" ")
-#  bkgrnd<-read.table(file=bkgrnd,sep=" ")
+  gwas=read.csv(file=in_gwas,sep="\t",header=FALSE)
+#  module=read.table(file=in_module,sep=" ")
+#  bkgrnd=read.table(file=bkgrnd,sep=" ")
   
   enrich=as.data.frame(matrix(NA,nrow=length(names(module)),ncol=5))
     rownames(enrich)=names(module)
@@ -1636,68 +1591,68 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
 
 
     for(imod in names(module)){
-      idx<-match(bkgrnd[,1],gwas[,1])
-      idx<-sort(idx)
-      gwas_final<-gwas[idx,]
+      idx=match(bkgrnd[,1],gwas[,1])
+      idx=sort(idx)
+      gwas_final=gwas[idx,]
 
-      idy<-match(as.matrix(module[[imod]])[,1],gwas_final[,1])
-      idy<-sort(idy)
-      module_final<-gwas_final[idy,]
+      idy=match(as.matrix(module[[imod]])[,1],gwas_final[,1])
+      idy=sort(idy)
+      module_final=gwas_final[idy,]
       enrich[imod,"n.genes.module"]=length(module[[imod]])
       enrich[imod,"pc.overlap.genes"]=round(length(idy)/length(module[[imod]]),digits=3)
 
     ##   type 1=z-test (USE THIS ONE)
       if(type==1){
         cat("\t'z-test' enrichment   ||   ",imod,"\t: ",which(names(module)==imod),"of",length(names(module)),"\n")
-        module_p<-mean(-log10(module_final[,2]),na.rm=TRUE)  
+        module_p=mean(-log10(module_final[,2]),na.rm=TRUE)  
       }
     ##  type 2=fishers combined p-value
       else if(type==2){
         cat("  'fisher's combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
-        df<-2*length(module_final[,2])
-        temp1<-log(module_final[,2])
-        temp2<- -2*sum(temp1)
-        module_p<-pchisq(temp2,df,lower.tail=FALSE)
+        df=2*length(module_final[,2])
+        temp1=log(module_final[,2])
+        temp2= -2*sum(temp1)
+        module_p=pchisq(temp2,df,lower.tail=FALSE)
       }
     ##  type 3=stouffer combined p-value
       else if(type==3){
         cat("  'stouffer combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
-        temp1<-qnorm(1-module_final[,2])/sqrt(length(module_final[,2]))
-        module_p<-sum(temp1[!is.infinite(temp1)])
+        temp1=qnorm(1-module_final[,2])/sqrt(length(module_final[,2]))
+        module_p=sum(temp1[!is.infinite(temp1)])
       }
-      output_stat<-vector()
+      output_stat=vector()
       for(i in 1:nperm){
-        rand1<-sample(gwas_final[,2],length(module_final[,2]),replace=FALSE)
-        rand1<-rand1[!is.infinite(rand1)]
+        rand1=sample(gwas_final[,2],length(module_final[,2]),replace=FALSE)
+        rand1=rand1[!is.infinite(rand1)]
 
         if(type==1){
-          output_stat[i]<-mean(-log10(rand1),na.rm=TRUE)  
+          output_stat[i]=mean(-log10(rand1),na.rm=TRUE)  
         }else if(type==2){
-          df<-2*length(rand1)
-          temp1<-log(rand1)
-          temp2<- -2*sum(temp1)
-          output_stat[i]<-pchisq(temp2,df,lower.tail=FALSE)
+          df=2*length(rand1)
+          temp1=log(rand1)
+          temp2= -2*sum(temp1)
+          output_stat[i]=pchisq(temp2,df,lower.tail=FALSE)
         }else if(type==3){
-          tempt<-qnorm(1-rand1)/sqrt(length(rand1))
-          output_stat[i]<-sum(tempt[!is.infinite(tempt)])
+          tempt=qnorm(1-rand1)/sqrt(length(rand1))
+          output_stat[i]=sum(tempt[!is.infinite(tempt)])
         }
         
           cat(round(i/nperm,digits=2),"\r");flush.console()
       }
 
-    output_stat_sd<-sd(output_stat)
-    output_stat_mean<-mean(output_stat)
+    output_stat_sd=sd(output_stat)
+    output_stat_mean=mean(output_stat)
 
-     Z<-(module_p - output_stat_mean)/(output_stat_sd)
+     Z=(module_p - output_stat_mean)/(output_stat_sd)
     # print(Z)
-    # enrich<-pnorm(abs(Z),low=FALSE)
-    enrich[imod,"GWAS.P.value"]<-pnorm(module_p,output_stat_mean,output_stat_sd,lower.tail=FALSE)
+    # enrich=pnorm(abs(Z),low=FALSE)
+    enrich[imod,"GWAS.P.value"]=pnorm(module_p,output_stat_mean,output_stat_sd,lower.tail=FALSE)
 
     #enrich[imod,"n.genes.module"]=nrow(module_final)
 
-    # testingWTF1<-t.test(output_stat,mu=module_p)
-    # testingWTF2<-t.test(output_stat,mu=module_p,alternative="less")
-    # testingWTF3<-t.test(output_stat,mu=module_p,alternative="greater")
+    # testingWTF1=t.test(output_stat,mu=module_p)
+    # testingWTF2=t.test(output_stat,mu=module_p,alternative="less")
+    # testingWTF3=t.test(output_stat,mu=module_p,alternative="greater")
     }
 
   enrich$GWAS.FDR=p.adjust(enrich$GWAS.P.value,method="fdr")
@@ -1752,9 +1707,9 @@ gwas_module_enrich<-function(in_gwas,module,bkgrnd,nperm=100000,seed=0,type=1){
 cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of modules  |  bkgrnd - matrix first column contains the ENSG list")
   set.seed(seed)
   options(stringsAsFactors=FALSE)
-  gwas<-read.csv(file=in_gwas,sep=",",header=FALSE)
-#  module<-read.table(file=in_module,sep=" ")
-#  bkgrnd<-read.table(file=bkgrnd,sep=" ")
+  gwas=read.csv(file=in_gwas,sep=",",header=FALSE)
+#  module=read.table(file=in_module,sep=" ")
+#  bkgrnd=read.table(file=bkgrnd,sep=" ")
   
   enrich=as.data.frame(matrix(NA,nrow=length(names(module)),ncol=5))
     rownames(enrich)=names(module)
@@ -1762,68 +1717,68 @@ cat("\tINPUTS : in_gwas - link to a csv file, ENSG - pval  |  module - list of m
 
 
     for(imod in names(module)){
-      idx<-match(bkgrnd[,1],gwas[,1])
-      idx<-sort(idx)
-      gwas_final<-gwas[idx,]
+      idx=match(bkgrnd[,1],gwas[,1])
+      idx=sort(idx)
+      gwas_final=gwas[idx,]
 
-      idy<-match(as.matrix(module[[imod]])[,1],gwas_final[,1])
-      idy<-sort(idy)
-      module_final<-gwas_final[idy,]
+      idy=match(as.matrix(module[[imod]])[,1],gwas_final[,1])
+      idy=sort(idy)
+      module_final=gwas_final[idy,]
       enrich[imod,"n.genes.module"]=length(module[[imod]])
       enrich[imod,"pc.overlap.genes"]=round(length(idy)/length(module[[imod]]),digits=3)
 
     ##   type 1=z-test (USE THIS ONE)
       if(type==1){
         cat("  'z-test' enrichment     ||     ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
-        module_p<-mean(-log10(module_final[,2]),na.rm=TRUE)  
+        module_p=mean(-log10(module_final[,2]),na.rm=TRUE)  
       }
     ##  type 2=fishers combined p-value
       else if(type==2){
         cat("  'fisher's combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
-        df<-2*length(module_final[,2])
-        temp1<-log(module_final[,2])
-        temp2<- -2*sum(temp1)
-        module_p<-pchisq(temp2,df,lower.tail=FALSE)
+        df=2*length(module_final[,2])
+        temp1=log(module_final[,2])
+        temp2= -2*sum(temp1)
+        module_p=pchisq(temp2,df,lower.tail=FALSE)
       }
     ##  type 3=stouffer combined p-value
       else if(type==3){
         cat("  'stouffer combined p-value' enrichment   ||   ",imod," : ",which(names(module)==imod),"of",length(names(module)),"\n")
-        temp1<-qnorm(1-module_final[,2])/sqrt(length(module_final[,2]))
-        module_p<-sum(temp1[!is.infinite(temp1)])
+        temp1=qnorm(1-module_final[,2])/sqrt(length(module_final[,2]))
+        module_p=sum(temp1[!is.infinite(temp1)])
       }
-      output_stat<-vector()
+      output_stat=vector()
       for(i in 1:nperm){
-        rand1<-sample(gwas_final[,2],length(module_final[,2]),replace=FALSE)
-        rand1<-rand1[!is.infinite(rand1)]
+        rand1=sample(gwas_final[,2],length(module_final[,2]),replace=FALSE)
+        rand1=rand1[!is.infinite(rand1)]
 
         if(type==1){
-          output_stat[i]<-mean(-log10(rand1),na.rm=TRUE)  
+          output_stat[i]=mean(-log10(rand1),na.rm=TRUE)  
         }else if(type==2){
-          df<-2*length(rand1)
-          temp1<-log(rand1)
-          temp2<- -2*sum(temp1)
-          output_stat[i]<-pchisq(temp2,df,lower.tail=FALSE)
+          df=2*length(rand1)
+          temp1=log(rand1)
+          temp2= -2*sum(temp1)
+          output_stat[i]=pchisq(temp2,df,lower.tail=FALSE)
         }else if(type==3){
-          tempt<-qnorm(1-rand1)/sqrt(length(rand1))
-          output_stat[i]<-sum(tempt[!is.infinite(tempt)])
+          tempt=qnorm(1-rand1)/sqrt(length(rand1))
+          output_stat[i]=sum(tempt[!is.infinite(tempt)])
         }
         
           cat(round(i/nperm,digits=2),"\r");flush.console()
       }
 
-    output_stat_sd<-sd(output_stat)
-    output_stat_mean<-mean(output_stat)
+    output_stat_sd=sd(output_stat)
+    output_stat_mean=mean(output_stat)
 
-     Z<-(module_p - output_stat_mean)/(output_stat_sd)
+     Z=(module_p - output_stat_mean)/(output_stat_sd)
     # print(Z)
-    # enrich<-pnorm(abs(Z),low=FALSE)
-    enrich[imod,"GWAS.P.value"]<-pnorm(module_p,output_stat_mean,output_stat_sd,lower.tail=FALSE)
+    # enrich=pnorm(abs(Z),low=FALSE)
+    enrich[imod,"GWAS.P.value"]=pnorm(module_p,output_stat_mean,output_stat_sd,lower.tail=FALSE)
 
     #enrich[imod,"n.genes.module"]=nrow(module_final)
 
-    # testingWTF1<-t.test(output_stat,mu=module_p)
-    # testingWTF2<-t.test(output_stat,mu=module_p,alternative="less")
-    # testingWTF3<-t.test(output_stat,mu=module_p,alternative="greater")
+    # testingWTF1=t.test(output_stat,mu=module_p)
+    # testingWTF2=t.test(output_stat,mu=module_p,alternative="less")
+    # testingWTF3=t.test(output_stat,mu=module_p,alternative="greater")
     }
 
   enrich$GWAS.FDR=p.adjust(enrich$GWAS.P.value,method="fdr")
@@ -2312,11 +2267,11 @@ for(ireg in 1:length(names(list_expr))){
   module_ensg_list=list()
   module_ensg_list[["M0_grey"]]=rownames(list_expr[[names(list_expr)[ireg]]])[mergedColor=="grey"]
   write.table(rownames(list_expr[[names(list_expr)[ireg]]])[mergedColor=="grey"],file=paste(outDir,"/modules/M0_",datDescr,"_power",softPower,".txt",sep=""),quote=F,row.names=F,col.names=F)
-    n<-1
+    n=1
   for(imod in unique(mergedColor[-which(mergedColor =="grey")])) {
     module_ensg_list[[paste("M",n,"_",imod,sep="")]]= rownames(list_expr[[names(list_expr)[ireg]]])[mergedColor==imod]
     write.table(rownames(list_expr[[names(list_expr)[ireg]]])[mergedColor==imod],file=paste(outDir,"/modules/M",n,"_",imod,"_",datDescr,"_power",softPower,".txt",sep=""),quote=F,row.names=F,col.names=F)
-    n<-n+1
+    n=n+1
   }
   module_ensg_list[["bkgrnd"]]=rownames(list_expr[[names(list_expr)[ireg]]])
   write.table(module_ensg_list[["bkgrnd"]],file=paste(outDir,"/modules/bkgrnd_",datDescr,"_power",softPower,".txt",sep=""),quote=F,row.names=F,col.names=F)    
@@ -2494,13 +2449,13 @@ peer.correct<-function(expDat,covDat=matrix(),sanity=F,cov_match=T,verbose=T){
 
     if(nrow(covDat)>1 & ncol(covDat)>=1){
        readme="\n\tResults obtained via peerCovCorrect function using PEER PMC3398141 bayes PMC4158865
-       \n\t\t1. resid - the residual dataset (NxG matrix)  ## i.e. corrected data for all factors
-       \n\t\t2. factr - covaraites the data was corrected for - can be used as 'phenotypes'  ||  the posterior mean of the inferred confounders (NxK matrix)
-       \n\t\t3. weights - weights (GxK matrix) of the inferred confounders (NxK matrix)
-       \n\t\t4. precision - precision (inverse variance) of the weights (Kx1 matrix)  ||  plot(precision)
-       \n\t\t5. model -  PEER model object can be used to perform diagnostic plot:  PEER_plotModel(model)
-       \n\t\t6. expr - original expression matrix
-       \n\t\t7. covar - original covariate matrix
+       \t\t1. resid - the residual dataset (NxG matrix)  ## i.e. corrected data for all factors
+       \t\t2. factr - covaraites the data was corrected for - can be used as 'phenotypes'  ||  the posterior mean of the inferred confounders (NxK matrix)
+       \t\t3. weights - weights (GxK matrix) of the inferred confounders (NxK matrix)
+       \t\t4. precision - precision (inverse variance) of the weights (Kx1 matrix)  ||  plot(precision)
+       \t\t5. model -  PEER model object can be used to perform diagnostic plot:  PEER_plotModel(model)
+       \t\t6. expr - original expression matrix
+       \t\t7. covar - original covariate matrix
        \n"
 
       return(list("expr"=expDat,"covar"=covDat,"resid"=resid,"factr"=factr,weights=weights,precision=precision,model=model,"readme"=readme))
@@ -2508,12 +2463,12 @@ peer.correct<-function(expDat,covDat=matrix(),sanity=F,cov_match=T,verbose=T){
 
     if(nrow(covDat)==1 & ncol(covDat)==1){
        readme="\n\tResults obtained via peerCovCorrect function using PEER PMC3398141 bayes PMC4158865
-       \n\t\t1. resid - the residual dataset (NxG matrix)  ## i.e. corrected data for all factors
-       \n\t\t2. factr - covaraites the data was corrected for - can be used as 'phenotypes'  ||  the posterior mean of the inferred confounders (NxK matrix)
-       \n\t\t3. weights - weights (GxK matrix) of the inferred confounders (NxK matrix)
-       \n\t\t4. precision - precision (inverse variance) of the weights (Kx1 matrix)  ||  plot(precision)
-       \n\t\t5. model -  PEER model object can be used to perform diagnostic plot:  PEER_plotModel(model)
-       \n\t\t6. expr - original expression matrix
+       \t\t1. resid - the residual dataset (NxG matrix)  ## i.e. corrected data for all factors
+       \t\t2. factr - covaraites the data was corrected for - can be used as 'phenotypes'  ||  the posterior mean of the inferred confounders (NxK matrix)
+       \t\t3. weights - weights (GxK matrix) of the inferred confounders (NxK matrix)
+       \t\t4. precision - precision (inverse variance) of the weights (Kx1 matrix)  ||  plot(precision)
+       \t\t5. model -  PEER model object can be used to perform diagnostic plot:  PEER_plotModel(model)
+       \t\t6. expr - original expression matrix
        \n"
 
       return(list("expr"=expDat,"resid"=resid,"factr"=factr,weights=weights,precision=precision,model=model,"readme"=readme))
@@ -2665,10 +2620,10 @@ peerCovCorrect<-function(listExpr,covDat=matrix(),sanity=F){
   }
 
  readme="\n\tResults obtained via peerCovCorrect function using PEER PMC3398141 bayes PMC4158865
- \n\t\t1. peercov - peer corrected expression residuals
- \n\t\t2. peerfac - covaraites the data was corrected for - can be used as 'phenotypes'\n"
-# \n\t\t3. expr - original expression matrix
-# \n\t\t4. covar - original covariate matrix\n")
+ \t\t1. peercov - peer corrected expression residuals
+ \t\t2. peerfac - covaraites the data was corrected for - can be used as 'phenotypes'\n"
+# \t\t3. expr - original expression matrix
+# \t\t4. covar - original covariate matrix\n")
 
 return(list("peercov"=peercov,"peerfac"=peerfac,"readme"=readme))
 #return(list("peercov"=peercov,"peerfac"=peerfac,"expr"=listExpr,"covar"=covDat,"readme"=readme))
@@ -2862,6 +2817,24 @@ print(as.matrix(unmapped))
 
 
 
+bgoverlap<-function(bg_list,union=F,intersect=T){
+# NOTE: bg_list - expect list of vectors for list of dataframes use bgcommon
+	if(union&intersect){
+		stop('union & intersect are mutually exclusive, set union=T,intersect=F or vice versa')
+	}
+	bkg=bg_list[[1]]
+	for(idat in 2:length(bg_list)){
+		if(!is.vector(bg_list[[idat]])){stop(paste('\t',names(bg_list)[idat],'is not a vector'))}
+		if(union){bkg=union(bkg,bg_list[[idat]])}
+		if(intersect){bkg=intersect(bkg,bg_list[[idat]])}
+	}
+	cat('\t',length(bkg),'entries common to',length(bg_list),'lists\n')
+	return(bkg)
+}
+
+
+
+
 bgcommon<-function(list_dat,transform=F,dat_mat='',union=F,help=F,verbose=T){
 if(help){
  cat("\n\tUSE\t: determine common background (union or intersect) across all entries in expression list\n")
@@ -2885,7 +2858,7 @@ if(help){
   if(!transform){return(invisible(bgcommon))}
 
   if(transform & !union){
-  	if(verbose){cat('\ttransform all datasets to "intersect" bakcground\n')}
+  	if(verbose){cat('\ttransform all datasets to "intersect" background\n')}
    listt=list()
     for(ilis in 1:length(list_dat)){
      listt[[names(list_dat)[ilis]]]=list_dat[[names(list_dat)[ilis]]][bgcommon,,drop=F]
@@ -2895,7 +2868,7 @@ if(help){
   }
 
   if(transform & union){
-  	if(verbose){cat('\ttransform all datasets to "union" bakcground\n')}
+  	if(verbose){cat('\ttransform all datasets to "union" background\n')}
    listt=list()
     for(ilis in 1:length(list_dat)){
      listt[[names(list_dat)[ilis]]]=dat_mat[bgcommon,colnames(list_dat[[names(list_dat)[ilis]]]),drop=F]
@@ -3585,8 +3558,8 @@ Legend<-function(legend,x='topright',...){
 Plot<-function(xdat,ydat,line45deg=F,...){
 	ylim.dat=c(floor(min(ydat)),ceiling(max(ydat)))
 	xlim.dat=c(floor(min(xdat)),ceiling(max(xdat)))
-#	plot(xdat,ydat,pch=16,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
-	plot(xdat,ydat,pch=18,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
+	plot(xdat,ydat,pch=16,col=rgb(0, 0, 0,alpha=0.2),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
+#	plot(xdat,ydat,pch=18,col=rgb(0, 0, 0,alpha=0.3),xlim=xlim.dat,ylim=ylim.dat,frame.plot=F,...)
 
 	if(line45deg){abline(coef=c(0,1),lty=2,col='grey60')}
 
@@ -3708,7 +3681,7 @@ clust.analyse<-function(cov_mat,do_plots=c(T,T,T,T),sanity=F,box_sig=0.95,clust.
 
 #  library(pvclust)
   # Ward Hierarchical Clustering with Bootstrapped p values
-#    fit <- pvclust((cov_mat), method.hclust="ward.D2", method.dist="euclidean")
+#    fit=pvclust((cov_mat), method.hclust="ward.D2", method.dist="euclidean")
 #    plot(fit) # dendogram with p values
     # add rectangles around groups highly supported by the data
 #    pvrect(fit, alpha=.95) 
@@ -3768,10 +3741,18 @@ rmerge.list<-function(dat_lis,all=F){
 }
 
 
-univarlm<-function(data_mat,colname_y_var){
+
+
+
+
+
+
+univarlm<-function(data_mat,colname_y_var,verbose=F){
+if(verbose){
  cat("\tUSE:  univariate lm for",ncol(data_mat),"variables, y =",colname_y_var,"\n")
  cat("\t\tNOTE: missing values can be used, only relevant variable n will be affected\n")
- cat("\t\tNOTE: for factor variables, min P is used\n\n")
+ cat("\t\tNOTE: for factor variables, min P is used\n\n")	
+}
   vdr=make.numeric(data_mat[,which(colnames(data_mat)==colname_y_var),drop=F])
   data_mat=(data_mat[,-which(colnames(data_mat)==colname_y_var),drop=F])
 
@@ -3782,7 +3763,7 @@ univarlm<-function(data_mat,colname_y_var){
 
 
   for(icov in 1:ncol(data_mat)){
-    tester=row.merge(vdr,data_mat[,colnames(data_mat)[icov],drop=F])
+    tester=rmerge(vdr,data_mat[,colnames(data_mat)[icov],drop=F])
   # tester=merge(vdr,data_mat[,colnames(data_mat)[icov],drop=F],by="row.names")
   # tester=tester[,-which(colnames(tester)=="Row.names")]
     tester=tester[complete.cases(tester),]
@@ -3998,6 +3979,44 @@ sva.fac<-function(expr_mat,non_adjust="",adjust="",nsv=""){
     svobj=sva(expr_mat,mod,mod0,n.sv=nsv)
 
 }
+
+
+
+
+
+lm.mat<-function(data_mat,verbose=F){
+##  USE:	~ lm for matrix of variables (pairwise) ~ cor.test()
+##  INPUT: matrix/data.frame of variables rows=samples, columns=variables (numeric or factor)
+##  missing values can be used, only relevant variable n will be affected
+##  for factor variables (in data_mat), min P of lm() is used\n\n")#
+
+	lmpstat=matrix(NA,ncol=ncol(data_mat),nrow=ncol(data_mat))
+		colnames(lmpstat)=colnames(data_mat)
+		rownames(lmpstat)=colnames(data_mat)
+	rsqstat=lmpstat
+	nsample=lmpstat
+
+	k=1
+	for(yvar in colnames(data_mat)){
+		for(xvar in colnames(data_mat)){
+			if(yvar!=xvar){
+				tester=data_mat[,c(yvar,xvar)]
+				tester=tester[complete.cases(tester),]
+				nsample[xvar,yvar]=nrow(tester)
+				holder=summary(lm(as.matrix(tester[,yvar,drop=F])~.,data=tester[,xvar,drop=F]))
+				 #### using min for factors - 1 p-value per factor ==> only interested in the lowest one
+				lmpstat[xvar,yvar]=min(holder$coefficients[,"Pr(>|t|)"][-1])  # -1 removes the intercept
+				#unistat[icov,"lmRsq"]=summary(lm(tester[,1]~tester[,2]))$r.sq*sign(min(summary(lm(tester[,1]~tester[,2]))$coefficients[,"Estimate"][-1]))
+				rsqstat[xvar,yvar]=holder$r.sq
+
+			}
+		}
+		k=lcount(k,length(colnames(data_mat)))
+	}
+	return(invisible(list(lmp=lmpstat,rsq=rsqstat,nsamp=nsample)))
+}
+
+
 
 
 
@@ -4948,13 +4967,13 @@ library('parallel')
 
   Load(paste(inpath,"/PathoGeneENS.Rdata",sep="")) # PathoGene & Patho_ENSgeneID
   Load(paste(inpath,"/ctr_GeneENS.Rdata",sep="")) # ctrGene & ctr_ENSgeneID
-  map <- read.table(file=paste(inpath,'/functional_mut_rate.bias_corrected.local.canonical_tx_only.bed.txt',sep=""),
+  map = read.table(file=paste(inpath,'/functional_mut_rate.bias_corrected.local.canonical_tx_only.bed.txt',sep=""),
                    header=TRUE, sep='\t', blank.lines.skip=TRUE)
 
   ### create a matrix for results
-  FBET <- matrix(nrow=length(clusters_list), ncol=23)
-  row.names(FBET) <- names (clusters_list)
-  colnames(FBET) <- c("module size","patho","FET p.value","FET FDR","OR","[95% OR CI] inf","OR [95% OR CI] sup",
+  FBET = matrix(nrow=length(clusters_list), ncol=23)
+  row.names(FBET) = names (clusters_list)
+  colnames(FBET) = c("module size","patho","FET p.value","FET FDR","OR","[95% OR CI] inf","OR [95% OR CI] sup",
                         "module DNMs in patients","module DNMs in controls",
                         "non module DNMs in patients","non module DNMs in controls",
                         "gene names of modules DNMs in patients",
@@ -4966,113 +4985,113 @@ library('parallel')
                         "nb ENSgeneID of M not in map"
                       )
   
-  npDNM<- list()
+  npDNM= list()
   for (pat in 1:length(PathoGene)){
-    pathoENS<-Patho_ENSgeneID[[pat]]
-    DNM_Gene<-PathoGene[[pat]]
-    ctrlENS<-ctr_ENSgeneID[['lgd']]
-    ctrl_Gene <- ctrGene[['lgd']]
+    pathoENS=Patho_ENSgeneID[[pat]]
+    DNM_Gene=PathoGene[[pat]]
+    ctrlENS=ctr_ENSgeneID[['lgd']]
+    ctrl_Gene = ctrGene[['lgd']]
     
     ### function to fill the matrix of results
     #for (i in 1:length(clusters_list)){
     FUNC=function(i){
-      Ms<-length(clusters_list[[i]])
+      Ms=length(clusters_list[[i]])
       #### FET
       cat('\t',names(clusters_list)[i],'   \tpatho: ',names(PathoGene)[pat],'\t',pat,'\tof ',length(PathoGene),'\n',sep='')
       ## function to calculate the number Mc of DNMs in CTRL involving a gene of the cluster i
-      y <- lapply(clusters_list[[i]],FUN=function(x) {ctrlENS[which(ctrlENS$ensembl_gene_id == x),'external_gene_name']})
-      Mc <- sum(sapply(as.matrix(unique(y)), FUN=function(ym) {length(which(ctrl_Gene == ym ))}))
-      McID <- paste(unlist(y),collapse=", ") 
+      y = lapply(clusters_list[[i]],FUN=function(x) {ctrlENS[which(ctrlENS$ensembl_gene_id == x),'external_gene_name']})
+      Mc = sum(sapply(as.matrix(unique(y)), FUN=function(ym) {length(which(ctrl_Gene == ym ))}))
+      McID = paste(unlist(y),collapse=", ") 
       
       ## number NMc of remaining DNMs in CTRL involving a gene not in the cluster i
-      NMc <- length(ctrl_Gene)-Mc
+      NMc = length(ctrl_Gene)-Mc
       
       ##function to calculate the number Mee of DNMs in patho involving a gene of the cluster i
-      z <- lapply(clusters_list[[i]],FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
-      Mp <- sum(sapply(as.matrix(unique(z)), FUN=function(zm) {length(which(DNM_Gene == zm ))}))
-      MpID <- paste(unlist(z),collapse=", ") 
+      z = lapply(clusters_list[[i]],FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
+      Mp = sum(sapply(as.matrix(unique(z)), FUN=function(zm) {length(which(DNM_Gene == zm ))}))
+      MpID = paste(unlist(z),collapse=", ") 
       
       ## number NMee of remaining DNMs in EE involving a gene not in the cluster i  
-      NMp <- length(DNM_Gene)-Mp
+      NMp = length(DNM_Gene)-Mp
       
       # contingency matrice for Fisher Exact Test FET all DNMs and ns DNMs
-      matr <- matrix(c(Mp,Mc,NMp,NMc), nrow=2)
+      matr = matrix(c(Mp,Mc,NMp,NMc), nrow=2)
       
       # FET
-      #    FisherM <- fisher.test(matr,alternative="greater")
-      FisherM <- fisher.test(matr)
-      Fisher.p <- FisherM$p.value
-      Fisher.or <- FisherM$estimate
-      Fisher.cinf <- FisherM$conf.int[1]
-      Fisher.cis <- FisherM$conf.int[2]
+      #    FisherM = fisher.test(matr,alternative="greater")
+      FisherM = fisher.test(matr)
+      Fisher.p = FisherM$p.value
+      Fisher.or = FisherM$estimate
+      Fisher.cinf = FisherM$conf.int[1]
+      Fisher.cis = FisherM$conf.int[2]
       
       #### BET
             
       # theorical Ps=Theorical probablity of sucess based on mutation rate map
-      CL.map.ens <- intersect(clusters_list[[i]],map$Gene)
-      #NnID<-paste(setdiff(clusters_list[[i]],map$Gene), collapse=", ")
-      nID<-length(setdiff(clusters_list[[i]],map$Gene))
+      CL.map.ens = intersect(clusters_list[[i]],map$Gene)
+      #NnID=paste(setdiff(clusters_list[[i]],map$Gene), collapse=", ")
+      nID=length(setdiff(clusters_list[[i]],map$Gene))
       # if lgd (nonsens + missense)
       ThPs=sum(sapply(CL.map.ens,FUN=function(x){sum(map[which(map$Gene == x),c("Missense_rate","Nonsense_rate")])}))
 
       # nb of trials=nb of DNM falling in all map genes divided by the mutation rate on all map genes
-      patho.map.ens <- intersect(pathoENS$ensembl_gene_id,map$Gene)
-      y <- lapply(patho.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
-      n <- round(sum(sapply(unique(y), FUN=function(x) {length(which(DNM_Gene == x ))}))/sum(map[,c("Missense_rate","Nonsense_rate")]))
+      patho.map.ens = intersect(pathoENS$ensembl_gene_id,map$Gene)
+      y = lapply(patho.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
+      n = round(sum(sapply(unique(y), FUN=function(x) {length(which(DNM_Gene == x ))}))/sum(map[,c("Missense_rate","Nonsense_rate")]))
 
       # nb of sucess=nb of DNM falling in map of the module
-      z <- lapply(CL.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
-      xz <- sum(sapply(z, FUN=function(x) {length(which(DNM_Gene == x ))}))
+      z = lapply(CL.map.ens,FUN=function(x) {pathoENS[which(pathoENS$ensembl_gene_id == x),'external_gene_name']})
+      xz = sum(sapply(z, FUN=function(x) {length(which(DNM_Gene == x ))}))
 
-      BET<- binom.test(xz,n,ThPs)
-      Binomial.p<-BET$p.value
-      EsPs<-BET$estimate
+      BET= binom.test(xz,n,ThPs)
+      Binomial.p=BET$p.value
+      EsPs=BET$estimate
       RobsE=xz /(n*ThPs)
-      CI.inf<-BET$conf.int [1]
-      CI.sup<-BET$conf.int [2]
+      CI.inf=BET$conf.int [1]
+      CI.sup=BET$conf.int [2]
 
       #FBET[i,]=c(Ms,names(PathoGene[pat]),Fisher.p,NA,Fisher.or,Fisher.cinf,Fisher.cis,Mp,Mc,NMp,NMc,MpID,McID,Binomial.p,NA,ThPs,EsPs,RobsE,CI.inf,CI.sup,xz,n,NnID,nID)
       FBET[i,]=c(Ms,names(PathoGene[pat]),Fisher.p,NA,Fisher.or,Fisher.cinf,Fisher.cis,Mp,Mc,NMp,NMc,MpID,McID,Binomial.p,NA,ThPs,EsPs,RobsE,CI.inf,CI.sup,xz,n,nID)
     }
 
-    fbet <- mclapply(1:length(clusters_list),FUNC,mc.cores=detectCores())
+    fbet = mclapply(1:length(clusters_list),FUNC,mc.cores=detectCores())
     #The fbet output object of the mclapply function is a list of 44 vectors FBET[i,] in the good order
 
     for (i in 1:length(clusters_list)){
-      FBET[i,]<-fbet[[i]]
+      FBET[i,]=fbet[[i]]
     }
 
-    FBET[,"FET FDR"]<- p.adjust(FBET[,"FET p.value"],method="fdr")
-    FBET[,"BET FDR"]<- p.adjust(FBET[,"BET p.value"],method="fdr")
+    FBET[,"FET FDR"]= p.adjust(FBET[,"FET p.value"],method="fdr")
+    FBET[,"BET FDR"]= p.adjust(FBET[,"BET p.value"],method="fdr")
     write.table(FBET, sep='\t', file=paste(outpath,"/",names(PathoGene)[pat],"_FBET_",runname,".txt",sep=""), row.names=TRUE, quote=FALSE, col.names=NA)
-    npDNM[[pat]]<-FBET
+    npDNM[[pat]]=FBET
   }  
-  names(npDNM) <- names(PathoGene)
+  names(npDNM) = names(PathoGene)
 
   if(selection==T){
-    select<- intersect(which(as.numeric(npDNM[[1]][,"FET FDR"]) < 0.2),which(as.numeric(npDNM[[1]][,"BET FDR"]) < 0.2))
+    select= intersect(which(as.numeric(npDNM[[1]][,"FET FDR"]) < 0.2),which(as.numeric(npDNM[[1]][,"BET FDR"]) < 0.2))
      cat("\tnumber of selected modules for\t\t", names(npDNM)[1]," :",length(select),'\n')
     if (length(select)==1){
-        SignifT<- npDNM[[1]][c(select,NA),]
-        SignifT<- SignifT[-which(is.na(rownames(SignifT)) ==T),]
+        SignifT= npDNM[[1]][c(select,NA),]
+        SignifT= SignifT[-which(is.na(rownames(SignifT)) ==T),]
       }else{
-        SignifT<- npDNM[[1]][select,]
+        SignifT= npDNM[[1]][select,]
     }
     for (pat in 2:length(npDNM)){
-      select<- intersect(which(as.numeric(npDNM[[pat]][,"FET FDR"]) < 0.2),which(as.numeric(npDNM[[pat]][,"BET FDR"]) < 0.2))
+      select= intersect(which(as.numeric(npDNM[[pat]][,"FET FDR"]) < 0.2),which(as.numeric(npDNM[[pat]][,"BET FDR"]) < 0.2))
        cat("\tnumber of selected modules for\t\t", names(npDNM)[pat]," :",length(select),'\n')
       if (length(select)==1){
-          SignifT<- rbind(SignifT,npDNM[[pat]][c(select,NA),])
-          SignifT<- SignifT[-which(is.na(rownames(SignifT)) ==T),]
+          SignifT= rbind(SignifT,npDNM[[pat]][c(select,NA),])
+          SignifT= SignifT[-which(is.na(rownames(SignifT)) ==T),]
         }else{
-          SignifT<- rbind(SignifT,npDNM[[pat]][select,])
+          SignifT= rbind(SignifT,npDNM[[pat]][select,])
       }          
     }
     write.table(SignifT, sep='\t', file =paste(outpath,'/significantFBET_',runname,'.txt',sep=''), row.names=TRUE, quote=FALSE, col.names=NA) 
   }else{
-    allT<- npDNM[[1]]
+    allT= npDNM[[1]]
     for (pat in 2:length(npDNM)){
-      allT<- rbind(allT,npDNM[[pat]])
+      allT= rbind(allT,npDNM[[pat]])
     }
     write.table(allT, sep='\t', file =paste(outpath,'/ALL_FBET_',runname,'.txt',sep=''), row.names=TRUE, quote=FALSE, col.names=NA) 
   }
@@ -6650,28 +6669,28 @@ wgcna_diffcoex_L <- function (list_expr, pow=6, minModuleSize=40, mergeHeight=0.
   print("Can deal with only one softpower (pow) at a time ")
   set.seed(0)
   
-  bicorL <- list() # correlation of gene expression
+  bicorL=list() # correlation of gene expression
   for (ireg in 1:length(list_expr)) {
     print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■")
     print(paste(names(list_expr)[ireg], ireg, "of", length(names(list_expr))))
     t0=Sys.time()
     
-    COND <- list_expr[[ireg]]
-    # CONDav <- scale(COND, scale=F)
+    COND=list_expr[[ireg]]
+    # CONDav=scale(COND, scale=F)
     CONDav=COND
-    bicorL[[ireg]] <- bicor(t(as.matrix(CONDav))) # bicor correlation of conditions
+    bicorL[[ireg]]=bicor(t(as.matrix(CONDav))) # bicor correlation of conditions
     
   }
   
-  names(bicorL) <- names(list_expr)
+  names(bicorL)=names(list_expr)
   collectGarbage()
   t0=Sys.time()
   
   softPower=pow
   print(softPower)
   
-# dissTOM <- applydiffcoex(softPower, bicorL, signtype=signType) # * 
-  dissTOM <- diffcoex_paper(softPower, bicorL, signtype=signType) # * 
+# dissTOM=applydiffcoex(softPower, bicorL, signtype=signType) # * 
+  dissTOM=diffcoex_paper(softPower, bicorL, signtype=signType) # * 
   print(Sys.time() - t0)
   collectGarbage()
   
@@ -6685,32 +6704,32 @@ wgcna_diffcoex_L <- function (list_expr, pow=6, minModuleSize=40, mergeHeight=0.
   dynamicColors=labels2colors(dynamicMods)
   collectGarbage()
   
-  Datall <- t(as.data.frame(list_expr)) # merge the conditions
+  Datall=t(as.data.frame(list_expr)) # merge the conditions
   collectGarbage()
   
-  mergedColor <- mergeCloseModules(Datall, dynamicColors, cutHeight=mergeHeight)$color
+  mergedColor=mergeCloseModules(Datall, dynamicColors, cutHeight=mergeHeight)$color
   
-  print(paste("mergedColor =", length(unique(mergedColor)), 
+  print(paste("mergedColor=", length(unique(mergedColor)), 
               unique(mergedColor)))
   print(Sys.time() - t0)
   collectGarbage()
   mstat=as.data.frame(table(mergedColor)) # using dynamicColors not Merged
   mstat=mstat[order(mstat[, 2], decreasing=T), ]
-  msta0=mstat[(mstat[, 1] == "grey"), ]
+  msta0=mstat[(mstat[, 1]=="grey"), ]
   msta0$module="M0"
-  mstat=mstat[!(mstat[, 1] == "grey"), ]
+  mstat=mstat[!(mstat[, 1]=="grey"), ]
   mstat$module=paste0("M", 1:nrow(mstat))
   mstat=rbind(mstat, msta0)
   colnames(mstat)=c("color", "ngenes", "module")
   mstat$color=as.character(mstat$color)
   
-  if (datDescr != "") {
+  if (datDescr !="") {
     mstat$module=paste(mstat$module, dat_descr, sep="_")
   }
   
   module_list=list()
   for (imod in 1:nrow(mstat)) {
-    module_list[[mstat$module[imod]]]=rownames(list_expr[[1]])[mergedColor == 
+    module_list[[mstat$module[imod]]]=rownames(list_expr[[1]])[mergedColor==
                                                                    mstat$color[imod]]
   }
   
@@ -6740,8 +6759,8 @@ diffcoex_paper <- function(beta2,bicorL,signtype=signType){
   AdjMatC2=sign(bicorL[[2]])*(bicorL[[2]])^2
   message("Condition - Control")
   
-  diag(AdjMatC1)<-0
-  diag(AdjMatC2)<-0
+  diag(AdjMatC1)=0
+  diag(AdjMatC2)=0
   beta1=beta2
   
   dissTOMC1C2=TOMdist((abs(AdjMatC1-AdjMatC2)/2)^(beta1/2))
@@ -6757,27 +6776,27 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
   print("Can deal with only one softpower (pow) at a time ")
 
   set.seed(0)       # reproducibility 
-  bicorL <- list()
+  bicorL = list()
   
   
   for(ireg in 1:length(list_expr)){
     print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■")
     print(paste(names(list_expr)[ireg],ireg,"of",length(names(list_expr))))
       t0=Sys.time()
-      COND<- list_expr[[ireg]]
+      COND= list_expr[[ireg]]
       #add a line to substract mean of gene expression row by row in each condition
-#      CONDav <- scale(COND,scale=F)		##  the data is likely scaled already (ie if removed a covariate etc)
-      bicorL[[ireg]]<- bicor(t(as.matrix(COND))) # iteration to adapt to the seq chosen
+#      CONDav = scale(COND,scale=F)		##  the data is likely scaled already (ie if removed a covariate etc)
+      bicorL[[ireg]]= bicor(t(as.matrix(COND))) # iteration to adapt to the seq chosen
   }
   
-  names(bicorL)<-names(list_expr)
+  names(bicorL)=names(list_expr)
   collectGarbage()
 
     t0=Sys.time()
     softPower=pow
     print(softPower)
 
-    dissTOM<-applydiffcoex(softPower,bicorL,signtype=signType)
+    dissTOM=applydiffcoex(softPower,bicorL,signtype=signType)
     print(Sys.time()-t0) #41.17 min
     collectGarbage()
   geneTree=hclust(as.dist(dissTOM), method="average")
@@ -6792,10 +6811,10 @@ wgcna.diffcoex<-function(list_expr,pow=5,minModuleSize=40,mergeHeight=0.15,datDe
   #print(Sys.time()-t0)
   collectGarbage()
 
-  Datall <- t(as.data.frame(list_expr))
+  Datall = t(as.data.frame(list_expr))
 
   collectGarbage()
-  mergedColor<-mergeCloseModules(Datall,dynamicColors,cutHeight=mergeHeight)$color
+  mergedColor=mergeCloseModules(Datall,dynamicColors,cutHeight=mergeHeight)$color
   print(paste("mergedColor =",length(unique(mergedColor)),unique(mergedColor)))
   print(Sys.time()-t0)
   collectGarbage()
@@ -7697,7 +7716,7 @@ cp<-function(file_names,target_path,show=T){
 
 read.zip <- function(file,verbose=T,...){
 ## SOURCE :   http://stackoverflow.com/questions/8986818/automate-zip-file-reading-in-r
-  zipFileInfo <- unzip(file, list=TRUE)
+  zipFileInfo = unzip(file, list=TRUE)
   if(nrow(zipFileInfo) > 1){
   	stop(paste0("more than one data file inside ",file))
   }
