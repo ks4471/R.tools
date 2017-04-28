@@ -8,33 +8,27 @@
 "
 
 
-##
-#gsub("[^A-Za-z0-9 _.,!]", "", humpty$title) ## gsub all but alphanumeric AND punctuation  ## http://stackoverflow.com/questions/7233447/a-regex-to-match-strings-with-alphanumeric-spaces-and-punctuation
-#gsub("[^[:alnum:] ]", "", str)	#http://stackoverflow.com/questions/8959243/r-remove-non-alphanumeric-symbols-from-a-string
-
-##  unicode arrow symbols http://xahlee.info/comp/unicode_arrows.html
-##  ← → ↑ ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↚ ↛ ↮ ⟵ ⟶ ⟷ ⇐ ⇒ ⇑ ⇓ ⇔ ⇕ ⇖ ⇗ ⇘ ⇙ ⇍ ⇏ ⇎ ⟸ ⟹ ⟺ ⇦ ⇨ ⇧ ⇩ ⬄ ⇳ ⬀ ⬁ ⬂ ⬃ ⬅ ( ⮕ ➡ ) ⬆ ⬇ ⬈ ⬉ ⬊ ⬋ ⬌ ⬍
-
+####======================================================================================================
+##  Description of what the script is for..    ----------------------------------------------------
+####======================================================================================================
+#╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
+#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║¯\_(•_•)_/¯║╚╣╔╣╔╣║║║║╚╣
+#options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
+#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
 #		:
 #	  : 
 #		:
 #	/\(••)/\
 #	\	   /
-
-#install.packages('devtools')
-
-#library(devtools)
-
-
 #library(colorout)
 #devtools::install_github("ks471/R.helper")
 #devtools::install_github("ks471/clickyOSX")
 #devtools::install_github("ks471/clickyLinux")
 
+##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
+#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
+#devtools::use_data(x)	# saves to working directory by default
 
-#library(R.helper)
-#library(clickyOSX)
-#library(clickyLinux)
 
 
 ##  entertaining if not quite whimsical tmp variable names..
@@ -51,57 +45,18 @@
 
 
 
-##Error: Could not find package root.		##  error possibly due to the fact that it checks for a R package structure around the folder where it is saving
-#setwd('~/Dropbox/SHARED/tools/R_functions/R.helper/data/')
-#devtools::use_data(x)	# saves to working directory by default
 
-
-# ¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯
-##cid(sdfset)=sdfid(sdfset)
-##  timer eg
-#t1=Sys.time()
-#Sys.time()-t1 		##  prints elapsed time
-
-
-## useful concept : add a readme.object.in.saved.R.object when saving file create a "method" / "description" of the file for easier handover / re-analysis
-##  readme.lires=
-#            "\tlires - differentially expressed genes in the hippocampus compared to 3 other brain regions FC, OC, TC Hardy UKBEC dataset n=102\n
-#            \tdesm=design matrix file for limma\n
-#            limma used for this code.file : 003.DifferentiallyExpressedGenes.limma.R     |\n|     adj.P - calculated based using FDR, CX excluded because it is very differentially expressed compared to the other 3 - all genes were differential with CX"
-##  save(lires,desm,readme,file="~/Dropbox/CapricaPrime/RU/dtb/secondary/HC.differentially.expressed.v.FC.OC.TC.R")
-
-###  saves 'cat' output to file, file separator can be controlled using the "\t" in relevant places
-#sink("~/Dropbox/bin/gsea/modules_bonn.gtf")
-#  for(imod in 1:length(bgen)){
-#   cat(as.vector(paste(c(names(bgen)[imod],bgen[[names(bgen)[imod]]]),collapse="\t")),"\n",sep="")
-#  }
-#sink()
-
-
-
-
-
-## http://serverfault.com/questions/25199/using-wget-to-recursively-download-whole-ftp-directories
-##  Check below wget command to download data from FTP recursively
-##  wget --user="" --password="" -r -np -nH --cut-dirs=1 --reject "index.html*" ""
-##  -r : is for recursively download.
-##  -np : is for no parent ascending.
-##  -nH : is for disabling creation of directory having name same as URL i.e. abc.xyz.com
-##  --cut-dirs : is for ignoring no. of parent directories. Value of this option will differ for your command.
-
+##
+#gsub("[^A-Za-z0-9 _.,!]", "", humpty$title) ## gsub all but alphanumeric AND punctuation  ## http://stackoverflow.com/questions/7233447/a-regex-to-match-strings-with-alphanumeric-spaces-and-punctuation
+#gsub("[^[:alnum:] ]", "", str)	#http://stackoverflow.com/questions/8959243/r-remove-non-alphanumeric-symbols-from-a-string
 
 
 ####======================================================================================================
 ###-----------------------------------------------------------------------------------------------------
 ##  my commonly used code annotation breakers   ------------------------------------------------
 #
-
-####======================================================================================================
-##  Description of what the script is for..    ----------------------------------------------------
-####======================================================================================================
 #╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
-#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║¯\_(•_•)_/¯║╚╣╔╣╔╣║║║║╚╣
-#options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
+#source('~/Dropbox//000.R.functions.R')#╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣╔╗║╚╚╣║╚╣¯\_(ツ)_/¯
 #╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
 
 ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -168,11 +123,6 @@
 #library(R.helper)#╔╦══╩╦╔╚║═╚╣╩║║╦╦═╔╦║╚╣ ╔╣═╦║╣═╔═╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
 ##╚═╝╩═╩╝╚═╩══╩═╩══╩╩═══╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩╩╩╩═══╩═╩╝╩═╩╝╚═╩═╩╩═╝
 
-##╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
-#options(stringsAsFactors=F);library(colorout);rm(list=ls());ls()#╚═╣║ ╚╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║║║║╚╣║╣
-#options(menu.graphics=FALSE);library(R.helper)#╣═╩╚╣║╔╔╣╦═║║╔╚║╔╚╔╣╩╚╚╦╣║╩╔╦║║ ╚╩╣╚╚╣║╣╚╩╔╦╩╚╦╚╩╣
-##╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
-
 
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 ##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#- MOTHBALLS -#•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##
@@ -185,13 +135,51 @@
 #•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•##•#
 
 
-####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-# nohup for R scrpts
-# nohup Rscript foo.R > ~/R/logs/foo.out 2>&1 &
-#http://www.r-bloggers.com/long-running-r-commands-unix-screen-nohup-and-r/
-####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+##  unicode arrow symbols http://xahlee.info/comp/unicode_arrows.html
+##  ← → ↑ ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↚ ↛ ↮ ⟵ ⟶ ⟷ ⇐ ⇒ ⇑ ⇓ ⇔ ⇕ ⇖ ⇗ ⇘ ⇙ ⇍ ⇏ ⇎ ⟸ ⟹ ⟺ ⇦ ⇨ ⇧ ⇩ ⬄ ⇳ ⬀ ⬁ ⬂ ⬃ ⬅ ( ⮕ ➡ ) ⬆ ⬇ ⬈ ⬉ ⬊ ⬋ ⬌ ⬍
+
+#		:
+#	  : 
+#		:
+#	/\(••)/\
+#	\	   /
+
+
+# ¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯
+##cid(sdfset)=sdfid(sdfset)
+##  timer eg
+#t1=Sys.time()
+#Sys.time()-t1 		##  prints elapsed time
+
+
+## useful concept : add a readme.object.in.saved.R.object when saving file create a "method" / "description" of the file for easier handover / re-analysis
+##  readme.lires=
+#            "\tlires - differentially expressed genes in the hippocampus compared to 3 other brain regions FC, OC, TC Hardy UKBEC dataset n=102\n
+#            \tdesm=design matrix file for limma\n
+#            limma used for this code.file : 003.DifferentiallyExpressedGenes.limma.R     |\n|     adj.P - calculated based using FDR, CX excluded because it is very differentially expressed compared to the other 3 - all genes were differential with CX"
+##  save(lires,desm,readme,file="~/Dropbox/CapricaPrime/RU/dtb/secondary/HC.differentially.expressed.v.FC.OC.TC.R")
+
+###  saves 'cat' output to file, file separator can be controlled using the "\t" in relevant places
+#sink("~/Dropbox/bin/gsea/modules_bonn.gtf")
+#  for(imod in 1:length(bgen)){
+#   cat(as.vector(paste(c(names(bgen)[imod],bgen[[names(bgen)[imod]]]),collapse="\t")),"\n",sep="")
+#  }
+#sink()
+
+
+
+
+
+## http://serverfault.com/questions/25199/using-wget-to-recursively-download-whole-ftp-directories
+##  Check below wget command to download data from FTP recursively
+##  wget --user="" --password="" -r -np -nH --cut-dirs=1 --reject "index.html*" ""
+##  -r : is for recursively download.
+##  -np : is for no parent ascending.
+##  -nH : is for disabling creation of directory having name same as URL i.e. abc.xyz.com
+##  --cut-dirs : is for ignoring no. of parent directories. Value of this option will differ for your command.
+
+
+
 
 
 
@@ -227,10 +215,6 @@
 
 
 
-
-
-
-
 ####■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #fnames=list.files("/Users/Shkura/Dropbox/Cognition/GWAS/magma/hrh.magma/out/netw.enrich", pattern=".out", full.names=TRUE)
 #basename
@@ -240,9 +224,6 @@
 #load("~/Downloads/expr.maps.rda")
 #attach("~/Downloads/expr.maps.rda")  # works in a way similar to load but checks workspaces for variables with the same names as the object and 'hides' them
 
-#╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╗╔╦╗╔═╗╔═╦╗╔═╦═╦╦╦╦╗╔═╗╔╗═╦╗╔═╦╗╔╦╦╗
-#source('~/Dropbox//000.R.functions.R')#╣║╚╣═╣║╚╣║║║╚╣╔╣╔╣║╚╣═╣╔╗║╚╚╣║╚╣¯\_(ツ)_/¯
-#╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩═╩╝╚═╝╩═╩╝╚═╩══╩═╩═╩═╩╝╩═╩╝╚═╩═╩╩═╝
 
 # ¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯
 
@@ -4003,12 +3984,14 @@ lm.mat<-function(data_mat,verbose=F){
 				tester=data_mat[,c(yvar,xvar)]
 				tester=tester[complete.cases(tester),]
 				nsample[xvar,yvar]=nrow(tester)
+
+				if(!is.factor(tester[,yvar])){		##  y variable can-not be a factor
 				holder=summary(lm(as.matrix(tester[,yvar,drop=F])~.,data=tester[,xvar,drop=F]))
 				 #### using min for factors - 1 p-value per factor ==> only interested in the lowest one
 				lmpstat[xvar,yvar]=min(holder$coefficients[,"Pr(>|t|)"][-1])  # -1 removes the intercept
 				#unistat[icov,"lmRsq"]=summary(lm(tester[,1]~tester[,2]))$r.sq*sign(min(summary(lm(tester[,1]~tester[,2]))$coefficients[,"Estimate"][-1]))
 				rsqstat[xvar,yvar]=holder$r.sq
-
+				}
 			}
 		}
 		k=lcount(k,length(colnames(data_mat)))
