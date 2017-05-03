@@ -3726,6 +3726,11 @@ rmerge.list<-function(dat_lis,all=F){
 
 
 lm.mat<-function(data_mat,verbose=F){
+##  USE:	~ lm for matrix of variables (pairwise) ~ cor.test()
+##  WARNING: y variable can-not be categorical => NA in results (diag() is also left as NA)
+##  INPUT: matrix/data.frame of variables rows=samples, columns=variables (numeric or factor)
+##  missing values can be used, only relevant variable n will be affected
+##  for factor variables (in data_mat), min P of lm() is used\n\n")#
 	data_mat=as.data.frame(data_mat)
     lmpstat=matrix(NA,ncol=ncol(data_mat),nrow=ncol(data_mat))
     colnames(lmpstat)=colnames(data_mat)
@@ -3739,10 +3744,11 @@ lm.mat<-function(data_mat,verbose=F){
                 tester=data_mat[,c(yvar,xvar)]
                 tester=tester[complete.cases(tester),]
                 nsample[xvar,yvar]=nrow(tester)
-              if(!is.factor(tester[,yvar])){
+              if(!is.factor(tester[,yvar])){		##  y variable can-not be a factor
                 holder=summary(lm(as.matrix(tester[,yvar,drop=F])~.,data=tester[,xvar,drop=F]))
                 dummy=holder$coefficients
                 dummy=dummy[-1,,drop=F]
+				 #### using min for factors - 1 p-value per factor ==> only interested in the lowest one
                 dummy=dummy[which(dummy[,"Pr(>|t|)"]==min(dummy[,"Pr(>|t|)"])),]		##  not doing this risk selecting the wrong sign for Rsq below if factor
                 lmpstat[xvar,yvar]=dummy['Pr(>|t|)']
                 rsqstat[xvar,yvar]=holder$r.sq*sign(dummy['Estimate']) ## add the direction of relationship
@@ -3993,43 +3999,43 @@ sva.fac<-function(expr_mat,non_adjust="",adjust="",nsv=""){
 
 
 
-lm.mat<-function(data_mat,verbose=F){
-##  USE:	~ lm for matrix of variables (pairwise) ~ cor.test()
-##  WARNING: y variable can-not be categorical => NA in results (diag() is also left as NA)
-##  INPUT: matrix/data.frame of variables rows=samples, columns=variables (numeric or factor)
-##  missing values can be used, only relevant variable n will be affected
-##  for factor variables (in data_mat), min P of lm() is used\n\n")#
+# lm.mat<-function(data_mat,verbose=F){
+# ##  USE:	~ lm for matrix of variables (pairwise) ~ cor.test()
+# ##  WARNING: y variable can-not be categorical => NA in results (diag() is also left as NA)
+# ##  INPUT: matrix/data.frame of variables rows=samples, columns=variables (numeric or factor)
+# ##  missing values can be used, only relevant variable n will be affected
+# ##  for factor variables (in data_mat), min P of lm() is used\n\n")#
 
-	lmpstat=matrix(NA,ncol=ncol(data_mat),nrow=ncol(data_mat))
-		colnames(lmpstat)=colnames(data_mat)
-		rownames(lmpstat)=colnames(data_mat)
-	rsqstat=lmpstat
-	nsample=lmpstat
+# 	lmpstat=matrix(NA,ncol=ncol(data_mat),nrow=ncol(data_mat))
+# 		colnames(lmpstat)=colnames(data_mat)
+# 		rownames(lmpstat)=colnames(data_mat)
+# 	rsqstat=lmpstat
+# 	nsample=lmpstat
 
-	k=1
-	for(yvar in colnames(data_mat)){
-		cat(yvar,'\t')
-		for(xvar in colnames(data_mat)){
-			if(yvar!=xvar){
-				cat('  ',xvar)
-				tester=data_mat[,c(yvar,xvar)]
-				tester=tester[complete.cases(tester),]
-				nsample[xvar,yvar]=nrow(tester)
+# 	k=1
+# 	for(yvar in colnames(data_mat)){
+# 		cat(yvar,'\t')
+# 		for(xvar in colnames(data_mat)){
+# 			if(yvar!=xvar){
+# 				cat('  ',xvar)
+# 				tester=data_mat[,c(yvar,xvar)]
+# 				tester=tester[complete.cases(tester),]
+# 				nsample[xvar,yvar]=nrow(tester)
 
-				if(!is.factor(tester[,yvar])){		##  y variable can-not be a factor
-				holder=summary(lm(as.matrix(tester[,yvar,drop=F])~.,data=tester[,xvar,drop=F]))
-				 #### using min for factors - 1 p-value per factor ==> only interested in the lowest one
-				lmpstat[xvar,yvar]=min(holder$coefficients[,"Pr(>|t|)"][-1])  # -1 removes the intercept
-				#unistat[icov,"lmRsq"]=summary(lm(tester[,1]~tester[,2]))$r.sq*sign(min(summary(lm(tester[,1]~tester[,2]))$coefficients[,"Estimate"][-1]))
-				rsqstat[xvar,yvar]=holder$r.sq
-				}
-			}
-		}
-		cat('\n')
-#		k=lcount(k,length(colnames(data_mat)))
-	}
-	return(invisible(list(lmp=lmpstat,rsq=rsqstat,nsamp=nsample)))
-}
+# 				if(!is.factor(tester[,yvar])){		##  y variable can-not be a factor
+# 				holder=summary(lm(as.matrix(tester[,yvar,drop=F])~.,data=tester[,xvar,drop=F]))
+# 				 #### using min for factors - 1 p-value per factor ==> only interested in the lowest one
+# 				lmpstat[xvar,yvar]=min(holder$coefficients[,"Pr(>|t|)"][-1])  # -1 removes the intercept
+# 				#unistat[icov,"lmRsq"]=summary(lm(tester[,1]~tester[,2]))$r.sq*sign(min(summary(lm(tester[,1]~tester[,2]))$coefficients[,"Estimate"][-1]))
+# 				rsqstat[xvar,yvar]=holder$r.sq
+# 				}
+# 			}
+# 		}
+# 		cat('\n')
+# #		k=lcount(k,length(colnames(data_mat)))
+# 	}
+# 	return(invisible(list(lmp=lmpstat,rsq=rsqstat,nsamp=nsample)))
+# }
 
 
 
