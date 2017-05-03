@@ -3725,9 +3725,9 @@ rmerge.list<-function(dat_lis,all=F){
 
 
 
-lm.mat<-function(data_mat,verbose=F){
+lm.mat<-function(data_mat,verbose=F,symm_fix=T){
 ##  USE:	~ lm for matrix of variables (pairwise) ~ cor.test()
-##  WARNING: y variable can-not be categorical => NA in results (diag() is also left as NA)
+##  WARNING: y variable can-not be categorical => if 2 variables are both categorical, rest fixed by symmetry
 ##  INPUT: matrix/data.frame of variables rows=samples, columns=variables (numeric or factor)
 ##  missing values can be used, only relevant variable n will be affected
 ##  for factor variables (in data_mat), min P of lm() is used\n\n")#
@@ -3757,6 +3757,17 @@ lm.mat<-function(data_mat,verbose=F){
         }
     k=lcount(k,length(colnames(data_mat)))
     }
+
+    if(symm_fix){
+	    ##  y variable can-not be a factor -> fix missing by symmetry,by construction, only columns are affected (and not rows)
+	    decider=apply(rsqstat,2,function(x){(sum(is.na(x))==length(x))})
+	#  rows and columns - same order by construction..
+		rsqstat[,decider]=t(rsqstat[decider,])
+		lmpstat[,decider]=t(lmpstat[decider,])
+		diag(rsqstat)=1
+		diag(lmpstat)=1    	
+    }
+
 return(invisible(list(lmp=lmpstat,rsq=rsqstat,nsamp=nsample)))
 }
 
