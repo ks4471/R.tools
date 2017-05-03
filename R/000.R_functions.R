@@ -2823,7 +2823,7 @@ if(help){
  cat("\tNOTE\t: transfrom=T also returns the list_dat processed for common bg\n")
  cat("\tNOTE\t: dat_mat required only if union=T & transform=T \n")
 }
-	if(verbose){cat('\tcalculate common background across',length(list_dat),'datasets\n')}
+#	if(verbose){cat('\tcalculate common background across',length(list_dat),'datasets\n')}
 
    bgcommon=rownames(list_dat[[1]])
   for(ilis in 2:length(list_dat)){
@@ -3725,6 +3725,34 @@ rmerge.list<-function(dat_lis,all=F){
 
 
 
+lm.mat<-function(data_mat,verbose=F){
+	data_mat=as.data.frame(data_mat)
+    lmpstat=matrix(NA,ncol=ncol(data_mat),nrow=ncol(data_mat))
+    colnames(lmpstat)=colnames(data_mat)
+    rownames(lmpstat)=colnames(data_mat)
+    rsqstat=lmpstat
+    nsample=lmpstat
+    k=1
+    for(yvar in colnames(data_mat)){
+        for(xvar in colnames(data_mat)){
+            if(yvar!=xvar){
+                tester=data_mat[,c(yvar,xvar)]
+                tester=tester[complete.cases(tester),]
+                nsample[xvar,yvar]=nrow(tester)
+              if(!is.factor(tester[,yvar])){
+                holder=summary(lm(as.matrix(tester[,yvar,drop=F])~.,data=tester[,xvar,drop=F]))
+                dummy=holder$coefficients
+                dummy=dummy[-1,,drop=F]
+                dummy=dummy[which(dummy[,"Pr(>|t|)"]==min(dummy[,"Pr(>|t|)"])),]		##  not doing this risk selecting the wrong sign for Rsq below if factor
+                lmpstat[xvar,yvar]=dummy['Pr(>|t|)']
+                rsqstat[xvar,yvar]=holder$r.sq*sign(dummy['Estimate']) ## add the direction of relationship
+              }
+            }
+        }
+    k=lcount(k,length(colnames(data_mat)))
+    }
+return(invisible(list(lmp=lmpstat,rsq=rsqstat,nsamp=nsample)))
+}
 
 
 
@@ -3967,6 +3995,7 @@ sva.fac<-function(expr_mat,non_adjust="",adjust="",nsv=""){
 
 lm.mat<-function(data_mat,verbose=F){
 ##  USE:	~ lm for matrix of variables (pairwise) ~ cor.test()
+##  WARNING: y variable can-not be categorical => NA in results (diag() is also left as NA)
 ##  INPUT: matrix/data.frame of variables rows=samples, columns=variables (numeric or factor)
 ##  missing values can be used, only relevant variable n will be affected
 ##  for factor variables (in data_mat), min P of lm() is used\n\n")#
@@ -3979,8 +4008,10 @@ lm.mat<-function(data_mat,verbose=F){
 
 	k=1
 	for(yvar in colnames(data_mat)){
+		cat(yvar,'\t')
 		for(xvar in colnames(data_mat)){
 			if(yvar!=xvar){
+				cat('  ',xvar)
 				tester=data_mat[,c(yvar,xvar)]
 				tester=tester[complete.cases(tester),]
 				nsample[xvar,yvar]=nrow(tester)
@@ -3994,7 +4025,8 @@ lm.mat<-function(data_mat,verbose=F){
 				}
 			}
 		}
-		k=lcount(k,length(colnames(data_mat)))
+		cat('\n')
+#		k=lcount(k,length(colnames(data_mat)))
 	}
 	return(invisible(list(lmp=lmpstat,rsq=rsqstat,nsamp=nsample)))
 }
@@ -6513,6 +6545,10 @@ lcount<-function(x,length){
 }
 
 
+lprogr<-function(xvar,xful){
+	cat(xvar,which(xful==xvar),'of',length(xful),'\n')
+}
+
 
 overlap<-function(A,B,n=5){
 ##  modified to run only for unique A & B, otherwise numbers can be misleading
@@ -7499,12 +7535,15 @@ distpc <- function(x,perc) ecdf(x)(perc)
 geo.matrix<-function(datid,path){
 ##  USE: download GEO matrix data and process into smth usable
 cur_dir=getwd()
-	dir.create(paste0(path,'/dtb/'))
-	dir.create(paste0(path,'/dtb/',datid))
+datid=toupper(datid)
+#	dir.create(paste0(path,'/dtb/'))
+#	dir.create(paste0(path,'/dtb/',datid))
+	dir.create(paste0(path,'/',datid))
 #	dir.create(file.path(path,'dtb',datid))
 
 #	paste0(path,'/dtb/',datid)
-	setwd(file.path(path,'dtb',datid))
+	#setwd(file.path(path,'dtb',datid))
+	setwd(file.path(paste0(path,'/',datid)))
 	getwd()
 
 	system(paste0('wget -r -nH --cut-dirs=7 ftp://ftp.ncbi.nlm.nih.gov/geo/series/',substr(datid,1,5),'nnn/',datid,'/matrix/'))
@@ -7517,7 +7556,7 @@ cur_dir=getwd()
 	system(paste0('gunzip ',datid,'_series_matrix.txt.gz'))
 #	list.files()
 
-	gse=readLines(file.path(path,'dtb',datid,paste0(datid,'_series_matrix.txt')))
+	gse=readLines(file.path(paste0(path,'/',datid,'/',datid,'_series_matrix.txt')))
 
 	cord=c(
 		grep('!Sample_title',gse)
