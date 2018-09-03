@@ -1,4 +1,4 @@
-# R_helper
+# R.helper / R.tools
 
 contains custom R functions and other paraphernalia to make life with R easier
 
