@@ -1,7 +1,6 @@
 # R.helper / R.tools
 
-contains custom R functions and other paraphernalia to make life with R easier
+Collection of custom R functions and other paraphernalia to make life with R easier
 
-## currently deprecated
-relevant functions updated and collated addR
+## currently deprecated, functions updated and collated under new name "addR"
 
